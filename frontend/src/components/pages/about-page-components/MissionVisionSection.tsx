@@ -89,7 +89,7 @@ export default function VisionMissionValues() {
         },
     };
 
-    strategy.sections?.forEach((sec: any) => {
+    strategy?.sections?.forEach((sec: any) => {
         const imageUrl = sec.attachment ? getImageUrl(sec.attachment) : null;
         const customIcon = imageUrl ? <img src={imageUrl} alt={sec.type} className="w-28 h-28 object-contain z-10" /> : null;
 
