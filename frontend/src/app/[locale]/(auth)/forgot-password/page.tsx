@@ -110,16 +110,16 @@ export default function ForgotPasswordPage() {
           onClick={() => step === 1 ? router.push(AUTH_LOGIN) : setStep((prev) => (prev - 1) as any)}
           className="cursor-pointer shadow-none z-50 bg-transparent hover:bg-slate-100 p-2 top-4 left-4 absolute flex items-center gap-1"
         >
-          <ArrowLeftIcon className="w-5 h-5 text-[#0C4A6E]" />
-          <span className="text-sm text-[#0C4A6E] font-medium">Back</span>
+          <ArrowLeftIcon className="w-5 h-5 text-golden-dark" />
+          <span className="text-sm text-golden-dark font-medium">Back</span>
         </Button>
 
         <div className="w-full bg-cover bg-center p-8 flex items-center justify-center">
           <div className="backdrop-blur-md p-6 rounded-xl text-center">
             <img
-              src="/jarra-logo.png"
-              alt="Organization Logo"
-              className="h-72 mx-auto mb-3 rounded-xl p-2"
+              src="/midi-log.png"
+              alt="MIDI Logo"
+              className="h-72 mx-auto mb-3 rounded-xl p-2 object-contain"
             />
           </div>
         </div>
@@ -130,11 +130,11 @@ export default function ForgotPasswordPage() {
             {step === 1 && (
               <div className="space-y-6">
                 <div className="text-center mb-8">
-                  <div className="bg-[#0C4A6E]/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Mail className="h-8 w-8 text-[#0C4A6E]" />
+                  <div className="bg-golden-dark/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Mail className="h-8 w-8 text-golden-dark" />
                   </div>
-                  <h1 className="text-3xl font-bold text-[#0C4A6E] mb-2">Forgot Password?</h1>
-                  <p className="text-sm text-[#0C4A6E]/70">Enter your email and we'll send you an OTP to reset your password.</p>
+                  <h1 className="text-3xl font-bold text-golden-dark mb-2">Forgot Password?</h1>
+                  <p className="text-sm text-golden-dark/70">Enter your email and we'll send you an OTP to reset your password.</p>
                 </div>
 
                 <Form {...emailForm}>

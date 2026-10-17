@@ -401,13 +401,14 @@ export const NavbarLogo = () => {
             className="flex items-center gap-2 hover:opacity-90 transition-opacity"
         >
             <Image
-                src="/jarra-logo.png"
-                alt="logo"
+                src="/midi-log.png"
+                alt="MIDI Logo"
                 width={40}
                 height={40}
+                className="object-contain"
                 priority/>
             <div className="flex flex-col">
-                <span className="text-secondary font-semibold dark:text-white text-md -mt-[2px]">Jarra Holdings</span>
+                <span className="text-secondary font-bold dark:text-white text-lg -mt-[2px] tracking-wide">MIDI</span>
             </div>
         </Link>
     );

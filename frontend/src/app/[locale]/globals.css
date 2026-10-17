@@ -14,8 +14,8 @@
     --popover: 0 0% 100%;
     --popover-foreground: 217 33% 17%;
 
-    --primary: 190 100% 42%;
-    --primary-hover: 190 100% 34%;
+    --primary: 42 100% 36.5%;
+    --primary-hover: 42 100% 30%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 202 100% 18%;
@@ -35,7 +35,7 @@
 
     --border: 220 13% 91%;
     --input: 220 13% 91%;
-    --ring: 190 100% 42%;
+    --ring: 42 100% 36.5%;
 
     --footer: 213 27% 84%;
     --footer-bg: 0 0% 10%;
@@ -44,12 +44,12 @@
 
     --sidebar-background: 202 100% 18%;
     --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 190 100% 42%;
+    --sidebar-primary: 42 100% 36.5%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 190 100% 42%;
+    --sidebar-accent: 42 100% 36.5%;
     --sidebar-accent-foreground: 0 0% 100%;
     --sidebar-border: 202 100% 10%;
-    --sidebar-ring: 190 100% 42%;
+    --sidebar-ring: 42 100% 36.5%;
   }
 
   /* Since user didn't specify dark mode, we will sync dark mode with the dark colors provided 
@@ -65,8 +65,8 @@
     --popover: 202 100% 14%;
     --popover-foreground: 213 27% 84%;
 
-    --primary: 190 100% 42%;
-    --primary-hover: 190 100% 34%;
+    --primary: 42 100% 36.5%;
+    --primary-hover: 42 100% 30%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 210 17% 98%;
@@ -86,19 +86,19 @@
 
     --border: 202 100% 14%;
     --input: 202 100% 14%;
-    --ring: 190 100% 42%;
+    --ring: 42 100% 36.5%;
 
     --footer: 213 27% 84%;
     --footer-bg: 0 0% 5%;
 
     --sidebar-background: 202 100% 10%;
     --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 190 100% 42%;
+    --sidebar-primary: 42 100% 36.5%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 202 100% 14%;
     --sidebar-accent-foreground: 0 0% 100%;
     --sidebar-border: 202 100% 14%;
-    --sidebar-ring: 190 100% 42%;
+    --sidebar-ring: 42 100% 36.5%;
   }
 
   .admin-theme {
@@ -127,8 +127,8 @@
     --sidebar-foreground: 0 0% 100%;
     --sidebar-border: 216 19% 20%;
 
-    --chart-1: 190 100% 42%;
-    /* Cyan */
+    --chart-1: 42 100% 36.5%;
+    /* Brand Golden #ba8200 */
     --chart-2: 215 100% 65%;
     /* Light blue */
     --chart-3: 45 100% 50%;

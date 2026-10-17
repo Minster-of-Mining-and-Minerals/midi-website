@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { routing } from "@/i18n/routing";
 
-export const SITE_NAME = "Jarra Holdings";
+export const SITE_NAME = "MIDI";
 export const DEFAULT_DESCRIPTION =
-  "Official website of Jarra Holdings.";
+  "Official portal of the Mineral Industry Development Institute (MIDI).";
 
-const DEFAULT_OG_IMAGE = "/jarra-logo.png";
+const DEFAULT_OG_IMAGE = "/midi-log.png";
 
 /** Canonical public site URL (no trailing slash). */
 export function getSiteUrl(): string {

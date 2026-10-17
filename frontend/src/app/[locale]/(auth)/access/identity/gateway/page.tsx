@@ -57,9 +57,9 @@ export default function ExternalLogin() {
                 <div className="w-full bg-cover bg-center p-8 flex items-center justify-center">
                     <div className="backdrop-blur-md p-6 rounded-xl text-center">
                         <img
-                            src="/jarra-logo.png"
-                            alt="Organization Logo"
-                            className="h-96 mx-auto mb-3 rounded-xl p-2"
+                            src="/midi-log.png"
+                            alt="MIDI Logo"
+                            className="h-96 mx-auto mb-3 rounded-xl p-2 object-contain"
                         />
                     </div>
                 </div>

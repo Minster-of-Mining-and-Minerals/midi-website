@@ -24,8 +24,8 @@ const Footer = () => {
     const footerData = footers && footers.length > 0 ? footers[0] : null;
 
     const currentYear = new Date().getFullYear();
-    const title = footerData?.title || "Jarra Holdings";
-    const text = footerData?.text || `© ${currentYear} Jarra Holdings. All rights reserved.`;
+    const title = footerData?.title || "MIDI";
+    const text = footerData?.text || `© ${currentYear} MIDI. All rights reserved.`;
 
     const sections = footerData?.sections || [];
     const displaySections = sections.slice(0, 3);
@@ -39,7 +39,7 @@ const Footer = () => {
     const logoAttachment = attachmentsResponse?.attachments?.find(
         (a) => a.attachment_id === footerData?.attachment_id
     );
-    const logoUrl = getImageUrl(logoAttachment, "large") || "/jarra-logo.png";
+    const logoUrl = getImageUrl(logoAttachment, "large") || "/midi-log.png";
 
     return (
         <footer className="bg-footer-bg bg-blur-md text-footer">

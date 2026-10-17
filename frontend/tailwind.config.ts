@@ -30,6 +30,16 @@ const config = {
           foreground: "hsl(var(--primary-foreground))",
           hover: "hsl(var(--primary-hover))",
         },
+        brand: {
+          DEFAULT: "#ba8200",
+          hover: "#996b00",
+          foreground: "#ffffff",
+        },
+        "golden-dark": "#ba8200",
+        golden: {
+          DEFAULT: "#ba8200",
+          dark: "#ba8200",
+        },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",

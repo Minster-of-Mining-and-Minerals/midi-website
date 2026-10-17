@@ -296,15 +296,15 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <Link href="/admin/dashboard" className="flex flex-col items-center">
               <Image
-                src="/jarra-logo.png"
-                alt="Jarra Holdings Logo"
+                src="/midi-log.png"
+                alt="MIDI Logo"
                 width={100}
                 height={100}
-                className="mx-auto mb-1 rounded-xl p-2"
+                className="mx-auto mb-1 rounded-xl p-2 object-contain"
               />
               <div className="grid flex-1 text-center gap-1 text-sm leading-tight group-data-[collapsible=icon]:opacity-0">
                 <span className="truncate font-semibold text-golden-dark">
-                  Jarra Holding Admin Portal
+                  MIDI Admin Portal
                 </span>
               </div>
             </Link>

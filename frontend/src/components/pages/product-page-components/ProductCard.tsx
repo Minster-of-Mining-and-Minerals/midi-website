@@ -27,7 +27,7 @@ export default function ProductCard({ product, locale = "en" }: { product: Produ
         .filter((url: string) => url !== "") || [];
 
     if (imageUrls.length === 0) {
-        imageUrls.push("/jarra-logo.png");
+        imageUrls.push("/midi-log.png");
     }
 
     const [currentIndex, setCurrentIndex] = useState(0);
