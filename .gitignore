@@ -6,6 +6,9 @@
 .env.*
 !.env.example
 !.env.production.example
+!**/.env.example
+!**/.env*.example
+!**/example.env
 /backend/.env
 # Ignore uploads
 /backend/uploads/
