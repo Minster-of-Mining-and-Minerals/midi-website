@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: "nav" });
     return {
-        title: t("services") || "Services - Jarra Holdings",
+        title: t("services") || "Services - Mineral Industry Development Institute (MIDI)",
     };
 }
 
@@ -25,7 +25,7 @@ export default function ServicesPage() {
                 pageIdentifier="services"
                 title="Our Services"
                 icon={<Settings />}
-                description="Explore the professional services offered by Jarra Holdings to our partners and clients globally."
+                description="Explore applied research, technical consultancy, testing laboratories, and capacity building services offered by MIDI."
             />
             
             <ServicesOverview />

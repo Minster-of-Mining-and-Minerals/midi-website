@@ -10,22 +10,22 @@ const Column = ({ item, isLast = false }: { item: any; isLast?: boolean }) => {
             <div className="mb-8 relative flex items-center justify-center">
                 {item.icon}
                 {/* Subtle highlight behind icon */}
-                {item.icon && <div className="absolute inset-0 bg-[#00B4D8]/10 rounded-full blur-xl -z-10"></div>}
+                {item.icon && <div className="absolute inset-0 bg-primary/10 rounded-full blur-xl -z-10"></div>}
             </div>
 
             {/* Title */}
             <h3 className="text-xl font-bold tracking-tight mb-5 uppercase">
-                <span className="text-[#003B5C]">OUR</span> <span className="text-[#00B4D8]">{item.title2}</span>
+                <span className="text-secondary">OUR</span> <span className="text-primary">{item.title2}</span>
             </h3>
 
             <div className="flex items-center justify-center w-full mb-6 opacity-60">
                 <div className="h-px bg-gray-300 w-12"></div>
-                <div className="w-1.5 h-1.5 bg-[#00B4D8] rounded-full mx-2"></div>
+                <div className="w-1.5 h-1.5 bg-primary rounded-full mx-2"></div>
                 <div className="h-px bg-gray-300 w-12"></div>
             </div>
 
             {/* Description */}
-            <p className="text-sm text-gray-500 leading-relaxed max-w-sm">
+            <p className="text-sm text-gray-600 leading-relaxed max-w-sm">
                 {item.description}
             </p>
         </div>
@@ -43,19 +43,50 @@ export default function VisionMissionValues() {
         );
     }
 
-    if (!strategiesData || strategiesData.length === 0) {
-        return null;
-    }
+    const strategy = strategiesData && strategiesData.length > 0 ? strategiesData[0] : null;
 
-    const strategy = strategiesData[0];
+    const sectionTitle = strategy?.title || "Strategic Framework & Objectives";
+    const sectionDescription = strategy?.description || "Empowering the Ethiopian mineral industry through innovation, quality, and human capacity.";
 
-    const sectionTitle = strategy.title || "Organizational Strategy";
-    const sectionDescription = strategy.description || "";
+    const defaultValuesList = [
+        { title: "Research & Innovation", content: "Conducting problem-solving applied research and adopting state-of-the-art mineral technologies." },
+        { title: "Excellence & Quality", content: "Upholding world-class standards in laboratory testing, material characterization, and consultancy." },
+        { title: "Integrity & Accountability", content: "Transparent, evidence-based leadership and responsible stewardship of public resources." },
+        { title: "Sustainable Development", content: "Balancing mineral wealth generation with environmental preservation and community benefit." },
+        { title: "Human Capital Growth", content: "Empowering industry-driven professionals and supporting ASM formalization." },
+        { title: "Value Creation", content: "Driving import substitution and expanding export revenues through national value addition." }
+    ];
 
     const displayData = {
-        mission: { title2: "MISSION", icon: null as any, description: "" },
-        vision: { title2: "VISION", icon: null as any, description: "" },
-        values: { title2: "VALUES", icon: null as any, description: "" },
+        mission: {
+            title2: "MISSION",
+            icon: <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center text-primary font-bold text-2xl">M</div>,
+            description: "To support the mineral industry through applied research and development, capacity building, technical consultancy, and modern laboratory testing to enhance production, foster import substitution, and stimulate sustainable job creation."
+        },
+        vision: {
+            title2: "VISION",
+            icon: <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center text-primary font-bold text-2xl">V</div>,
+            description: "To become a premier center of excellence in mineral technology, innovative research, and human capital development in Africa by 2030."
+        },
+        values: {
+            title2: "VALUES",
+            icon: <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center text-primary font-bold text-2xl">★</div>,
+            description: (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full text-left">
+                    {defaultValuesList.map((v, i) => (
+                        <div key={i} className="flex flex-col gap-2 p-6 rounded-xl bg-gray-50 border border-gray-100 hover:shadow-sm transition-shadow">
+                            <div className="flex items-center gap-3">
+                                <div className="w-2 h-2 bg-primary rounded-full shrink-0" />
+                                <span className="font-bold text-lg text-secondary">{v.title}</span>
+                            </div>
+                            <p className="text-sm text-gray-600 leading-relaxed pl-5 border-l-2 border-primary/20 ml-1">
+                                {v.content}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+            ) as any
+        },
     };
 
     strategy.sections?.forEach((sec: any) => {
@@ -115,16 +146,16 @@ export default function VisionMissionValues() {
                 <div className="w-full flex flex-col items-center text-center p-8 pt-12 border-t border-gray-200">
                     <div className="mb-8 relative flex items-center justify-center">
                         {displayData.values.icon}
-                        {displayData.values.icon && <div className="absolute inset-0 bg-[#00B4D8]/10 rounded-full blur-xl -z-10"></div>}
+                        {displayData.values.icon && <div className="absolute inset-0 bg-primary/10 rounded-full blur-xl -z-10"></div>}
                     </div>
 
                     <h3 className="text-2xl font-bold tracking-tight mb-5 uppercase">
-                        <span className="text-[#003B5C]">OUR</span> <span className="text-[#00B4D8]">{displayData.values.title2}</span>
+                        <span className="text-secondary">OUR</span> <span className="text-primary">{displayData.values.title2}</span>
                     </h3>
 
                     <div className="flex items-center justify-center w-full mb-12 opacity-60">
-                        <div className="h-px bg-red-300 w-12"></div>
-                        <div className="w-1.5 h-1.5 bg-[#00B4D8] rounded-full mx-2"></div>
+                        <div className="h-px bg-gray-300 w-12"></div>
+                        <div className="w-1.5 h-1.5 bg-primary rounded-full mx-2"></div>
                         <div className="h-px bg-gray-300 w-12"></div>
                     </div>
 

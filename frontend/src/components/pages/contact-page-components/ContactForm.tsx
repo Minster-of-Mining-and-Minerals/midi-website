@@ -79,9 +79,9 @@ const ContactForm = () => {
         return <ContactPageSkeleton />;
     }
 
-    const officeAddress = office?.office_address || "Bole Sub-City, Addis Ababa, Ethiopia";
+    const officeAddress = office?.office_address || "Addis Ababa, Ethiopia (Ministry of Mines Complex)";
     const officePhone = office?.phone || "+251 11 667 2020";
-    const officeEmail = office?.email || "info@jarraholdings.com";
+    const officeEmail = office?.email || "info@midi.gov.et";
     const mapLocation = office?.map_location;
 
     return (

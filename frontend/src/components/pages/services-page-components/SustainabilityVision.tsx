@@ -43,10 +43,10 @@ export default function SustainabilityVision() {
                         </h2>
                         <div className="space-y-6 text-lg text-slate-600">
                             <p>
-                                At Jarra Holdings, our services go beyond simple transactions. We are committed to socially responsible investment, sustainable portfolios, and creating lasting value for our shareholders and communities.
+                                At the Mineral Industry Development Institute (MIDI), our services go beyond technical support. We are committed to sustainable mineral extraction, value addition, import substitution, and creating lasting industrial capability across Ethiopia.
                             </p>
                             <p>
-                                By delivering reliable trading and supply solutions, we contribute to economic empowerment, create employment opportunities, and drive socio-economic development while building a knowledgeable and innovative workforce.
+                                By delivering world-class laboratory testing, engineering consultancy, and specialized training, we empower the domestic mining sector, create skilled employment, and drive national socio-economic transformation.
                             </p>
                         </div>
                     </motion.div>

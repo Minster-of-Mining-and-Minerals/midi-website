@@ -21,11 +21,11 @@ export default function FacilitiesHero() {
                 </span>
                 
                 <h1 className="text-3xl md:text-5xl font-bold text-primary mb-6 tracking-tight">
-                    Our Physical <span className="text-primary/70">Footprint</span>
+                    Our Laboratories & <span className="text-primary/70">Workshop Facilities</span>
                 </h1>
                 
                 <p className="text-primary text-lg md:text-xl max-w-3xl mx-auto mb-10 leading-relaxed">
-                    Jarra Holdings’s presence is supported by substantial physical facilities and infrastructure across strategic locations. Explore our corporate, industrial, and operational sites that form the foundation of our organization.
+                    MIDI's nationwide operations are anchored by modern mineral testing laboratories, pilot foundries, mold-making tool rooms, and educational centers of excellence.
                 </p>
                 
                 <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">

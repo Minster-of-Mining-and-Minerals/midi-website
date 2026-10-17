@@ -8,8 +8,8 @@ import SplitTitle from "@/components/common/SplitTitle";
 const BackgroundPage = () => {
     const { data: backgrounds = [] } = useGetBackgroundsQuery();
 
-    const title = backgrounds[0]?.title || "Company Background & Import/Export";
-    const description = backgrounds[0]?.description || "Established to regulate and develop Ethiopia's mineral and petroleum resources for sustainable economic growth, national development, and global import/export operations.";
+    const title = backgrounds[0]?.title || "Mineral Industry Development Institute (MIDI)";
+    const description = backgrounds[0]?.description || "Established under Proclamation No. 1263/2014 and governed by Regulation No. 508/2022 under the Ministry of Mines, the Mineral Industry Development Institute (MIDI) is mandated to support the national mineral industry in applied research & development, technical consultancy, modern laboratory testing, and specialized human capital development to foster production, import substitution, and sustainable economic transformation.";
     const iconName = backgrounds[0]?.icon || "Building2";
     const IconComponent = (Icons as any)[iconName] || Icons.Building2;
 

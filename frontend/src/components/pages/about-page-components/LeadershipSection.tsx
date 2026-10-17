@@ -40,11 +40,7 @@ export default function LeadershipSection() {
     }
 
     if (isError || rootNodes.length === 0) {
-        return (
-            <div className="min-h-screen py-12 text-center text-muted">
-                No leadership structure available at the moment.
-            </div>
-        );
+        return null;
     }
 
     let sectionTitle = "Corporate Leadership Structure";

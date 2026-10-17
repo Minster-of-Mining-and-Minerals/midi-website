@@ -14,15 +14,13 @@ const CardSection = () => {
         return <CardSkeleton />;
     }
 
-    if (cmsCards.length === 0) {
-        return null;
-    }
+    const activeCard = cmsCards.length > 0 ? cmsCards[0] : null;
 
-    const title = cmsCards[0]?.title;
-    const description = cmsCards[0]?.description;
-    const buttonName = cmsCards[0]?.button_name || "Learn More";
-    const buttonUrl = cmsCards[0]?.button_url || "/about";
-    const image = getImageUrl(cmsCards[0]?.attachment as any, "original");
+    const title = activeCard?.title || "Advancing Ethiopia's Strategic Mineral Industries";
+    const description = activeCard?.description || "The Mineral Industry Development Institute (MIDI) bridges the gap between raw mineral resources and industrial manufacturing through technical consultancy, laboratory testing, specialized training centers of excellence, and domestic and foreign investment facilitation.";
+    const buttonName = activeCard?.button_name || "Explore Our Services";
+    const buttonUrl = activeCard?.button_url || "/services";
+    const image = activeCard?.attachment ? getImageUrl(activeCard.attachment as any, "original") : "/home-5.jpg";
 
     return (
         <section className="w-full flex justify-center md:px-4 mb-20 pt-2">

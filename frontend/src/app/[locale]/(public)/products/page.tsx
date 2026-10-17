@@ -9,7 +9,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: "nav" });
     return {
-        title: t("products") || "Products - Jarra Holdings",
+        title: t("products") || "Mineral Products & Commodities - MIDI",
     };
 }
 
@@ -18,9 +18,9 @@ export default function ProductsPage() {
         <main className="min-h-screen bg-slate-50 flex flex-col">
             <PageHeader
                 pageIdentifier="products"
-                title="Our Product Portfolio"
+                title="Mineral Products & Commodities"
                 icon={<Package />}
-                description="Jarra Holdings offers a comprehensive and diverse range of products across agriculture, chemicals, manufacturing, and industrial sectors. Explore our catalog or send an inquiry for specific sourcing and trading needs."
+                description="Explore Ethiopian strategic mineral commodities, industrial raw materials, and value-added resources supported and characterized by MIDI."
             />
             <ProductGrid />
         </main>

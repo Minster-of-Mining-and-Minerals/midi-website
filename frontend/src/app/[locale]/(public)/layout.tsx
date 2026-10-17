@@ -3,8 +3,8 @@ import PublicNavbar from "@/components/public-layout/nav-bar";
 import Footer from "@/components/public-layout/footer";
 
 export const metadata: Metadata = {
-    title: "Jarra Holdings",
-    description: "Jarra Holdings",
+    title: "Mineral Industry Development Institute (MIDI)",
+    description: "Official portal of the Mineral Industry Development Institute (MIDI), Ministry of Mines, Federal Democratic Republic of Ethiopia.",
 };
 
 export default function RootLayout({

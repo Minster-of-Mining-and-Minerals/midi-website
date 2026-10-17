@@ -10,11 +10,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useLocale } from "next-intl";
 
 const fallbackDescriptions: Record<string, string> = {
-    "/businesses": "Connecting trade, logistics, warehousing, and distribution",
-    "/businesses/overview": "Jarra Holdings business overview and operations",
-    "/businesses/import-export": "Cross-border trading and supply operations",
-    "/businesses/warehousing": "Multi-location storage and inventory infrastructure",
-    "/businesses/trading": "Product sourcing and commercial goods"
+    "/businesses": "Strategic mineral industries, value chains, and development programs",
+    "/businesses/overview": "MIDI sector operations and institutional technical support",
+    "/businesses/import-export": "Mineral value addition and export facilitation",
+    "/businesses/warehousing": "Testing facilities and material repository infrastructure",
+    "/businesses/trading": "Mineral products and industrial inputs"
 };
 
 export default function Layout({
@@ -63,7 +63,7 @@ export default function Layout({
                 items.push({
                     label: getLabel(child.translations),
                     slug: child.path || "",
-                    description: fallbackDescriptions[child.path || ""] || "Jarra Holdings Businesses"
+                    description: fallbackDescriptions[child.path || ""] || "MIDI Strategic Sectors"
                 });
             });
         }
@@ -76,17 +76,17 @@ export default function Layout({
 
     // Find active item for title & breadcrumb
     const activeItem = dynamicItems.find((item) => item.slug === normalizedPathname);
-    const title = activeItem?.label ?? "Our Businesses";
-    const description = activeItem?.description ?? "Connecting trade, logistics, warehousing, and distribution";
+    const title = activeItem?.label ?? "Our Strategic Sectors";
+    const description = activeItem?.description ?? "Strategic mineral industries, value chains, and development programs";
 
     return (
         <>
             {/* Hero / Page Header (shared across all administration pages) */}
             <PageHeader
                 pageIdentifier="businesses"
-                title="Jarra Holdings Businesses"
+                title="Strategic Mineral Sectors"
                 icon={<BriefcaseBusiness />}
-                description="Jarra Holdings Businesses"
+                description="Explore the priority mineral industries, value chains, and industrial operations supported by MIDI."
             />
 
             {/* Main container with relative positioning for overlay */}

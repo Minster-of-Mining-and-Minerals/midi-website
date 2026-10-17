@@ -30,7 +30,7 @@ const MapSection = () => {
                         Office Location
                     </h2>
                     <p className="text-muted-foreground mt-1">
-                        Find Jarra Holdings head office on the interactive map below.
+                        Find Mineral Industry Development Institute (MIDI) office on the interactive map below.
                     </p>
                     {office?.office_address && (
                         <p className="text-sm text-gray-700 font-medium mt-2">
@@ -54,7 +54,7 @@ const MapSection = () => {
 
             <div className="overflow-hidden rounded-xl border border-gray-200 shadow-inner">
                 <iframe
-                    title="Jarra Holdings Location Map"
+                    title="MIDI Location Map"
                     src={embedUrl}
                     className="w-full h-[360px] md:h-[420px] border-0"
                     loading="lazy"

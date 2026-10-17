@@ -71,19 +71,18 @@ export default function NewsPageClient() {
         <main className="min-h-screen bg-slate-50 flex flex-col">
             <PageHeader
                 pageIdentifier="news"
-                title="News"
+                title="News & Press Releases"
                 icon={<MessageCircle />}
-                description="News and updates from Jarra Holdings"
+                description="Latest news, industry bulletins, and updates from the Mineral Industry Development Institute (MIDI)."
             />
 
             <div className="py-16 bg-white min-h-[600px] flex-grow">
                 <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="mb-8">
-                        <h1 className="text-2xl sm:text-3xl font-bold text-primary">News</h1>
+                        <h1 className="text-2xl sm:text-3xl font-bold text-primary">News & Bulletins</h1>
                         <div className="mt-2 h-1 w-12 bg-primary rounded-full" />
                         <p className="text-gray-600 mt-4 max-w-2xl">
-                            Stay updated with the latest news and announcements from Jarra Holdings.
-                            Here you can find information about our activities, projects, and initiatives.
+                            Stay updated with the latest news, technological milestones, and announcements from the Mineral Industry Development Institute (MIDI).
                         </p>
                     </div>
 

@@ -9,7 +9,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: "nav" });
     return {
-        title: t("careers") || "Careers - Jarra Holdings",
+        title: t("careers") || "Careers & Fellowships - MIDI",
     };
 }
 
@@ -18,9 +18,9 @@ export default function CareersPage() {
         <main className="min-h-screen flex flex-col">
             <PageHeader
                 pageIdentifier="careers"
-                title="Careers"
+                title="Careers & Human Resource Development"
                 icon={<Briefcase />}
-                description="Information about career opportunities at Jarra Holdings."
+                description="Join the Mineral Industry Development Institute (MIDI) in pioneering research, engineering innovation, and strategic mineral industry development."
             />
 
             <Introduction />

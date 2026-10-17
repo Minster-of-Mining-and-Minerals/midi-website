@@ -18,7 +18,7 @@ export function getSiteUrl(): string {
   if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL}`;
   }
-  return "https://jarra.et";
+  return "https://midi.gov.et";
 }
 
 export type PageSeoInput = {

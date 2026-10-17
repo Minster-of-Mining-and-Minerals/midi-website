@@ -32,6 +32,60 @@ export type Slide = {
 };
 
 
+const defaultMidiSlides: Slide[] = [
+    {
+        id: 1,
+        title: {
+            en: "Mineral Industry Development Institute (MIDI)",
+            am: "የማዕድን ኢንዱስትሪ ልማት ኢንስቲትዩት (MIDI)",
+        },
+        description: {
+            en: "Spearheading research, technology transfer, and high-level human resource development to accelerate production, import substitution, and sustainable development of Ethiopia's mineral industry.",
+            am: "የኢትዮጵያን የማዕድን ኢንዱስትሪ ለማሳደግ፣ ምርትና ምርታማነትን ለማሻሻል እና የውጭ ምርትን ለመተካት የላቀ የምርምር እና የሰው ኃይል ልማት መሪ።",
+        },
+        button_name: { en: "Explore Sectors", am: "ዘርፎችን ይመልከቱ" },
+        button_url: "/businesses",
+        button2_name: { en: "About MIDI", am: "ስለ ኢንስቲትዩቱ" },
+        button2_url: "/about",
+        image: "/home-1.jpg",
+        bg: "bg-base-200/60",
+    },
+    {
+        id: 2,
+        title: {
+            en: "Advanced Training & Workshop Facilities",
+            am: "ዘመናዊ የስልጠና እና የዎርክሾፕ ማዕከላት",
+        },
+        description: {
+            en: "Establishing state-of-the-art Center of Excellence workshops, material testing laboratories, and technical training centers across Addis Ababa and mining regions.",
+            am: "በአዲስ አበባ እና በክልሎች ደረጃቸውን የጠበቁ የልህቀት ማዕከል ዎርክሾፖችን፣ የላቦራቶሪ ምርመራ እና የሙያ ስልጠና ማዕከላትን መገንባት።",
+        },
+        button_name: { en: "Our Facilities", am: "መገልገያዎች" },
+        button_url: "/facilities",
+        button2_name: { en: "Our Services", am: "አገልግሎቶች" },
+        button2_url: "/services",
+        image: "/home-2.jpg",
+        bg: "bg-base-200/60",
+    },
+    {
+        id: 3,
+        title: {
+            en: "Catalyzing Strategic Mineral Value Chains",
+            am: "ስልታዊ የማዕድን እሴት ሰንሰለቶችን ማጎልበት",
+        },
+        description: {
+            en: "Providing technical consultancy and productivity enhancement across metallic minerals, fertilizers, cement, ceramics, glass, dimensional stone, and gemstones.",
+            am: "በብረታ ብረት፣ ማዳበሪያ፣ ሲሚንቶ፣ ሴራሚክስ፣ መስታወት፣ የግንባታ ድንጋይ እና የከበሩ ማዕድናት ዘርፎች የቴክኒክ ድጋፍ እና የምርታማነት ማሻሻያ።",
+        },
+        button_name: { en: "Our Services", am: "አገልግሎቶች" },
+        button_url: "/services",
+        button2_name: { en: "Contact Us", am: "አግኙን" },
+        button2_url: "/contact",
+        image: "/home-4.jpg",
+        bg: "bg-base-200/60",
+    },
+];
+
 export default function HeroSection() {
     const [current, setCurrent] = useState(0);
     const [locale, setLocale] = useState<keyof LocalizedText>("en"); // default language
@@ -50,20 +104,22 @@ export default function HeroSection() {
     // Fetch sliders from CMS
     const { data: cmsSliders = [], isLoading } = useGetSlidersQuery();
 
-    // Map CMS sliders
-    const activeSlides = [...cmsSliders]
-        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-        .map((s, idx) => ({
-            id: s.slider_id || idx,
-            title: { en: s.title, am: s.title },
-            description: { en: s.description || "", am: s.description || "" },
-            button_name: { en: s.button_name || t("hero.button"), am: s.button_name || t("hero.button") },
-            button_url: s.button_url || "/investigating-in-ethiopia",
-            button2_name: { en: s.button2_name || t("hero.button2"), am: s.button2_name || t("hero.button2") },
-            button2_url: s.button2_url || "/services",
-            image: getImageUrl(s.attachment as any, "original") || "/placeholder.jpg",
-            bg: "bg-base-200/60"
-        }));
+    // Map CMS sliders or use default MIDI slides
+    const activeSlides = cmsSliders.length > 0
+        ? [...cmsSliders]
+            .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+            .map((s, idx) => ({
+                id: s.slider_id || idx,
+                title: { en: s.title, am: s.title },
+                description: { en: s.description || "", am: s.description || "" },
+                button_name: { en: s.button_name || t("hero.button"), am: s.button_name || t("hero.button") },
+                button_url: s.button_url || "/businesses",
+                button2_name: { en: s.button2_name || t("hero.button2"), am: s.button2_name || t("hero.button2") },
+                button2_url: s.button2_url || "/services",
+                image: getImageUrl(s.attachment as any, "original") || "/home-1.jpg",
+                bg: "bg-base-200/60"
+            }))
+        : defaultMidiSlides;
 
     // Go to next slide
     const next = () => setCurrent((prev) => (prev === activeSlides.length - 1 ? 0 : prev + 1));

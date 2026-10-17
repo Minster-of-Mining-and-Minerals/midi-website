@@ -21,11 +21,11 @@ export default function ProductHero() {
                 </span>
                 
                 <h1 className="text-3xl md:text-5xl font-bold text-primary mb-6 tracking-tight">
-                    Our Product <span className="text-primary/70">Portfolio</span>
+                    Mineral Commodities & <span className="text-primary/70">Industrial Products</span>
                 </h1>
                 
                 <p className="text-primary text-lg md:text-xl max-w-3xl mx-auto mb-10 leading-relaxed">
-                    Jarra Holdings offers a comprehensive and diverse range of products across agriculture, chemicals, manufacturing, and industrial sectors. Explore our catalog or send an inquiry for specific sourcing and trading needs.
+                    The Mineral Industry Development Institute (MIDI) supports value addition, laboratory testing, and standardization across metallic, industrial, construction, and fertilizer minerals in Ethiopia.
                 </p>
                 
                 <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">

@@ -169,7 +169,7 @@ export default function OurBusinesses() {
                   <div className="absolute inset-0 rounded-full border border-primary/20 animate-[spin_12s_linear_infinite]"></div>
                   <h3 className="text-white font-bold text-2xl text-center leading-none tracking-wider mb-2">
                     {(() => {
-                      const centerTitle = businessNodes.find(n => n.id_string === 'center')?.title || "JARRA\nHOLDINGS";
+                      const centerTitle = businessNodes.find(n => n.id_string === 'center')?.title || "MIDI\nETHIOPIA";
                       return centerTitle.split('\\n').map((line, idx, arr) => (
                         <React.Fragment key={idx}>
                           {line}
@@ -179,7 +179,7 @@ export default function OurBusinesses() {
                     })()}
                   </h3>
                   <p className="text-primary text-[10px] uppercase font-semibold tracking-widest text-center w-3/4">
-                    {businessNodes.find(n => n.id_string === 'center')?.description || "Multi-Sector Business"}
+                    {businessNodes.find(n => n.id_string === 'center')?.description || "Mineral Industry Development"}
                   </p>
                 </motion.div>
               </div>
@@ -235,7 +235,7 @@ export default function OurBusinesses() {
                   <div className="absolute inset-0 rounded-full border border-primary/20 animate-[spin_12s_linear_infinite]"></div>
                   <h3 className="text-white font-bold text-sm leading-none tracking-wider">
                     {(() => {
-                      const centerTitle = businessNodes.find(n => n.id_string === 'center')?.title || "JARRA\nHOLDINGS";
+                      const centerTitle = businessNodes.find(n => n.id_string === 'center')?.title || "MIDI\nETHIOPIA";
                       return centerTitle.split('\\n').map((line, idx, arr) => (
                         <React.Fragment key={idx}>
                           {line}
@@ -246,7 +246,7 @@ export default function OurBusinesses() {
                   </h3>
                 </div>
                 <p className="text-primary text-xs uppercase font-semibold tracking-widest">
-                  {businessNodes.find(n => n.id_string === 'center')?.description || "Multi-Sector Business"}
+                  {businessNodes.find(n => n.id_string === 'center')?.description || "Mineral Industry Development"}
                 </p>
               </motion.div>
 

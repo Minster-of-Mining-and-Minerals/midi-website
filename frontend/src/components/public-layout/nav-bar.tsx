@@ -55,7 +55,8 @@ export default function PublicNavbar() {
         const fallbackNavItems: NavItem[] = [
             { name: locale === "am" ? "መነሻ" : "Home", link: "/" },
             { name: locale === "am" ? "ስለኛ" : "About", link: "/about" },
-            { name: locale === "am" ? "ንግዶች" : "Businesses", link: "/businesses" },
+            { name: locale === "am" ? "የMIDI ፕሮጀክት" : "MIDI Project", link: "/midi-project" },
+            { name: locale === "am" ? "ዘርፎች" : "Sectors", link: "/businesses" },
             { name: locale === "am" ? "ምርቶች" : "Products", link: "/products" },
             { name: locale === "am" ? "አገልግሎቶች" : "Services", link: "/services" },
             { name: locale === "am" ? "መገልገያዎች" : "Facilities", link: "/facilities" },

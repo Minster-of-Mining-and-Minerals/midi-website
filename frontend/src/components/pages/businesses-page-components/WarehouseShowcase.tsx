@@ -136,7 +136,7 @@ export default function WarehouseShowcase() {
                             {overview?.facilities_section?.title || "Our Warehouse Network"}
                         </h2>
                         <p className="text-lg text-slate-600 leading-relaxed">
-                            {overview?.facilities_section?.description || "Jarra Holdings operates purpose-built facilities that support its diversified business activities and the movement of goods across the markets it serves. Explore our warehouse and facility presence across different regions."}
+                            {overview?.facilities_section?.description || "MIDI supports purpose-built workshops, testing laboratories, and regional technical centers facilitating the mineral industry across Ethiopia."}
                         </p>
                     </div>
                     

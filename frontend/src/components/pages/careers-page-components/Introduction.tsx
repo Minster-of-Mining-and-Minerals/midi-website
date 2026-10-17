@@ -14,8 +14,8 @@ export default function Introduction() {
 
     const titleNormal = content?.intro_title || "Build Your Career With";
     const titleHighlight = content?.intro_title_highlight || "Purpose";
-    const desc1 = content?.intro_description_1 || "Jarra Holdings is a multi-sector organization where people can work across different areas of business and contribute to the organization's broader growth.";
-    const desc2 = content?.intro_description_2 || "We believe that our success is deeply connected to creating job opportunities, driving economic development, and building a knowledgeable, innovative workforce. By prioritizing the development of employee competency and fostering a culture of collaboration, we ensure long-term organizational growth and meaningful careers for our people.";
+    const desc1 = content?.intro_description_1 || "The Mineral Industry Development Institute (MIDI) is the national apex institution under the Ministry of Mines where engineers, scientists, researchers, and technical professionals spearhead Ethiopia's mineral transformation.";
+    const desc2 = content?.intro_description_2 || "We believe that national prosperity is driven by building high-level human capital. Through postgraduate fellowships, advanced workshop training, and direct technical mentorship, MIDI empowers professionals in mining engineering, extractive metallurgy, and mineral economics to shape a self-reliant industrial future.";
     
     const imageUrl = content?.intro_image?.file_path ? getFileUrl(content.intro_image.file_path) : "/home-4.jpg";
     

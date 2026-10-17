@@ -58,7 +58,7 @@ const Footer = () => {
                 </div>
 
                 {/* Sections */}
-                {hasDynamicSections && (
+                {hasDynamicSections ? (
                     displaySections.map((section, idx) => (
                         <div key={section.footer_section_id || idx}>
                             <h3 className="text-lg font-semibold text-white mb-4">
@@ -77,6 +77,38 @@ const Footer = () => {
                             )}
                         </div>
                     ))
+                ) : (
+                    <>
+                        <div>
+                            <h3 className="text-lg font-semibold text-white mb-4">Quick Links</h3>
+                            <ul className="space-y-2 text-sm">
+                                <li><Link href="/" className="hover:text-primary">Home</Link></li>
+                                <li><Link href="/about" className="hover:text-primary">About MIDI</Link></li>
+                                <li><Link href="/midi-project" className="hover:text-primary">5-Year National Project</Link></li>
+                                <li><Link href="/businesses" className="hover:text-primary">Strategic Sectors</Link></li>
+                                <li><Link href="/services" className="hover:text-primary">Laboratories & Services</Link></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 className="text-lg font-semibold text-white mb-4">Strategic Value Chains</h3>
+                            <ul className="space-y-2 text-sm text-slate-300">
+                                <li>Metallic & Energy Minerals</li>
+                                <li>Agro-Minerals & Fertilizers</li>
+                                <li>Cement & Ceramic Industries</li>
+                                <li>Glass & Dimensional Stones</li>
+                                <li>Artisanal & Small-Scale Mining</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 className="text-lg font-semibold text-white mb-4">Institutional Mandate</h3>
+                            <p className="text-sm text-slate-300 leading-relaxed">
+                                Mineral Industry Development Institute (MIDI)<br />
+                                Federal Democratic Republic of Ethiopia<br />
+                                Ministry of Mines<br />
+                                Reg. No. 508/2022 & Proc. No. 1263/2014
+                            </p>
+                        </div>
+                    </>
                 )}
             </div>
 

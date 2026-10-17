@@ -64,16 +64,16 @@ export default function Layout({
 
     // Find active item for title & breadcrumb
     const activeItem = items.find((item) => item.slug === normalizedPathname);
-    const title = activeItem?.label ?? "Background of Jarra Holdings";
+    const title = activeItem?.label ?? "Background of MIDI";
 
     return (
         <>
             {/* Hero / Page Header (shared across all administration pages) */}
             <PageHeader
                 pageIdentifier="about"
-                title="About Jarra Holdings"
+                title="About Mineral Industry Development Institute (MIDI)"
                 icon={<Quote />}
-                description="About Jarra Holdings"
+                description="Institutional mandate, legal background, core values, and strategic pillars of MIDI."
             />
 
             <section className="mx-auto">

@@ -1,69 +1,74 @@
 /** Static SEO copy keyed by public path (without locale prefix). */
 export const PAGE_SEO: Record<string, { title: string; description: string }> = {
   "/": {
-    title: "Jarra Holdings",
+    title: "MIDI - Mineral Industry Development Institute",
     description:
-      "Official website of Jarra Holdings. Explore our businesses, services, and investment opportunities.",
+      "Official portal of the Mineral Industry Development Institute (MIDI), Ministry of Mines, Ethiopia. Driving research, technical capacity, and sustainable mineral industrialization.",
   },
   "/about": {
-    title: "About Us",
+    title: "About MIDI",
     description:
-      "Learn about Jarra Holdings, our leadership, mission, vision, and role in driving sustainable growth.",
+      "Learn about MIDI's mandate under Proclamation No. 1263/2014 & Regulation No. 508/2022, leadership, research mission, vision, and strategic goals.",
   },
   "/services": {
-    title: "Our Services",
+    title: "Our Services & Technical Support",
     description:
-      "Comprehensive services and solutions provided by Jarra Holdings.",
+      "Comprehensive laboratory testing, technical consultancy, feasibility studies, and capacity building for the Ethiopian mineral industry.",
   },
   "/products": {
-    title: "Our Products",
+    title: "Strategic Mineral Sectors",
     description:
-      "Explore the diverse range of high-quality products offered by Jarra Holdings.",
+      "Explore Ethiopia's mineral potential across metallic, energy, agro-minerals, cement, ceramics, glass, dimensional stones, and gemstones.",
   },
   "/facilities": {
-    title: "Our Facilities",
+    title: "Facilities & Centers of Excellence",
     description:
-      "State-of-the-art facilities and operational centers of Jarra Holdings.",
+      "Advanced mineral industry workshops, training centers, material testing laboratories, and tool rooms across Ethiopia.",
   },
   "/careers": {
-    title: "Careers",
+    title: "Careers & Opportunities",
     description:
-      "Join the team at Jarra Holdings. Explore current job vacancies and career opportunities.",
+      "Join the Mineral Industry Development Institute (MIDI) and contribute to national industrial growth and research excellence.",
   },
   "/contact": {
     title: "Contact Us",
     description:
-      "Contact Jarra Holdings. Find our address, email, phone, and inquiry options.",
+      "Contact the Mineral Industry Development Institute (MIDI). Office locations, inquiries, and technical consultation.",
   },
   "/businesses": {
-    title: "Our Businesses",
+    title: "Mineral Sectors & Industrial Divisions",
     description:
-      "Discover the various sectors and businesses operating under Jarra Holdings.",
+      "Discover the strategic commodity divisions supported by MIDI across Ethiopia's mineral value chain.",
   },
   "/businesses/overview": {
-    title: "Businesses Overview",
+    title: "Mineral Industry Overview",
     description:
-      "An overview of Jarra Holdings's industrial sectors and operational divisions.",
+      "An overview of Ethiopia's mineral sectors, productivity goals, and industrial development priorities.",
   },
   "/businesses/import-export": {
-    title: "Import & Export",
+    title: "Import Substitution & Export Development",
     description:
-      "Import and export operations, logistics, and global trade solutions by Jarra Holdings.",
+      "Strategic initiatives by MIDI to expand mineral export revenues and substitute industrial imports.",
   },
   "/businesses/trading": {
-    title: "Trading",
+    title: "Commodity Trading & Market Linkage",
     description:
-      "Strategic trading and commodity exchange divisions within Jarra Holdings.",
+      "Mineral market development, value chain integration, and ASM trading support by MIDI.",
   },
   "/businesses/warehousing": {
-    title: "Warehousing",
+    title: "Logistics & Storage Facilities",
     description:
-      "Secure and scalable warehousing solutions provided by Jarra Holdings.",
+      "Safe storage, testing, and distribution centers for strategic mineral commodities in Ethiopia.",
   },
   "/news": {
-    title: "News & Updates",
+    title: "News & Publications",
     description:
-      "Stay updated with the latest news, announcements, and events from Jarra Holdings.",
+      "Stay updated with the latest news, announcements, research publications, and events from MIDI.",
+  },
+  "/_midi": {
+    title: "MIDI Facility & Human Resource Development Project",
+    description:
+      "The 5-year National Flagship Project to establish training centers, workshops, and build 520+ industry-driven professionals.",
   },
 };
 

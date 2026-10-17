@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: "nav" });
     return {
-        title: t("facilities") || "Facilities - Jarra Holdings",
+        title: t("facilities") || "Facilities & Laboratories - MIDI",
     };
 }
 
@@ -20,9 +20,9 @@ export default function FacilitiesPage() {
         <main className="min-h-screen bg-white flex flex-col">
             <PageHeader
                 pageIdentifier="facilities"
-                title="Our Physical Footprint"
+                title="Laboratories & Workshop Facilities"
                 icon={<Building2 />}
-                description="Jarra Holdings’s presence is supported by substantial physical facilities and infrastructure across strategic locations. Explore our corporate, industrial, and operational sites that form the foundation of our organization."
+                description="MIDI's infrastructure is supported by specialized material characterization laboratories, foundry and mold-making workshops, and technical training centers of excellence across Ethiopia."
             />
             <EditorialIntro />
             <FacilityEditorialShowcase />

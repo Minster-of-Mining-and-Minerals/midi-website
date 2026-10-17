@@ -10,9 +10,9 @@ function NewsPageFallback() {
         <>
             <PageHeader
                 pageIdentifier="news"
-                title="News"
+                title="News & Press Releases"
                 icon={<MessageCircle />}
-                description="News and updates from Jarra Holdings"
+                description="Latest news, industry bulletins, and updates from the Mineral Industry Development Institute (MIDI)."
             />
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="mb-8 space-y-4">
