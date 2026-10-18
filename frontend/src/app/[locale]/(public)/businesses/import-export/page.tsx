@@ -1,12 +1,10 @@
-import React from 'react'
-import ImportExport from '@/components/pages/businesses-page-components/ImportExport'
+import { redirect } from "next/navigation";
 
-const ImportExportPage = () => {
-    return (
-        <div className="flex flex-col w-full">
-            <ImportExport />
-        </div>
-    )
+export default async function BusinessesImportExportRedirectPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  redirect(`/${locale}/businesses`);
 }
-
-export default ImportExportPage

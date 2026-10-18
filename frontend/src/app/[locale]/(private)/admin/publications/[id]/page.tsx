@@ -289,13 +289,14 @@ export default function EditPublicationPage() {
 
         // Prepare files payload
         const allFiles: Array<{
-            file_role: string;
-            title: string;
+            attachment_id?: string | null;
+            file_role: FileRole;
+            title?: string;
             file_name: string;
             file_path: string;
-            file_size: number;
-            mime_type: string;
-            is_public: boolean;
+            file_size?: number | null;
+            mime_type?: string;
+            is_public?: boolean;
         }> = [];
         if (mainPdf) {
             allFiles.push({
@@ -303,7 +304,7 @@ export default function EditPublicationPage() {
                 title: mainPdf.title || "Main Publication PDF",
                 file_name: mainPdf.file_name,
                 file_path: mainPdf.file_path,
-                file_size: mainPdf.file_size,
+                file_size: mainPdf.file_size || 0,
                 mime_type: mainPdf.mime_type,
                 is_public: accessMode === "open_access",
             });
@@ -311,11 +312,11 @@ export default function EditPublicationPage() {
 
         supplementaryFiles.forEach((supp) => {
             allFiles.push({
-                file_role: supp.file_role,
+                file_role: supp.file_role as FileRole,
                 title: supp.title || supp.file_name,
                 file_name: supp.file_name,
                 file_path: supp.file_path,
-                file_size: supp.file_size,
+                file_size: supp.file_size || 0,
                 mime_type: supp.mime_type,
                 is_public: accessMode === "open_access",
             });

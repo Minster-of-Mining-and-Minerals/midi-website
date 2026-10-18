@@ -85,7 +85,7 @@ const Footer = () => {
                                 <li><Link href="/" className="hover:text-primary">Home</Link></li>
                                 <li><Link href="/about" className="hover:text-primary">About MIDI</Link></li>
                                 <li><Link href="/midi-project" className="hover:text-primary">5-Year National Project</Link></li>
-                                <li><Link href="/businesses" className="hover:text-primary">Strategic Sectors</Link></li>
+                                <li><Link href="/businesses" className="hover:text-primary">Mineral Industry Development</Link></li>
                                 <li><Link href="/services" className="hover:text-primary">Laboratories & Services</Link></li>
                             </ul>
                         </div>

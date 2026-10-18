@@ -3,9 +3,13 @@ import { baseApi } from '../baseApi';
 export interface BusinessOverview {
   business_overview_id: string;
   title_part1?: string;
+  title_part1_am?: string;
   title_part2?: string;
+  title_part2_am?: string;
   description1?: string;
+  description1_am?: string;
   description2?: string;
+  description2_am?: string;
   network_operations?: Array<{
     title: string;
     description: string;
@@ -57,8 +61,8 @@ export interface BusinessOverview {
     statusColor?: string;
   }>;
   quick_stats: {
-    left: Array<{ title: string; subtitle: string }>;
-    right: Array<{ title: string; subtitle: string }>;
+    left: Array<{ title?: string; subtitle?: string; label?: string; value?: string }>;
+    right: Array<{ title?: string; subtitle?: string; label?: string; value?: string }>;
   };
 }
 
@@ -66,11 +70,32 @@ export interface BusinessNode {
   business_node_id: string;
   id_string: string;
   title: string;
+  title_am?: string;
   description: string;
+  description_am?: string;
   icon: string;
   position_x: number;
   position_y: number;
   mobile_order: number;
+}
+
+export interface BusinessPage {
+  business_page_id: string;
+  slug: string;
+  title: string;
+  title_am?: string;
+  subtitle?: string;
+  subtitle_am?: string;
+  summary?: string;
+  summary_am?: string;
+  content?: string;
+  content_am?: string;
+  cover_image_id?: string;
+  sections_data?: any;
+  publish_status: string;
+  display_order: number;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface ImportExportOverview {
@@ -201,6 +226,22 @@ export interface TradingOverview {
 
 export const businessApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    getBusinessPages: builder.query<BusinessPage[], { status?: string } | void>({
+      query: (params) => (params && params.status ? `/business/pages?status=${params.status}` : '/business/pages'),
+      providesTags: ['BusinessPages'] as any,
+    }),
+    getBusinessPageBySlug: builder.query<BusinessPage, string>({
+      query: (slug) => `/business/pages/${slug}`,
+      providesTags: (_res, _err, slug) => [{ type: 'BusinessPages' as any, id: slug }],
+    }),
+    updateBusinessPage: builder.mutation<BusinessPage, { slug: string; data: Partial<BusinessPage> }>({
+      query: ({ slug, data }) => ({
+        url: `/business/pages/${slug}`,
+        method: 'PUT',
+        body: data,
+      }),
+      invalidatesTags: ['BusinessPages'] as any,
+    }),
     getTradingOverview: builder.query<TradingOverview, void>({
       query: () => '/business/trading/overview',
       providesTags: ['TradingOverview'] as any,
@@ -394,6 +435,9 @@ export const businessApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useGetBusinessPagesQuery,
+  useGetBusinessPageBySlugQuery,
+  useUpdateBusinessPageMutation,
   useGetBusinessOverviewQuery,
   useUpdateBusinessOverviewMutation,
   useGetBusinessNodesQuery,

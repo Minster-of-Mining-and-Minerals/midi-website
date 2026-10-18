@@ -49,7 +49,7 @@ export const routePermissions: RouteConfig[] = [
     },
     {
         path: "/admin/businesses",
-        label: "Businesses",
+        label: "Mineral Industry Dev",
         icon: "Briefcase",
         permissions: {
             anyPermissions: ["BUSINESSES:READ"],
@@ -57,32 +57,14 @@ export const routePermissions: RouteConfig[] = [
         children: [
             {
                 path: "/admin/businesses",
-                label: "Our Businesses",
-                icon: "Briefcase",
+                label: "Pages & Value Chain",
+                icon: "Layers",
                 permissions: { anyPermissions: ["BUSINESSES:READ"] },
             },
             {
                 path: "/admin/businesses/overview",
-                label: "Overview",
+                label: "Technical Operations",
                 icon: "Tag",
-                permissions: { anyPermissions: ["BUSINESSES:READ"] },
-            },
-            {
-                path: "/admin/businesses/import-export",
-                label: "Import Export",
-                icon: "MessageSquare",
-                permissions: { anyPermissions: ["BUSINESSES:READ"] },
-            },
-            {
-                path: "/admin/businesses/trading",
-                label: "Trading",
-                icon: "MessageSquare",
-                permissions: { anyPermissions: ["BUSINESSES:READ"] },
-            },
-            {
-                path: "/admin/businesses/warehousing",
-                label: "Warehousing",
-                icon: "MessageSquare",
                 permissions: { anyPermissions: ["BUSINESSES:READ"] },
             },
         ],

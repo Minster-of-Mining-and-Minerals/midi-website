@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useRef, useState } from 'react';
-import { motion, useScroll, useTransform, MotionValue, Variants } from 'framer-motion';
-import * as LucideIcons from 'lucide-react';
-import { useGetBusinessOverviewQuery, useGetBusinessNodesQuery, BusinessNode } from '@/redux/api/businessApi';
+import React, { useRef, useState } from "react";
+import { motion, useScroll, useTransform, MotionValue, Variants } from "framer-motion";
+import * as LucideIcons from "lucide-react";
+import { useGetBusinessOverviewQuery, useGetBusinessNodesQuery, BusinessNode } from "@/redux/api/businessApi";
 import { OurBusinessesSkeleton } from "@/components/skeletons";
+import { useLocale } from "next-intl";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -13,8 +14,8 @@ const containerVariants: Variants = {
     transition: {
       staggerChildren: 0.15,
       delayChildren: 0.2,
-    }
-  }
+    },
+  },
 };
 
 const itemVariants: Variants = {
@@ -22,16 +23,16 @@ const itemVariants: Variants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: "easeOut" }
-  }
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
 };
 
-// Sub-component for animated lines to use hooks safely
+// Sub-component for animated lines connecting value chain nodes
 const ConnectingLine = ({
   node,
   hoveredNode,
   yCenterTemplate,
-  scrollYProgress
+  scrollYProgress,
 }: {
   node: BusinessNode;
   hoveredNode: string | null;
@@ -58,10 +59,10 @@ const ConnectingLine = ({
       viewport={{ once: true }}
       transition={{
         pathLength: { duration: 1.2, delay: 0.5, ease: "easeOut" },
-        opacity: { duration: 0.3 }
+        opacity: { duration: 0.3 },
       }}
       animate={{
-        opacity: isHovered ? 1 : (isAnyHovered ? 0.2 : 1)
+        opacity: isHovered ? 1 : isAnyHovered ? 0.2 : 1,
       }}
     />
   );
@@ -70,41 +71,66 @@ const ConnectingLine = ({
 export default function OurBusinesses() {
   const sectionRef = useRef<HTMLElement>(null);
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
+  const currentLocale = useLocale();
+  const isAm = currentLocale === "am";
 
   const { data: overview, isLoading: isOverviewLoading } = useGetBusinessOverviewQuery();
   const { data: businessNodes = [], isLoading: isNodesLoading } = useGetBusinessNodesQuery();
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ["start end", "end start"]
+    offset: ["start end", "end start"],
   });
 
   const yCenter = useTransform(scrollYProgress, [0, 1], [15, -15]);
   const yNodes = useTransform(scrollYProgress, [0, 1], [35, -35]);
-
   const yCenterTemplate = useTransform(yCenter, (y) => `calc(50% + ${y}px)`);
 
   if (isOverviewLoading || isNodesLoading) {
-      return <OurBusinessesSkeleton />;
+    return <OurBusinessesSkeleton />;
   }
 
-  if (!overview || businessNodes.length === 0) {
-      return null;
+  // Graceful institutional empty state if database has no records
+  if (!overview && businessNodes.length === 0) {
+    return (
+      <div className="w-full py-16 text-center bg-slate-50 border border-slate-200 rounded-2xl p-8">
+        <LucideIcons.Layers className="w-12 h-12 text-primary mx-auto mb-4" />
+        <h3 className="text-xl font-bold text-slate-800 mb-2">
+          {isAm ? "የማዕድን እሴት ሰንሰለት መረጃ በዝግጅት ላይ ነው" : "Mineral Value Chain Framework"}
+        </h3>
+        <p className="text-slate-600 max-w-xl mx-auto">
+          {isAm
+            ? "የማዕድን ኢንዱስትሪ ልማት እሴት ሰንሰለት እና የቴክኒክ መረጃዎች እየተዘጋጁ ናቸው። እባክዎ ጥቂት ቆይተው እንደገና ይጎብኙ።"
+            : "Institutional mineral value chain frameworks and technical processing data are being compiled. Please check back shortly."}
+        </p>
+      </div>
+    );
   }
 
-  const scrollToNext = () => {
-    const nextSection = document.getElementById('business-overview');
-    if (nextSection) {
-      nextSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  const titlePart1 = isAm
+    ? overview?.title_part1_am || overview?.title_part1 || "የማዕድን እሴት ሰንሰለት እና"
+    : overview?.title_part1 || "Mineral Value Chain &";
+
+  const titlePart2 = isAm
+    ? overview?.title_part2_am || overview?.title_part2 || "የኢንዱስትሪ ማቀነባበሪያ"
+    : overview?.title_part2 || "Industrial Beneficiation";
+
+  const desc1 = isAm
+    ? overview?.description1_am || overview?.description1 || "በተግባራዊ ምርምር፣ በቴክኒክ ማማከር፣ በከፍተኛ ደረጃ አቅም ግንባታ እና በልዩ የላቦራቶሪ ምርመራ አማካኝነት በመላው ኢትዮጵያ ዘላቂ የማዕድን ኢንዱስትሪ ልማትን መምራት።"
+    : overview?.description1 || "Spearheading sustainable mineral industry development across Ethiopia through applied research, technical consultancy, high-level capacity building, and specialized laboratory testing.";
+
+  const desc2 = isAm
+    ? overview?.description2_am || overview?.description2 || "ከጂኦሎጂካል ቁፋሮ ጀምሮ እስከ ከፍተኛ ዋጋ ያላቸው የኢንዱስትሪ ምርቶች ድረስ፣ ተቋሙ በጥሬ የተፈጥሮ ማዕድን ሀብቶች እና በዘመናዊ የማኑፋክቸሪንግ ተወዳዳሪነት መካከል ያለውን ክፍተት ያገናኛል።"
+    : overview?.description2 || "From geological extraction to high-value industrial manufacturing, MIDI bridges the gap between raw natural mineral resources and modern industrial competitiveness.";
+
+  const centerNodeTitle = isAm ? "MIDI\nኢትዮጵያ" : "MIDI\nETHIOPIA";
+  const centerNodeDesc = isAm ? "የማዕድን እሴት ሰንሰለት" : "Mineral Value Chain";
 
   return (
-    <section ref={sectionRef} className="relative w-full overflow-hidden lg:pt-10">
+    <section ref={sectionRef} className="relative w-full overflow-hidden lg:pt-6">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col xl:flex-row items-center gap-16 xl:gap-8">
-
-          {/* Left Side: Content (45%) */}
+        <div className="flex flex-col xl:flex-row items-center gap-12 xl:gap-8">
+          {/* Left Side: Institutional Content (42%) */}
           <motion.div
             className="w-full xl:w-[42%] flex flex-col items-start z-10"
             initial="hidden"
@@ -112,33 +138,59 @@ export default function OurBusinesses() {
             viewport={{ once: true, margin: "-100px" }}
             variants={containerVariants}
           >
-            <motion.span variants={itemVariants} className="text-primary font-semibold tracking-wider text-sm uppercase mb-4">
-
+            <motion.span
+              variants={itemVariants}
+              className="text-primary font-semibold tracking-wider text-xs md:text-sm uppercase mb-3 px-3 py-1 bg-primary/10 rounded-full"
+            >
+              {isAm ? "ስልታዊ የዘርፍ እይታ" : "Strategic Sectoral Framework"}
             </motion.span>
 
-            <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl font-bold text-heading leading-tight mb-6">
-              {overview.title_part1}<br />
-              <span className="text-secondary">{overview.title_part2}</span>
+            <motion.h2
+              variants={itemVariants}
+              className="text-3xl md:text-4xl lg:text-5xl font-bold text-heading leading-tight mb-6"
+            >
+              {titlePart1}
+              <br />
+              <span className="text-secondary">{titlePart2}</span>
             </motion.h2>
 
-            <motion.p variants={itemVariants} className="text-lg text-body font-medium mb-4 max-w-xl">
-              {overview.description1}
+            <motion.p
+              variants={itemVariants}
+              className="text-base md:text-lg text-body font-medium mb-4 max-w-xl leading-relaxed"
+            >
+              {desc1}
             </motion.p>
 
-            <motion.p variants={itemVariants} className="text-muted text-base mb-10 max-w-xl leading-relaxed">
-              {overview.description2}
+            <motion.p
+              variants={itemVariants}
+              className="text-muted text-sm md:text-base mb-6 max-w-xl leading-relaxed"
+            >
+              {desc2}
             </motion.p>
+
+            <motion.div variants={itemVariants} className="flex flex-wrap gap-3 pt-2">
+              <span className="text-xs font-semibold px-3 py-1.5 bg-slate-100 text-slate-700 rounded-md border border-slate-200">
+                {isAm ? "የጥሬ ዕቃ ማበልፀጊያ" : "Beneficiation"}
+              </span>
+              <span className="text-xs font-semibold px-3 py-1.5 bg-slate-100 text-slate-700 rounded-md border border-slate-200">
+                {isAm ? "የብረታብረት ማቅለጥ" : "Metallurgy & Foundry"}
+              </span>
+              <span className="text-xs font-semibold px-3 py-1.5 bg-slate-100 text-slate-700 rounded-md border border-slate-200">
+                {isAm ? "ማኑፋክቸሪንግ" : "Industrial Manufacturing"}
+              </span>
+              <span className="text-xs font-semibold px-3 py-1.5 bg-slate-100 text-slate-700 rounded-md border border-slate-200">
+                {isAm ? "የውጭ ምርት መተካት" : "Import Substitution"}
+              </span>
+            </motion.div>
           </motion.div>
 
-          {/* Right Side: Ecosystem Diagram (55%) */}
-          <div className="w-full xl:w-[58%] relative min-h-[750px] flex items-center justify-center">
-
+          {/* Right Side: Mineral Value Chain Visualization (58%) */}
+          <div className="w-full xl:w-[58%] relative min-h-[620px] md:min-h-[720px] flex items-center justify-center">
             {/* Dark premium background panel */}
             <div className="absolute inset-0 bg-[#0F172A] rounded-3xl overflow-hidden shadow-2xl border border-white/5">
-              {/* Subtle gradients and lines */}
               <div className="absolute inset-0 bg-gradient-to-br from-[#1E293B]/60 via-transparent to-transparent"></div>
-              <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px] transform translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
-              <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/10 rounded-full blur-[100px] transform -translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
+              <div className="absolute top-0 right-0 w-[450px] h-[450px] bg-primary/10 rounded-full blur-[100px] transform translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
+              <div className="absolute bottom-0 left-0 w-[450px] h-[450px] bg-secondary/10 rounded-full blur-[100px] transform -translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
 
               {/* Desktop Connecting Lines SVG */}
               <svg className="hidden md:block absolute inset-0 w-full h-full pointer-events-none">
@@ -156,7 +208,7 @@ export default function OurBusinesses() {
 
             {/* Desktop Layout Nodes */}
             <div className="hidden md:block absolute inset-0 pointer-events-none">
-              {/* Central Element */}
+              {/* Central Hub */}
               <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-auto">
                 <motion.div
                   style={{ y: yCenter }}
@@ -164,126 +216,169 @@ export default function OurBusinesses() {
                   whileInView={{ scale: 1, opacity: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, ease: "easeOut" }}
-                  className="flex flex-col items-center justify-center w-48 h-48 bg-[#0F172A]/90 backdrop-blur-md rounded-full border border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.5)]"
+                  className="flex flex-col items-center justify-center w-44 h-44 bg-[#0F172A]/90 backdrop-blur-md rounded-full border border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.5)]"
                 >
-                  <div className="absolute inset-0 rounded-full border border-primary/20 animate-[spin_12s_linear_infinite]"></div>
-                  <h3 className="text-white font-bold text-2xl text-center leading-none tracking-wider mb-2">
-                    {(() => {
-                      const centerTitle = businessNodes.find(n => n.id_string === 'center')?.title || "MIDI\nETHIOPIA";
-                      return centerTitle.split('\\n').map((line, idx, arr) => (
-                        <React.Fragment key={idx}>
-                          {line}
-                          {idx < arr.length - 1 && <br />}
-                        </React.Fragment>
-                      ));
-                    })()}
+                  <div className="absolute inset-0 rounded-full border border-primary/25 animate-[spin_16s_linear_infinite]"></div>
+                  <h3 className="text-white font-bold text-xl text-center leading-none tracking-wider mb-2">
+                    {centerNodeTitle.split("\n").map((line, idx, arr) => (
+                      <React.Fragment key={idx}>
+                        {line}
+                        {idx < arr.length - 1 && <br />}
+                      </React.Fragment>
+                    ))}
                   </h3>
-                  <p className="text-primary text-[10px] uppercase font-semibold tracking-widest text-center w-3/4">
-                    {businessNodes.find(n => n.id_string === 'center')?.description || "Mineral Industry Development"}
+                  <p className="text-primary text-[10px] uppercase font-semibold tracking-widest text-center px-2">
+                    {centerNodeDesc}
                   </p>
                 </motion.div>
               </div>
 
-              {businessNodes.filter(n => n.id_string !== 'center').map((node, i) => {
-                const Icon = (LucideIcons as any)[node.icon || 'HelpCircle'] || LucideIcons.HelpCircle;
-                return (
-                <div key={node.business_node_id} className="absolute pointer-events-auto" style={{ left: `${node.position_x}%`, top: `${node.position_y}%`, transform: 'translate(-50%, -50%)' }}>
-                  <motion.div
-                    style={{ y: yNodes }}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: 0.6 + i * 0.1, ease: "easeOut" }}
-                  >
-                    <motion.div
-                      animate={{
-                        scale: hoveredNode === node.business_node_id ? 1.05 : (hoveredNode !== null ? 0.95 : 1),
-                        opacity: hoveredNode === node.business_node_id ? 1 : (hoveredNode !== null ? 0.5 : 1),
+              {/* Surrounding Value Chain Stages */}
+              {businessNodes
+                .filter((n) => n.id_string !== "center")
+                .map((node, i) => {
+                  const Icon =
+                    (LucideIcons as any)[node.icon || "HelpCircle"] || LucideIcons.Layers;
+                  const nodeTitle = isAm ? node.title_am || node.title : node.title;
+                  const nodeDesc = isAm ? node.description_am || node.description : node.description;
+
+                  return (
+                    <div
+                      key={node.business_node_id}
+                      className="absolute pointer-events-auto"
+                      style={{
+                        left: `${node.position_x}%`,
+                        top: `${node.position_y}%`,
+                        transform: "translate(-50%, -50%)",
                       }}
-                      onMouseEnter={() => setHoveredNode(node.business_node_id)}
-                      onMouseLeave={() => setHoveredNode(null)}
-                      className={`relative z-10 w-44 group flex flex-col items-center text-center p-4 rounded-xl backdrop-blur-md border transition-colors duration-300 cursor-default
-                        ${hoveredNode === node.business_node_id ? 'bg-white/10 border-primary/50 shadow-[0_0_30px_rgba(0,0,0,0.3)]' : 'bg-white/5 border-white/10'}
-                      `}
                     >
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 transition-colors duration-300
-                        ${hoveredNode === node.business_node_id ? 'bg-primary' : 'bg-secondary/80'}
-                      `}>
-                        <Icon className="w-5 h-5 text-white" />
-                      </div>
-                      <h4 className={`font-bold text-sm tracking-wide mb-1 transition-colors ${hoveredNode === node.business_node_id ? 'text-primary' : 'text-white'}`}>
-                        {node.title}
-                      </h4>
-                      <p className="text-white/70 text-xs leading-snug">
-                        {node.description}
-                      </p>
-                    </motion.div>
-                  </motion.div>
-                </div>
-              )})}
+                      <motion.div
+                        style={{ y: yNodes }}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6, delay: 0.5 + i * 0.1, ease: "easeOut" }}
+                      >
+                        <motion.div
+                          animate={{
+                            scale:
+                              hoveredNode === node.business_node_id
+                                ? 1.05
+                                : hoveredNode !== null
+                                ? 0.95
+                                : 1,
+                            opacity:
+                              hoveredNode === node.business_node_id
+                                ? 1
+                                : hoveredNode !== null
+                                ? 0.5
+                                : 1,
+                          }}
+                          onMouseEnter={() => setHoveredNode(node.business_node_id)}
+                          onMouseLeave={() => setHoveredNode(null)}
+                          className={`relative z-10 w-44 group flex flex-col items-center text-center p-3.5 rounded-xl backdrop-blur-md border transition-all duration-300 cursor-default ${
+                            hoveredNode === node.business_node_id
+                              ? "bg-white/10 border-primary/50 shadow-[0_0_30px_rgba(0,0,0,0.3)]"
+                              : "bg-white/5 border-white/10 hover:border-white/20"
+                          }`}
+                        >
+                          <div
+                            className={`w-11 h-11 rounded-full flex items-center justify-center mb-2.5 transition-colors duration-300 ${
+                              hoveredNode === node.business_node_id
+                                ? "bg-primary text-white"
+                                : "bg-secondary/80 text-white"
+                            }`}
+                          >
+                            <Icon className="w-5 h-5" />
+                          </div>
+                          <span className="text-[10px] uppercase font-bold tracking-wider text-primary/80 mb-0.5">
+                            {isAm ? `ደረጃ ${node.mobile_order}` : `Stage ${node.mobile_order}`}
+                          </span>
+                          <h4
+                            className={`font-bold text-xs md:text-sm tracking-wide mb-1 transition-colors ${
+                              hoveredNode === node.business_node_id ? "text-primary" : "text-white"
+                            }`}
+                          >
+                            {nodeTitle}
+                          </h4>
+                          <p className="text-white/70 text-[11px] leading-snug line-clamp-3">
+                            {nodeDesc}
+                          </p>
+                        </motion.div>
+                      </motion.div>
+                    </div>
+                  );
+                })}
             </div>
 
             {/* Mobile Layout */}
-            <div className="md:hidden flex flex-col w-full px-4 py-12 relative z-10 space-y-8">
+            <div className="md:hidden flex flex-col w-full px-4 py-8 relative z-10 space-y-6">
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
                 whileInView={{ scale: 1, opacity: 1 }}
                 viewport={{ once: true }}
-                className="flex flex-col items-center text-center mb-6"
+                className="flex flex-col items-center text-center mb-4"
               >
-                <div className="w-28 h-28 rounded-full border border-primary/30 flex items-center justify-center bg-[#0F172A] shadow-lg mb-4 relative">
-                  <div className="absolute inset-0 rounded-full border border-primary/20 animate-[spin_12s_linear_infinite]"></div>
-                  <h3 className="text-white font-bold text-sm leading-none tracking-wider">
-                    {(() => {
-                      const centerTitle = businessNodes.find(n => n.id_string === 'center')?.title || "MIDI\nETHIOPIA";
-                      return centerTitle.split('\\n').map((line, idx, arr) => (
-                        <React.Fragment key={idx}>
-                          {line}
-                          {idx < arr.length - 1 && <br />}
-                        </React.Fragment>
-                      ));
-                    })()}
+                <div className="w-24 h-24 rounded-full border border-primary/30 flex items-center justify-center bg-[#0F172A] shadow-lg mb-3 relative">
+                  <div className="absolute inset-0 rounded-full border border-primary/20 animate-[spin_16s_linear_infinite]"></div>
+                  <h3 className="text-white font-bold text-xs leading-tight tracking-wider">
+                    {centerNodeTitle.split("\n").map((line, idx, arr) => (
+                      <React.Fragment key={idx}>
+                        {line}
+                        {idx < arr.length - 1 && <br />}
+                      </React.Fragment>
+                    ))}
                   </h3>
                 </div>
-                <p className="text-primary text-xs uppercase font-semibold tracking-widest">
-                  {businessNodes.find(n => n.id_string === 'center')?.description || "Mineral Industry Development"}
+                <p className="text-primary text-[11px] uppercase font-semibold tracking-widest">
+                  {centerNodeDesc}
                 </p>
               </motion.div>
 
-              <div className="flex flex-col space-y-4 relative">
-                {/* Vertical connecting line */}
+              <div className="flex flex-col space-y-3 relative">
                 <div className="absolute left-[2.25rem] top-4 bottom-8 w-px bg-gradient-to-b from-primary/50 via-white/20 to-transparent"></div>
 
-                {[...businessNodes].filter(n => n.id_string !== 'center').sort((a, b) => a.mobile_order - b.mobile_order).map((node, index) => {
-                  const Icon = (LucideIcons as any)[node.icon || 'HelpCircle'] || LucideIcons.HelpCircle;
-                  return (
-                    <motion.div
-                      key={node.business_node_id}
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.2 + index * 0.1 }}
-                      className="flex items-center space-x-4 pl-4 group relative"
-                    >
-                      {/* Node connector dot */}
-                      <div className="absolute left-[2.25rem] w-2 h-2 rounded-full bg-primary/50 -translate-x-1/2"></div>
+                {[...businessNodes]
+                  .filter((n) => n.id_string !== "center")
+                  .sort((a, b) => a.mobile_order - b.mobile_order)
+                  .map((node, index) => {
+                    const Icon =
+                      (LucideIcons as any)[node.icon || "HelpCircle"] || LucideIcons.Layers;
+                    const nodeTitle = isAm ? node.title_am || node.title : node.title;
+                    const nodeDesc = isAm ? node.description_am || node.description : node.description;
 
-                      <div className="relative z-10 w-10 h-10 rounded-full bg-secondary/80 flex-shrink-0 flex items-center justify-center border border-white/10 group-active:bg-primary transition-colors">
-                        <Icon className="w-4 h-4 text-white" />
-                      </div>
-                      <div className="flex-1 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-4">
-                        <h4 className="text-white font-bold text-sm tracking-wide mb-1">{node.title}</h4>
-                        <p className="text-white/70 text-xs leading-snug">{node.description}</p>
-                      </div>
-                    </motion.div>
-                  );
-                })}
+                    return (
+                      <motion.div
+                        key={node.business_node_id}
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.15 + index * 0.1 }}
+                        className="flex items-start space-x-3 pl-4 group relative"
+                      >
+                        <div className="absolute left-[2.25rem] w-2 h-2 rounded-full bg-primary/50 -translate-x-1/2 top-4"></div>
+
+                        <div className="relative z-10 w-9 h-9 rounded-full bg-secondary/80 flex-shrink-0 flex items-center justify-center border border-white/10 mt-1">
+                          <Icon className="w-4 h-4 text-white" />
+                        </div>
+                        <div className="flex-1 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-3.5">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-[10px] uppercase font-bold tracking-wider text-primary">
+                              {isAm ? `ደረጃ ${node.mobile_order}` : `Stage ${node.mobile_order}`}
+                            </span>
+                          </div>
+                          <h4 className="text-white font-bold text-sm tracking-wide mb-1">
+                            {nodeTitle}
+                          </h4>
+                          <p className="text-white/70 text-xs leading-relaxed">{nodeDesc}</p>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
               </div>
             </div>
-
           </div>
         </div>
-
       </div>
     </section>
   );

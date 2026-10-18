@@ -148,7 +148,7 @@ export interface PublicationInquiry {
         inquiry_id?: string;
         email: string;
         access_token: string;
-        access_level: string;
+        access_level: "online_only" | "download_allowed";
         expires_at?: string | null;
         downloads_used: number;
         max_downloads: number;

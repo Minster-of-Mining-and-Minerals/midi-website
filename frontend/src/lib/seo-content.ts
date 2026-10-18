@@ -41,29 +41,44 @@ export const PAGE_SEO: Record<string, { title: string; description: string }> = 
       "Contact the Mineral Industry Development Institute (MIDI). Office locations, inquiries, and technical consultation.",
   },
   "/businesses": {
-    title: "Mineral Sectors & Industrial Divisions",
+    title: "Mineral Industry Development | MIDI",
     description:
-      "Discover the strategic commodity divisions supported by MIDI across Ethiopia's mineral value chain.",
+      "Explore Ethiopia's mineral value chain, processing, beneficiation, and industrial manufacturing integration supported by MIDI.",
   },
   "/businesses/overview": {
-    title: "Mineral Industry Overview",
+    title: "Development Overview & Technical Framework | MIDI",
     description:
-      "An overview of Ethiopia's mineral sectors, productivity goals, and industrial development priorities.",
+      "Institutional framework, priority mineral sub-sectors, laboratory testing, and development programs of the Mineral Industry Development Institute.",
+  },
+  "/businesses/mineral-processing": {
+    title: "Mineral Processing & Beneficiation | MIDI",
+    description:
+      "Ore characterization, comminution, gravity concentration, froth flotation, and recovery optimization for Ethiopian mineral resources.",
+  },
+  "/businesses/value-addition": {
+    title: "Mineral-Based Manufacturing & Value Addition | MIDI",
+    description:
+      "Transforming domestic mineral feedstocks into cement, structural ceramics, glass, foundries, and lapidary products.",
+  },
+  "/businesses/research-innovation": {
+    title: "Applied Research, Technology Transfer & Innovation | MIDI",
+    description:
+      "Bench-scale testing, pilot trials, metallurgical solutions, and technical knowledge dissemination under the Mineral Industry Development Institute.",
   },
   "/businesses/import-export": {
-    title: "Import Substitution & Export Development",
+    title: "Mineral Industry Development | MIDI",
     description:
-      "Strategic initiatives by MIDI to expand mineral export revenues and substitute industrial imports.",
+      "Mineral processing, beneficiation, and domestic value addition under the Mineral Industry Development Institute.",
   },
   "/businesses/trading": {
-    title: "Commodity Trading & Market Linkage",
+    title: "Mineral Industry Development | MIDI",
     description:
-      "Mineral market development, value chain integration, and ASM trading support by MIDI.",
+      "Mineral value chains and industrial transformation supported by the Mineral Industry Development Institute.",
   },
   "/businesses/warehousing": {
-    title: "Logistics & Storage Facilities",
+    title: "Facilities & Laboratories | MIDI",
     description:
-      "Safe storage, testing, and distribution centers for strategic mineral commodities in Ethiopia.",
+      "Advanced testing laboratories, pilot plants, and workshop facilities of the Mineral Industry Development Institute.",
   },
   "/news": {
     title: "News & Publications",

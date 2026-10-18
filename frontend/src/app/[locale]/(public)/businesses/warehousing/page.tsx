@@ -1,14 +1,10 @@
-import React from 'react'
-import WarehousingTrading from '@/components/pages/businesses-page-components/WarehousingTrading'
-import WarehouseShowcase from '@/components/pages/businesses-page-components/WarehouseShowcase'
+import { redirect } from "next/navigation";
 
-const WarehousingTradingPage = () => {
-    return (
-        <div className="flex flex-col w-full">
-            <WarehousingTrading />
-            <WarehouseShowcase />
-        </div>
-    )
+export default async function BusinessesWarehousingRedirectPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  redirect(`/${locale}/facilities`);
 }
-
-export default WarehousingTradingPage

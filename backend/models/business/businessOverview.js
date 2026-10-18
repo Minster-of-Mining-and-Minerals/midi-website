@@ -19,7 +19,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(255),
         allowNull: true,
       },
+      title_part1_am: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+      },
       title_part2: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+      },
+      title_part2_am: {
         type: DataTypes.STRING(255),
         allowNull: true,
       },
@@ -27,7 +35,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: true,
       },
+      description1_am: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
       description2: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
+      description2_am: {
         type: DataTypes.TEXT,
         allowNull: true,
       },

@@ -56,7 +56,7 @@ export default function PublicNavbar() {
             { name: locale === "am" ? "መነሻ" : "Home", link: "/" },
             { name: locale === "am" ? "ስለኛ" : "About", link: "/about" },
             { name: locale === "am" ? "የMIDI ፕሮጀክት" : "MIDI Project", link: "/midi-project" },
-            { name: locale === "am" ? "ዘርፎች" : "Sectors", link: "/businesses" },
+            { name: locale === "am" ? "የማዕድን ልማት" : "Mineral Industry Dev", link: "/businesses" },
             { name: locale === "am" ? "ህትመቶች እና ምርምር" : "Publications & Research", link: "/publications" },
             { name: locale === "am" ? "አገልግሎቶች" : "Services", link: "/services" },
             { name: locale === "am" ? "መገልገያዎች" : "Facilities", link: "/facilities" },
@@ -158,7 +158,7 @@ export default function PublicNavbar() {
                         <div className="h-4 w-20 bg-gray-200 dark:bg-gray-800 animate-pulse rounded"></div>
                     </div>
                 ) : (
-                    <NavItems items={navItems.map(item => (item.link === "/businesses" || item.name === "Businesses" || item.name === "ንግዶች") ? { ...item, children: undefined } : item)} />
+                    <NavItems items={navItems.map(item => (item.link === "/businesses" || item.name === "Businesses" || item.name === "ንግዶች" || item.name === "Mineral Industry Development" || item.name === "የማዕድን ኢንዱስትሪ ልማት" || item.name === "Mineral Industry Dev" || item.name === "የማዕድን ልማት") ? { ...item, children: undefined } : item)} />
                 )}
             </NavBody>
 

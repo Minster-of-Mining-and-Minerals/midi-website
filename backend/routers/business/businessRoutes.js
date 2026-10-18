@@ -8,17 +8,58 @@ const businessController = require("../../controllers/business/businessControlle
 // Assuming there might be an auth middleware to protect the routes. 
 // For now, these are standard endpoints. You can add middleware later if needed.
 
+const {
+  validateUpdateOverview,
+  validateCreateNode,
+  validateUpdateNode,
+  validateUpdatePage,
+} = require("../../validators/business/businessValidator");
+
 const importExportController = require("../../controllers/business/importExportController");
+
+// Page routes for 5 Institutional Mineral Industry Development pages
+router.get("/pages", businessController.getPages);
+router.get("/pages/:slug", businessController.getPageBySlug);
+router.put(
+  "/pages/:slug",
+  authenticateToken,
+  checkPermission("businesses", "update"),
+  validateUpdatePage,
+  businessController.updatePage
+);
 
 // Overview routes
 router.get("/overview", businessController.getOverview);
-router.put("/overview", authenticateToken, checkPermission("businesses", "update"), businessController.updateOverview); // usually protected
+router.put(
+  "/overview",
+  authenticateToken,
+  checkPermission("businesses", "update"),
+  validateUpdateOverview,
+  businessController.updateOverview
+);
 
 // Node routes
 router.get("/nodes", businessController.getNodes);
-router.post("/nodes", authenticateToken, checkPermission("businesses", "create"), businessController.createNode); // usually protected
-router.put("/nodes/:id", authenticateToken, checkPermission("businesses", "update"), businessController.updateNode); // usually protected
-router.delete("/nodes/:id", authenticateToken, checkPermission("businesses", "delete"), businessController.deleteNode); // usually protected
+router.post(
+  "/nodes",
+  authenticateToken,
+  checkPermission("businesses", "create"),
+  validateCreateNode,
+  businessController.createNode
+);
+router.put(
+  "/nodes/:id",
+  authenticateToken,
+  checkPermission("businesses", "update"),
+  validateUpdateNode,
+  businessController.updateNode
+);
+router.delete(
+  "/nodes/:id",
+  authenticateToken,
+  checkPermission("businesses", "delete"),
+  businessController.deleteNode
+);
 
 // Import/Export Overview routes
 router.get("/import-export/overview", importExportController.getOverview);
