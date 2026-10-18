@@ -22,10 +22,7 @@ const frameworkSchema = Joi.object({
         "string.min": "Framework title must be at least 3 characters.",
     }),
 
-    description: Joi.string().min(3).required().messages({
-        "string.empty": "Framework description is required.",
-        "string.min": "Framework description must be at least 3 characters.",
-    }),
+    description: Joi.string().allow("", null).optional(),
 
     objectives: Joi.array().items(Joi.string()).optional().default([]),
 
@@ -99,10 +96,7 @@ const serviceCardSchema = Joi.object({
 
     icon: Joi.string().optional().allow(null, ""),
 
-    description: Joi.string().min(3).required().messages({
-        "string.empty": "Service card description is required.",
-        "string.min": "Service card description must be at least 3 characters.",
-    }),
+    description: Joi.string().allow("", null).optional(),
 
     requirements: Joi.array().items(Joi.string()).optional().default([]),
 });
@@ -128,10 +122,7 @@ const createMiningRegulationProcessSchema = Joi.object({
         "string.min": "Title must be at least 3 characters.",
     }),
 
-    description: Joi.string().min(3).required().messages({
-        "string.empty": "Description is required.",
-        "string.min": "Description must be at least 3 characters.",
-    }),
+    description: Joi.string().allow("", null).optional(),
 
     publish: Joi.boolean().optional().default(false),
 
@@ -149,9 +140,7 @@ const updateMiningRegulationProcessSchema = Joi.object({
         "string.min": "Title must be at least 3 characters.",
     }),
 
-    description: Joi.string().min(3).optional().messages({
-        "string.min": "Description must be at least 3 characters.",
-    }),
+    description: Joi.string().allow("", null).optional(),
 
     publish: Joi.boolean().optional(),
 

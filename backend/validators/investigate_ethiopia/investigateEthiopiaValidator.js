@@ -44,7 +44,7 @@ const actionSchema = Joi.object({
     investigate_ethiopia_id: Joi.string().optional(),
 
     title: Joi.string().min(3).required(),
-    description: Joi.string().min(3).required(),
+    description: Joi.string().allow("", null).optional(),
     action: Joi.string().min(3).required(),
     link: Joi.string().uri().required(),
 

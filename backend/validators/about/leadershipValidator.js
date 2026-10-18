@@ -17,7 +17,7 @@ const createLeadershipSchema = Joi.object({
         .optional(),
     name: Joi.string().min(2).max(255).required(),
     title: Joi.string().min(2).max(255).required(),
-    description: Joi.string().optional(),
+    description: Joi.string().allow("", null).optional(),
     level: Joi.number().integer().min(1).optional(),
     attachments: Joi.array()
         .items(attachmentSchema)
@@ -33,7 +33,7 @@ const updateLeadershipSchema = Joi.object({
         .optional(),
     name: Joi.string().min(2).max(255).optional(),
     title: Joi.string().min(2).max(255).optional(),
-    description: Joi.string().optional(),
+    description: Joi.string().allow("", null).optional(),
     level: Joi.number().integer().min(1).optional(),
     attachments: Joi.array()
         .items(attachmentSchema)

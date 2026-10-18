@@ -5,9 +5,7 @@ const createRoleSchema = Joi.object({
     "string.empty": "Role name is required",
   }),
 
-  description: Joi.string().trim().required().messages({
-    "string.empty": "Role description is required",
-  }),
+  description: Joi.string().trim().allow("", null).optional(),
   role_type: Joi.string()
     .trim()
     .optional()
@@ -45,7 +43,7 @@ const createRoleSchema = Joi.object({
           "string.empty": "Name cannot be empty if creating a new sub-role",
         }),
 
-        description: Joi.string().trim().optional(),
+        description: Joi.string().trim().allow("", null).optional(),
 
         permission_ids: Joi.alternatives()
           .try(
@@ -92,7 +90,7 @@ exports.validateCreateRole = (req, res, next) => {
 // Schema for updating a Role
 const updateRoleSchema = Joi.object({
   name: Joi.string().trim().optional(),
-  description: Joi.string().trim().optional(),
+  description: Joi.string().trim().allow("", null).optional(),
   is_active: Joi.boolean().optional(),
   role_type: Joi.string()
     .trim()

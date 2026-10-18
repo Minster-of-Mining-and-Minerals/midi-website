@@ -21,7 +21,7 @@ const regulationSchema = Joi.object({
         "string.empty": "Regulation title is required.",
     }),
 
-    description: Joi.string().required(),
+    description: Joi.string().allow("", null).optional(),
 
     order: Joi.number().integer().optional(),
 
@@ -39,7 +39,7 @@ const regulationSchema = Joi.object({
 const directiveSchema = Joi.object({
     title: Joi.string().min(1).required(),
 
-    description: Joi.string().required(),
+    description: Joi.string().allow("", null).optional(),
 
     order: Joi.number().integer().optional(),
 

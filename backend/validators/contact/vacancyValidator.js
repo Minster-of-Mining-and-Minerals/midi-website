@@ -23,9 +23,7 @@ const createVacancySchema = Joi.object({
     .valid("full_time", "contract", "part_time")
     .optional(),
   positions: Joi.number().integer().min(1).allow(null).optional(),
-  description: Joi.string().min(1).required().messages({
-    "string.empty": "Job description is required.",
-  }),
+  description: Joi.string().allow("", null).optional(),
   requirements: Joi.string().allow("", null).optional(),
   published_date: dateSchema,
   application_deadline: dateSchema,
@@ -50,7 +48,7 @@ const updateVacancySchema = Joi.object({
     .valid("full_time", "contract", "part_time")
     .optional(),
   positions: Joi.number().integer().min(1).allow(null).optional(),
-  description: Joi.string().min(1).optional(),
+  description: Joi.string().allow("", null).optional(),
   requirements: Joi.string().allow("", null).optional(),
   published_date: Joi.date().iso().optional(),
   application_deadline: Joi.date().iso().optional(),

@@ -18,9 +18,7 @@ const createTenderSchema = Joi.object({
     "string.empty": "Title is required.",
   }),
   reference_number: Joi.string().max(100).allow("", null).optional(),
-  description: Joi.string().min(1).required().messages({
-    "string.empty": "Description is required.",
-  }),
+  description: Joi.string().allow("", null).optional(),
   published_date: dateSchema,
   closing_date: dateSchema,
   attachment_id: uuidSchema.allow(null).optional(),
@@ -37,7 +35,7 @@ const createTenderSchema = Joi.object({
 const updateTenderSchema = Joi.object({
   title: Joi.string().min(1).max(500).optional(),
   reference_number: Joi.string().max(100).allow("", null).optional(),
-  description: Joi.string().min(1).optional(),
+  description: Joi.string().allow("", null).optional(),
   published_date: Joi.date().iso().optional(),
   closing_date: Joi.date().iso().optional(),
   attachment_id: uuidSchema.allow(null).optional(),

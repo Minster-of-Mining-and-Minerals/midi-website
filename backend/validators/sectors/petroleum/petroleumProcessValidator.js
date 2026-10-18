@@ -17,9 +17,7 @@ const uuidSchema = Joi.string()
 /* ================= STEP ================= */
 
 const stepSchema = Joi.object({
-    description: Joi.string().min(1).required().messages({
-        "string.empty": "Step description is required.",
-    }),
+    description: Joi.string().allow("", null).optional(),
 
     attachment_id: uuidSchema.required().messages({
         "any.required": "Attachment ID is required for each step.",

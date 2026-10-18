@@ -35,9 +35,7 @@ const createPetroleumObjectiveSchema = Joi.object({
         "any.required": "Type is required.",
     }),
 
-    description: Joi.string().min(1).required().messages({
-        "string.empty": "Description is required.",
-    }),
+    description: Joi.string().allow("", null).optional(),
 
     content: Joi.string().optional().allow("", null),
 
@@ -62,7 +60,7 @@ const updatePetroleumObjectiveSchema = Joi.object({
 
     type: Joi.string().valid("headline", "others").optional(),
 
-    description: Joi.string().min(1).optional(),
+    description: Joi.string().allow("", null).optional(),
 
     content: Joi.string().optional().allow("", null),
 

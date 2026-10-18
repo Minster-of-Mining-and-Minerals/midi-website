@@ -35,10 +35,7 @@ const createResourceSchema = Joi.object({
         "string.min": "Title must be at least 5 characters.",
     }),
 
-    description: Joi.string().min(1).required().messages({
-        "string.base": "Description must be a string.",
-        "string.empty": "Description is required.",
-    }),
+    description: Joi.string().allow("", null).optional(),
 
     attachments: Joi.array()
         .items(attachmentSchema)
@@ -55,7 +52,7 @@ const updateResourceSchema = Joi.object({
 
     title: Joi.string().min(5).optional(),
 
-    description: Joi.string().min(1).optional(),
+    description: Joi.string().allow("", null).optional(),
 
     attachments: Joi.array()
         .items(attachmentSchema)

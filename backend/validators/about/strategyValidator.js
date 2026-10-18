@@ -23,14 +23,14 @@ const sectionSchema = Joi.object({
 // =================== Create Strategy Schema ===================
 const createStrategySchema = Joi.object({
   title: Joi.string().min(2).max(255).required(),
-  description: Joi.string().optional(),
+  description: Joi.string().allow("", null).optional(),
   sections: Joi.array().items(sectionSchema).optional(),
 });
 
 // =================== Update Strategy Schema ===================
 const updateStrategySchema = Joi.object({
   title: Joi.string().min(2).max(255).optional(),
-  description: Joi.string().optional(),
+  description: Joi.string().allow("", null).optional(),
   sections: Joi.array().items(sectionSchema).optional(),
 });
 

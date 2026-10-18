@@ -19,7 +19,7 @@ const uuidSchema = Joi.string()
 const createEventSchema = Joi.object({
   title: Joi.string().min(5).required(),
 
-  description: Joi.string().optional(),
+  description: Joi.string().allow("", null).optional(),
 
   start_time: Joi.date().iso().required(),
   end_time: Joi.date().iso().greater(Joi.ref("start_time")).required(),
@@ -55,7 +55,7 @@ const createEventSchema = Joi.object({
 const updateEventSchema = Joi.object({
   title: Joi.string().min(5).optional(),
 
-  description: Joi.string().optional(),
+  description: Joi.string().allow("", null).optional(),
 
   start_time: Joi.date().iso().optional(),
   end_time: Joi.date().iso().optional(),
