@@ -71,7 +71,7 @@ export default function PeopleAndCulture() {
 
                         {/* Decorative Element */}
                         <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl -z-10" />
-                        <div className="absolute top-10 -right-10 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl -z-10" />
+                        <div className="absolute top-10 -right-10 w-40 h-40 bg-[#ba8200]/15 rounded-full blur-3xl -z-10" />
                     </div>
 
                     {/* Right Side: Text & Features */}

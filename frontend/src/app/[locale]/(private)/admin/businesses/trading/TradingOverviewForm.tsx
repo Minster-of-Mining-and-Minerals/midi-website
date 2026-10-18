@@ -15,7 +15,7 @@ import { ComponentGuard } from "@/components/auth/ComponentGuard";
 
 const RELATIONSHIP_NODE_SLOTS = [
     { name: "Top Node (e.g. Suppliers)", defaultX: 50, defaultY: 10, defaultMain: false, defaultHighlight: false },
-    { name: "Center Main Node (e.g. Jarra Holdings)", defaultX: 50, defaultY: 45, defaultMain: true, defaultHighlight: false },
+    { name: "Center Main Node (e.g. MIDI Ethiopia)", defaultX: 50, defaultY: 45, defaultMain: true, defaultHighlight: false },
     { name: "Bottom Left Node (e.g. Customers)", defaultX: 20, defaultY: 80, defaultMain: false, defaultHighlight: false },
     { name: "Bottom Right Node (e.g. Markets)", defaultX: 80, defaultY: 80, defaultMain: false, defaultHighlight: false },
     { name: "Bottom Node Highlight (e.g. Value)", defaultX: 50, defaultY: 110, defaultMain: false, defaultHighlight: true },
@@ -213,11 +213,11 @@ export const TradingOverviewForm = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 text-white gap-4">
                         <div className="space-y-2">
                             <label className="text-sm text-white font-medium">Center Title</label>
-                            <Input className='text-white' value={formData.hero_visual?.center_title} onChange={e => setFormData({ ...formData, hero_visual: { ...formData.hero_visual, center_title: e.target.value } })} placeholder="JARRA" />
+                            <Input className='text-white' value={formData.hero_visual?.center_title} onChange={e => setFormData({ ...formData, hero_visual: { ...formData.hero_visual, center_title: e.target.value } })} placeholder="MIDI" />
                         </div>
                         <div className="space-y-2">
                             <label className="text-sm text-white font-medium">Center Subtitle</label>
-                            <Input className='text-white' value={formData.hero_visual?.center_subtitle} onChange={e => setFormData({ ...formData, hero_visual: { ...formData.hero_visual, center_subtitle: e.target.value } })} placeholder="Holdings" />
+                            <Input className='text-white' value={formData.hero_visual?.center_subtitle} onChange={e => setFormData({ ...formData, hero_visual: { ...formData.hero_visual, center_subtitle: e.target.value } })} placeholder="Ethiopia" />
                         </div>
                         <div className="space-y-2">
                             <label className="text-sm text-white font-medium">Top Orbital Node</label>
@@ -344,7 +344,7 @@ export const TradingOverviewForm = () => {
                                 <Input className="text-white" value={formData.market_gap?.diagram_gap_label} onChange={e => setFormData({ ...formData, market_gap: { ...formData.market_gap, diagram_gap_label: e.target.value } })} />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm text-white font-medium">Central Pill (e.g. JARRA HOLDINGS)</label>
+                                <label className="text-sm text-white font-medium">Central Pill (e.g. MIDI ETHIOPIA)</label>
                                 <Input className="text-white" value={formData.market_gap?.diagram_central_pill} onChange={e => setFormData({ ...formData, market_gap: { ...formData.market_gap, diagram_central_pill: e.target.value } })} />
                             </div>
                             <div className="space-y-2 md:col-span-2">

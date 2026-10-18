@@ -113,7 +113,7 @@ const BusinessOverviewAdminPage = () => {
         <div className="mx-auto space-y-10 w-full pb-10">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold text-teal-900">Manage Business Overview</h1>
+                    <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Manage Business Overview</h1>
                     <p className="text-muted-foreground mt-2">Manage the content for the public Business Overview page.</p>
                 </div>
             </div>
@@ -264,7 +264,7 @@ const BusinessOverviewAdminPage = () => {
                                     </h2>
                                     <ComponentGuard anyPermissions={['BUSINESS_OVERVIEW:UPDATE']}>
                                         <div className="flex items-center gap-3">
-                                            <Button onClick={() => addArrayItem('key_metrics', { title: '', value: '', change: '', period: '', icon: 'TrendingUp', color: '#14b8a6' })} variant="outline" className="flex items-center gap-2 bg-transparent border-slate-700 text-white hover:bg-slate-800">
+                                            <Button onClick={() => addArrayItem('key_metrics', { title: '', value: '', change: '', period: '', icon: 'TrendingUp', color: '#ba8200' })} variant="outline" className="flex items-center gap-2 bg-transparent border-slate-700 text-white hover:bg-slate-800">
                                                 <Plus className="w-4 h-4" /> Add Metric
                                             </Button>
                                             <Button onClick={handleSave} disabled={isUpdating} className="flex items-center gap-2">

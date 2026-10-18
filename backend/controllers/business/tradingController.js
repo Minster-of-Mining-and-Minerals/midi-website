@@ -10,8 +10,8 @@ const tradingController = {
             if (!overview) {
                 overview = await TradingOverview.create({
                     hero_visual: {
-                        center_title: 'JARRA',
-                        center_subtitle: 'Holdings',
+                        center_title: 'MIDI',
+                        center_subtitle: 'Ethiopia',
                         node_top: 'SUPPLIERS',
                         node_bottom: 'CUSTOMERS',
                         node_left: 'MARKETS',
@@ -25,7 +25,7 @@ const tradingController = {
                     ],
                     relationship_nodes: [
                         { id_name: 'supplier', label: 'SUPPLIER', desc: 'Reliable sourcing and commercial relationships', x: 50, y: 10 },
-                        { id_name: 'jarra', label: 'JARRA HOLDINGS', desc: 'Connecting supply with demand', x: 50, y: 45, main: true },
+                        { id_name: 'midi', label: 'MIDI ETHIOPIA', desc: 'Connecting supply with demand', x: 50, y: 45, main: true },
                         { id_name: 'customer', label: 'CUSTOMERS', desc: 'Responding to real market needs', x: 20, y: 80 },
                         { id_name: 'market', label: 'MARKETS', desc: 'Understanding opportunities and demand', x: 80, y: 80 },
                         { id_name: 'value', label: 'VALUE', desc: 'Long-term commercial impact', x: 50, y: 110, highlight: true }
@@ -33,16 +33,16 @@ const tradingController = {
                     market_gap: {
                         overline: 'OUR TRADING APPROACH',
                         title: 'Understanding the Market Before Moving the Market',
-                        description: 'Trading begins with understanding. Jarra Holdings seeks to identify gaps, respond to market demand, connect reliable supply with opportunities, and build commercial relationships that create sustainable value.',
+                        description: 'Market development begins with understanding. MIDI seeks to identify value gaps, support mineral market linkages, connect producers with industrial demand, and foster sustainable growth.',
                         diagram_left_label: 'Supply',
                         diagram_right_label: 'Demand',
                         diagram_gap_label: 'MARKET GAP',
-                        diagram_central_pill: 'JARRA HOLDINGS',
+                        diagram_central_pill: 'MIDI ETHIOPIA',
                         diagram_bottom_label: 'SUPPLY + DEMAND'
                     },
                     customer_connection: {
                         title: 'Closer to the Markets We Serve',
-                        description: 'Our trading activities are ultimately driven by the needs of customers and end users. By connecting market opportunities with supply, Jarra Holdings works to ensure that its commercial activities create meaningful value beyond the transaction itself.',
+                        description: 'Our value chain initiatives are driven by the needs of miners, processors, and industrial buyers. By connecting mineral supply with industrial opportunities, MIDI works to ensure sustainable value addition beyond the transaction itself.',
                         note_text: 'Hover over the network nodes to explore relationships.'
                     },
                     big_statement: {

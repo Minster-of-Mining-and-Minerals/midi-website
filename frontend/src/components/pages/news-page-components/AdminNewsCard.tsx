@@ -112,7 +112,7 @@ const AdminNewsCard = ({
 
                 {/* Content */}
                 <div className="p-5">
-                    <p className="text-xs font-semibold text-blue-600 mb-1">
+                    <p className="text-xs font-semibold text-primary mb-1">
                         {category} • {readingTime(excerpt)} min read
                     </p>
 
@@ -137,7 +137,7 @@ const AdminNewsCard = ({
                     </div>
 
                     <div className="flex items-center justify-between border-t pt-4 mt-4">
-                        <Link href={`/admin/news/${id}`} className="text-sm font-semibold text-blue-600 hover:underline flex items-center gap-1">
+                        <Link href={`/admin/news/${id}`} className="text-sm font-semibold text-primary hover:underline flex items-center gap-1">
                             Edit News <span>→</span>
                         </Link>
                         

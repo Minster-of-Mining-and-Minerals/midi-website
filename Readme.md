@@ -1,6 +1,6 @@
-# Jarra Holdings Website
+# Mineral Industry Development Institute (MIDI) Portal
 
-> Corporate website and content management platform for Jarra Holdings.
+> Official institutional portal and content management platform for the Mineral Industry Development Institute (MIDI), Ethiopia, under the Ministry of Mines.
 
 You can run everything with **Docker Compose** or run **backend** and **frontend** locally against a Postgres instance.
 
@@ -157,7 +157,7 @@ docker exec -it jarra-holding-group-website-backend npm run reprocess-attachment
 
 ### 1. Database
 
-Create a Postgres database matching `DB_NAME` in `backend/.env` (default `jarra_holding_group_website`).
+Create a Postgres database matching `DB_NAME` in `backend/.env` (e.g. `midi_portal`).
 
 ### 2. Backend
 

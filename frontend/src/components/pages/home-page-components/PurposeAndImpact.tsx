@@ -56,13 +56,13 @@ export default function PurposeAndImpact() {
             </div>
 
             {/* Purpose Visualization */}
-            <div className="relative max-w-[95%] mx-auto rounded-3xl overflow-hidden shadow-2xl bg-[#030e21] border border-cyan-900/30">
+            <div className="relative max-w-[95%] mx-auto rounded-3xl overflow-hidden shadow-2xl bg-[#1c160c] border border-[#ba8200]/30">
                 {/* Background Glow */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-blue-600/20 blur-[120px] rounded-full pointer-events-none" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-[#ba8200]/20 blur-[120px] rounded-full pointer-events-none" />
 
-                <div className="absolute bottom-0 left-1/4 w-1/2 h-1/2 bg-cyan-500/10 blur-[100px] rounded-full pointer-events-none" />
+                <div className="absolute bottom-0 left-1/4 w-1/2 h-1/2 bg-[#d49b1a]/15 blur-[100px] rounded-full pointer-events-none" />
 
-                <div className="absolute top-0 right-1/4 w-1/3 h-1/3 bg-blue-400/10 blur-[80px] rounded-full pointer-events-none" />
+                <div className="absolute top-0 right-1/4 w-1/3 h-1/3 bg-[#8c5f00]/20 blur-[80px] rounded-full pointer-events-none" />
 
                 {/* Word Cloud */}
                 <motion.div
@@ -80,21 +80,21 @@ export default function PurposeAndImpact() {
                         {/* Top Left */}
                         <div className="flex flex-col items-end gap-0 md:gap-1">
                             <div className="flex items-baseline gap-2 md:gap-3">
-                                <span className="text-cyan-600 font-medium text-base md:text-2xl lg:text-3xl">
+                                <span className="text-[#a87400] font-medium text-base md:text-2xl lg:text-3xl">
                                     {words.top_left_1 || "Sustainable"}
                                 </span>
 
-                                <span className="text-cyan-400 font-bold text-xl md:text-4xl lg:text-5xl">
+                                <span className="text-[#e5af37] font-bold text-xl md:text-4xl lg:text-5xl">
                                     {words.top_left_2 || "Investment"}
                                 </span>
                             </div>
 
                             <div className="flex items-baseline gap-2 md:gap-3">
-                                <span className="text-cyan-600 font-medium text-xs md:text-lg lg:text-xl">
+                                <span className="text-[#a87400] font-medium text-xs md:text-lg lg:text-xl">
                                     {words.top_left_3 || "Quality"}
                                 </span>
 
-                                <span className="text-cyan-500 font-black text-3xl md:text-6xl lg:text-7xl tracking-tight leading-none">
+                                <span className="text-[#ba8200] font-black text-3xl md:text-6xl lg:text-7xl tracking-tight leading-none">
                                     {words.top_left_4 || "Integrity"}
                                 </span>
                             </div>
@@ -104,14 +104,14 @@ export default function PurposeAndImpact() {
                         <div className="flex items-end gap-1 md:gap-2 ml-2 md:ml-4 lg:ml-6">
                             <div className="flex gap-1 h-full pb-1">
                                 <span
-                                    className="text-cyan-700 font-bold text-lg md:text-2xl lg:text-3xl tracking-widest"
+                                    className="text-[#8c5f00] font-bold text-lg md:text-2xl lg:text-3xl tracking-widest"
                                     style={{ writingMode: "vertical-rl" }}
                                 >
                                     {words.top_right_1 || "VALUE"}
                                 </span>
 
                                 <span
-                                    className="text-cyan-500 font-black text-2xl md:text-5xl lg:text-6xl tracking-widest"
+                                    className="text-[#ba8200] font-black text-2xl md:text-5xl lg:text-6xl tracking-widest"
                                     style={{ writingMode: "vertical-rl" }}
                                 >
                                     {words.top_right_2 || "GROWTH"}
@@ -119,7 +119,7 @@ export default function PurposeAndImpact() {
                             </div>
 
                             <div className="flex flex-col justify-end gap-0 md:gap-1 pb-1">
-                                <span className="text-cyan-400 font-bold text-lg md:text-3xl lg:text-4xl">
+                                <span className="text-[#e5af37] font-bold text-lg md:text-3xl lg:text-4xl">
                                     {words.top_right_3 || "Innovation"}
                                 </span>
 
@@ -161,7 +161,7 @@ export default function PurposeAndImpact() {
                         {/* Bottom Left */}
                         <div className="flex flex-col gap-0 md:gap-1 items-end">
                             <div className="flex items-baseline gap-2 md:gap-3">
-                                <span className="text-cyan-400 font-bold text-xl md:text-3xl lg:text-4xl">
+                                <span className="text-[#e5af37] font-bold text-xl md:text-3xl lg:text-4xl">
                                     {words.bottom_left_1 || "Empowerment"}
                                 </span>
 
@@ -171,7 +171,7 @@ export default function PurposeAndImpact() {
                             </div>
 
                             <div className="flex items-start gap-2 md:gap-3">
-                                <span className="text-cyan-500 font-black text-3xl md:text-5xl lg:text-[5rem] tracking-tight leading-none">
+                                <span className="text-[#ba8200] font-black text-3xl md:text-5xl lg:text-[5rem] tracking-tight leading-none">
                                     {words.bottom_left_3 || "Development"}
                                 </span>
                             </div>
@@ -180,7 +180,7 @@ export default function PurposeAndImpact() {
                         {/* Vertical Word */}
                         <div className="flex items-start h-full pt-1">
                             <span
-                                className="text-cyan-700 font-bold text-xl md:text-3xl lg:text-4xl tracking-widest"
+                                className="text-[#8c5f00] font-bold text-xl md:text-3xl lg:text-4xl tracking-widest"
                                 style={{ writingMode: "vertical-rl" }}
                             >
                                 {words.bottom_left_4 || "PROGRESS"}
@@ -201,7 +201,7 @@ export default function PurposeAndImpact() {
                                 </div>
 
                                 <div className="flex items-baseline gap-2 md:gap-3">
-                                    <span className="text-cyan-400 font-bold text-lg md:text-2xl lg:text-3xl">
+                                    <span className="text-[#e5af37] font-bold text-lg md:text-2xl lg:text-3xl">
                                         {words.bottom_right_3 || "Competency"}
                                     </span>
 
@@ -214,14 +214,14 @@ export default function PurposeAndImpact() {
                             {/* Vertical Words */}
                             <div className="flex gap-1 h-full pt-1">
                                 <span
-                                    className="text-cyan-500 font-bold text-lg md:text-2xl lg:text-3xl tracking-widest"
+                                    className="text-[#ba8200] font-bold text-lg md:text-2xl lg:text-3xl tracking-widest"
                                     style={{ writingMode: "vertical-rl" }}
                                 >
                                     {words.bottom_right_5 || "INNOVATION"}
                                 </span>
 
                                 <span
-                                    className="text-cyan-600 font-medium text-base md:text-xl lg:text-2xl tracking-widest"
+                                    className="text-[#a87400] font-medium text-base md:text-xl lg:text-2xl tracking-widest"
                                     style={{ writingMode: "vertical-rl" }}
                                 >
                                     {words.bottom_right_6 || "FUTURE"}

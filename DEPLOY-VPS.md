@@ -1,13 +1,13 @@
 # Production Deployment Guide (VPS)
 
-This guide details the exact steps to deploy the Jarra Holdings website to your VPS (`178.105.223.28`).
+This guide details the exact steps to deploy the Mineral Industry Development Institute (MIDI) portal to your VPS (`178.105.223.28`).
 
 ## 1. Initial VPS Setup
 
 ### DNS Configuration
 Ensure that your DNS provider has an `A` record pointing to your VPS.
 - **Type**: `A`
-- **Host/Name**: `jarra.et` and `www.jarra.et` (or `@` and `www`). Ensure the full records resolve `jarra.et` and `www.jarra.et` to `178.105.223.28`.
+- **Host/Name**: `midi.gov.et` and `www.midi.gov.et` (or `@` and `www`). Ensure the full records resolve `midi.gov.et` and `www.midi.gov.et` to `178.105.223.28`.
 - **Value**: `178.105.223.28`
 
 ## 2. Server Preparation
@@ -19,8 +19,8 @@ ssh root@178.105.223.28
 
 Clone the repository and navigate into the project:
 ```bash
-git clone <your-repo-url> jarra-holding-group-website
-cd jarra-holding-group-website
+git clone <your-repo-url> midi-website
+cd midi-website
 ```
 
 ## 3. Environment Variables Configuration
@@ -55,7 +55,7 @@ Currently, Nginx is listening on port 80 and waiting for SSL generation. Do not 
 
 Run Certbot to generate the SSL certificates:
 ```bash
-docker compose -f docker-compose.prod.yml run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ -d jarra.et -d www.jarra.et
+docker compose -f docker-compose.prod.yml run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ -d midi.gov.et -d www.midi.gov.et
 ```
 Follow the interactive prompt (provide your email and agree to the TOS).
 
@@ -84,8 +84,8 @@ curl http://localhost:4000
 ```
 
 From your local machine browser, navigate to:
-- `https://jarra.et`
-- `https://www.jarra.et`
+- `https://midi.gov.et`
+- `https://www.midi.gov.et`
 
 Everything should now be live and secure!
 

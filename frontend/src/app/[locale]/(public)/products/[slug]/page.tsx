@@ -12,7 +12,7 @@ import { getImageUrl } from "@/utils/fileUrl";
 async function getProduct(slug: string) {
     try {
         // Use internal Docker network URL if available to avoid NAT hairpin issues during SSR
-        const baseUrl = process.env.INTERNAL_API_URL || process.env.NEXT_PUBLIC_BASE_URL;
+        const baseUrl = process.env.INTERNAL_API_URL || process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:4000/api";
         const res = await fetch(`${baseUrl}/products/${slug}`, {
             next: { revalidate: 60 } // Revalidate every minute
         });
@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     }
     
     return {
-        title: `${product.name} - Jarra Holdings`,
+        title: `${product.name} | MIDI`,
         description: product.short_description
     };
 }
@@ -51,7 +51,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     const getStatusColor = (status: string) => {
         switch (status) {
             case 'Available': return 'bg-green-100 text-green-800 border-green-200';
-            case 'Available on Request': return 'bg-blue-100 text-blue-800 border-blue-200';
+            case 'Available on Request': return 'bg-[#ba8200]/10 text-[#ba8200] border-[#ba8200]/30';
             case 'Inquiry Required': return 'bg-amber-100 text-amber-800 border-amber-200';
             case 'Currently Unavailable': return 'bg-red-100 text-red-800 border-red-200';
             default: return 'bg-gray-100 text-gray-800 border-gray-200';

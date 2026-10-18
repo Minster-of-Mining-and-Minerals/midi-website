@@ -79,7 +79,7 @@ const OverviewPage = () => {
                                             <IconRenderer name={metric.icon} className="w-5 h-5" />
                                         </div>
                                         {metric.change && (
-                                            <span className='px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-700'>
+                                            <span className='px-3 py-1 rounded-full text-sm font-medium bg-[#ba8200]/10 text-[#ba8200]'>
                                                 {metric.change}
                                             </span>
                                         )}
@@ -202,7 +202,7 @@ const OverviewPage = () => {
                 <div className='lg:col-span-4 space-y-8'>
                     {/* Business Categories / Key Verticals */}
                     {businessCategories.length > 0 && (
-                        <div className='bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100'>
+                        <div className='bg-gradient-to-br from-amber-50/50 to-orange-50/30 rounded-xl p-6 border border-[#ba8200]/20'>
                             <h3 className='text-2xl font-bold text-heading mb-6 flex items-center gap-2'>
                                 <IconRenderer name={pageMetadata.key_verticals_info?.icon || 'PieChart'} className='w-6 h-6' />
                                 {pageMetadata.key_verticals_info?.title || 'Key Verticals'}
@@ -211,11 +211,11 @@ const OverviewPage = () => {
                                 {businessCategories.map((category: any, index: number) => (
                                     <div
                                         key={index}
-                                        className='bg-white p-4 rounded-lg border border-blue-100 hover:border-blue-300 transition-colors'
+                                        className='bg-white p-4 rounded-lg border border-slate-200 hover:border-[#ba8200] transition-colors'
                                     >
                                         <div className='flex items-center justify-between mb-3'>
                                             <div className='flex items-center gap-2'>
-                                                <div className='p-2 bg-blue-100 rounded-lg' style={{ color: category.color || '#3b82f6' }}>
+                                                <div className='p-2 bg-[#ba8200]/10 rounded-lg' style={{ color: category.color || '#ba8200' }}>
                                                     <IconRenderer name={category.icon || 'Package'} className="w-5 h-5" />
                                                 </div>
                                                 <h4 className='font-bold text-heading'>{category.title}</h4>
@@ -270,7 +270,7 @@ const OverviewPage = () => {
                                     >
                                         <div className='flex items-center justify-between'>
                                             <div className='flex items-center gap-3'>
-                                                <div className='p-2 bg-blue-100 rounded-lg text-secondary'>
+                                                <div className='p-2 bg-[#ba8200]/10 rounded-lg text-primary'>
                                                     <IconRenderer name={tool.icon || 'Truck'} className="w-5 h-5" />
                                                 </div>
                                                 <div>

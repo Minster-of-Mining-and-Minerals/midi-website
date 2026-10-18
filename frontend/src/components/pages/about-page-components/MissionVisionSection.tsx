@@ -106,11 +106,11 @@ export default function VisionMissionValues() {
                         {sec.core_values.map((v: any, i: number) => (
                             <div key={i} className="flex flex-col gap-2 p-6 rounded-xl bg-gray-50 border border-gray-100 hover:shadow-sm transition-shadow">
                                 <div className="flex items-center gap-3">
-                                    <div className="w-2 h-2 bg-[#00B4D8] rounded-full shrink-0" />
-                                    <span className="font-bold text-lg text-[#003B5C]">{v.title}</span>
+                                    <div className="w-2 h-2 bg-[#ba8200] rounded-full shrink-0" />
+                                    <span className="font-bold text-lg text-slate-900 dark:text-white">{v.title}</span>
                                 </div>
                                 {v.content && v.content !== v.title && (
-                                    <p className="text-sm text-gray-600 leading-relaxed pl-5 border-l-2 border-[#00B4D8]/20 ml-1">
+                                    <p className="text-sm text-gray-600 leading-relaxed pl-5 border-l-2 border-[#ba8200]/20 ml-1">
                                         {v.content}
                                     </p>
                                 )}

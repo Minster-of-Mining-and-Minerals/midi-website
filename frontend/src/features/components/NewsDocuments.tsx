@@ -27,7 +27,7 @@ const NewsDocuments: React.FC<NewsDocumentsProps> = ({ attachments }) => {
                 {footerDocuments.map((doc) => (
                     <a
                         key={doc.attachment.attachment_id}
-                        href={`${process.env.NEXT_PUBLIC_BASE}/uploads/${doc.attachment.file_path.replace(/^uploads[\\/]/, '')}`}
+                        href={`${process.env.NEXT_PUBLIC_BASE || 'http://localhost:4000'}/uploads/${doc.attachment.file_path.replace(/^uploads[\\/]/, '')}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors group"
@@ -36,10 +36,10 @@ const NewsDocuments: React.FC<NewsDocumentsProps> = ({ attachments }) => {
                             {doc.attachment.file_name.endsWith('.pdf') ? (
                                 <FileText className="w-5 h-5 text-red-500" />
                             ) : (
-                                <File className="w-5 h-5 text-blue-500" />
+                                <File className="w-5 h-5 text-primary" />
                             )}
                         </div>
-                        <span className="text-sm text-gray-700 group-hover:text-blue-600 transition-colors">
+                        <span className="text-sm text-gray-700 group-hover:text-primary transition-colors">
                             {doc.attachment.file_name}
                         </span>
                     </a>

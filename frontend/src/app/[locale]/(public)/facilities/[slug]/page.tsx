@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     if (!facility) return { title: "Facility Not Found" };
     
     return {
-        title: `${facility.name} - Jarra Holdings`,
+        title: `${facility.name} | MIDI`,
         description: facility.shortDescription
     };
 }
@@ -119,7 +119,7 @@ export default async function FacilityDetailPage({ params }: { params: Promise<{
                         Supported Operations
                     </h2>
                     <p className="text-muted-foreground max-w-2xl mx-auto mb-10 text-lg leading-relaxed">
-                        This physical infrastructure serves as a core asset supporting Jarra Holdings's wider commercial and logistical activities.
+                        This physical infrastructure serves as a core asset supporting MIDI&apos;s wider institutional and technical operations.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link href={`/${locale}/businesses/overview`}>

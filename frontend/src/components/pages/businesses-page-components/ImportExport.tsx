@@ -203,7 +203,7 @@ export default function ImportExport() {
             </div>
           </motion.div>
 
-          {/* CENTER: JARRA HOLDINGS */}
+          {/* CENTER: MIDI ETHIOPIA */}
           <motion.div
             style={{ y: yCenter }}
             className="w-full lg:w-1/3 flex justify-center items-center z-20 py-8 lg:py-0"

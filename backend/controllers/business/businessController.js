@@ -15,8 +15,8 @@ const businessController = {
           business_data: [
             {
               title: "Business Overview & Operations",
-              heading: "Comprehensive view of Jarra Holdings's integrated commercial operations.",
-              description: "Explore our diversified network of business activities. Our overview provides insights into our warehousing infrastructure, distribution networks, import/export operations, and overall growth trends across multiple locations.",
+              heading: "Comprehensive view of MIDI's mineral sector and technical operations.",
+              description: "Explore our institutional support framework across mineral development, testing laboratories, training centers, value addition, and technical facilitation.",
               features: [
                 "Supply chain connectivity",
                 "Multi-location warehousing",
@@ -56,7 +56,7 @@ const businessController = {
               change: "Diversified",
               period: "Integrated Operations",
               icon: "Database",
-              color: "from-blue-500 to-cyan-500"
+              color: "from-amber-600 to-[#ba8200]"
             },
             {
               title: "Commercial Reach",

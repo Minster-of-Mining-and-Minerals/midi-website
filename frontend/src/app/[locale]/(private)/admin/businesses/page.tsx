@@ -14,7 +14,7 @@ import { ComponentGuard } from "@/components/auth/ComponentGuard";
 
 // Define the static sections for the diagram
 const STATIC_SECTIONS = [
-    { id_string: 'center', label: 'Center Element (e.g. JARRA HOLDINGS)', position_x: 50, position_y: 50, mobile_order: 0, isCenter: true },
+    { id_string: 'center', label: 'Center Element (e.g. MIDI ETHIOPIA)', position_x: 50, position_y: 50, mobile_order: 0, isCenter: true },
     { id_string: 'top_left', label: 'Top Left Node', position_x: 25, position_y: 20, mobile_order: 1 },
     { id_string: 'top_right', label: 'Top Right Node', position_x: 75, position_y: 20, mobile_order: 2 },
     { id_string: 'middle_left', label: 'Middle Left Node', position_x: 10, position_y: 50, mobile_order: 3 },
@@ -151,7 +151,7 @@ const BusinessesPage = () => {
     return (
         <div className="mx-auto space-y-8 w-full max-w-full pb-16">
             <div>
-                <h1 className="text-3xl font-bold text-teal-900">Businesses Overview</h1>
+                <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Businesses Overview</h1>
                 <p className="text-muted-foreground mt-2">Update the main heading, descriptions, and dynamic ecosystem diagram for the Our Businesses page.</p>
             </div>
 
@@ -246,9 +246,9 @@ const BusinessesPage = () => {
                                                     <Input
                                                         value={formData.title || ''}
                                                         onChange={(e) => handleNodeChange(section.id_string, 'title', e.target.value)}
-                                                        placeholder={section.isCenter ? "e.g. JARRA HOLDINGS" : "e.g. Export Trade"}
+                                                        placeholder={section.isCenter ? "e.g. MIDI ETHIOPIA" : "e.g. Export Trade"}
                                                     />
-                                                    {section.isCenter && <p className="text-[10px] text-muted-foreground mt-1">Use \n for line breaks (e.g. JARRA\nHOLDINGS)</p>}
+                                                    {section.isCenter && <p className="text-[10px] text-muted-foreground mt-1">Use \n for line breaks (e.g. MIDI\nETHIOPIA)</p>}
                                                 </div>
                                                 <div className="space-y-2">
                                                     <label className="text-xs font-medium text-muted-foreground">{section.isCenter ? 'Center Subtitle' : 'Description'}</label>

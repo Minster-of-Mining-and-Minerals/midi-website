@@ -1,7 +1,7 @@
 import os
 import re
 
-ROUTERS_DIR = r"c:\Users\Amanuel Daniel\Desktop\PLC-AND-HOLDING-GROUPS\jarra-holding-group-website\backend\routers"
+ROUTERS_DIR = r"c:\Users\Amanuel Daniel\Desktop\MoM\projects\midi-website-1\backend\routers"
 
 mapping = {
     # users resource

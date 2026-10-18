@@ -34,7 +34,7 @@ const ApplicationPage = () => {
                     </h3>
                     <div className='relative'>
                         {/* Timeline line */}
-                        <div className='absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-blue-500 to-green-500 hidden lg:block' />
+                        <div className='absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-[#ba8200] to-green-600 hidden lg:block' />
 
                         <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
                             {applicationProcess.map((process, index) => (
@@ -44,7 +44,7 @@ const ApplicationPage = () => {
                                 >
                                     <div className='bg-white p-6 rounded-xl border border-border shadow-lg'>
                                         <div className='flex items-center justify-between lg:justify-start lg:flex-row-reverse gap-4 mb-4'>
-                                            <div className='w-12 h-12 rounded-full bg-gradient-to-r from-blue-600 to-blue-400 flex items-center justify-center text-white font-bold text-lg'>
+                                            <div className='w-12 h-12 rounded-full bg-gradient-to-r from-[#ba8200] to-[#e5af37] flex items-center justify-center text-white font-bold text-lg'>
                                                 {process.step}
                                             </div>
                                             <h4 className='text-xl font-bold text-heading'>{process.title}</h4>
@@ -94,7 +94,7 @@ const ApplicationPage = () => {
 
                     {/* Quick Actions */}
                     <div className='space-y-6'>
-                        <div className='bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-8 border border-blue-200'>
+                        <div className='bg-gradient-to-br from-amber-50/60 to-orange-50/40 rounded-xl p-8 border border-[#ba8200]/20'>
                             <h3 className='text-2xl font-bold text-heading mb-6'>Ready to Apply?</h3>
                             <div className='space-y-4'>
                                 <button className='w-full bg-secondary text-white py-4 rounded-lg font-semibold hover:bg-secondary transition-colors flex items-center justify-center gap-2'>

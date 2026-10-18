@@ -1,7 +1,7 @@
 // utils/newsMapper.ts
 import { getImageUrl } from "./fileUrl";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_BASE;
+const API_BASE_URL = process.env.NEXT_PUBLIC_BASE || "http://localhost:4000";
 export const extractExcerpt = (content: any, maxLength = 160) => {
     if (!content) return "";
 

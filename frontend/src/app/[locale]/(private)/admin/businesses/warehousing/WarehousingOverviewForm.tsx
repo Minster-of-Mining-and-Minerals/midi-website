@@ -54,13 +54,13 @@ export const WarehousingOverviewForm = () => {
 
                 visualization_nodes: overview.visualization_nodes || [
                     { title: "SUPPLY", active: false },
-                    { title: "JARRA HOLDINGS", active: false },
+                    { title: "MIDI ETHIOPIA", active: false },
                     { title: "TRADING", active: true },
                     { title: "MARKET DEMAND", active: false },
                     { title: "CUSTOMERS", active: false }
                 ],
 
-                facilities_section: overview.facilities_section || { small_title: "OUR FACILITIES", title: "Our Warehouse Network", description: "Jarra Holdings operates purpose-built facilities that support its diversified business activities and the movement of goods across the markets it serves. Explore our warehouse and facility presence across different regions.", stat_description: "Part of our documented 6,850 m² built facility infrastructure" },
+                facilities_section: overview.facilities_section || { small_title: "OUR FACILITIES", title: "Our Warehouse Network", description: "MIDI operates purpose-built facilities that support its mineral testing, training, value addition, and technical development across the sector. Explore our facility presence across different regions.", stat_description: "Part of our documented 6,850 m² built facility infrastructure" },
 
                 business_steps: overview.business_steps || []
             });

@@ -246,7 +246,7 @@ app.use("/api/tags", tagRoute);
 
 // ================== Root Endpoint ==================
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to Issue Tracking System API 🚀" });
+  res.json({ message: "Welcome to Mineral Industry Development Institute (MIDI) API 🚀" });
 });
 
 // ================== Error Handler ==================

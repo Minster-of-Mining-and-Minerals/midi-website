@@ -52,7 +52,7 @@ fi
 BACKUP_DIR="$REPO_ROOT/backups/$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$BACKUP_DIR"
 
-echo "=== Jarra Holdings Website production deploy ==="
+echo "=== Mineral Industry Development Institute (MIDI) Portal production deploy ==="
 
 if docker ps --format '{{.Names}}' | grep -q '^jarra-holding-group-website-db$'; then
   echo "1. Backing up current database..."

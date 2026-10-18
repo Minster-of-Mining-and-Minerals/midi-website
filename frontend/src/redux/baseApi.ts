@@ -4,9 +4,9 @@ import { getSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import { AUTH_LOGIN } from "@/constants/authRoutes";
 
-// Custom base query with authentication
+const defaultApiUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:4000/api";
 const rawBaseQuery = fetchBaseQuery({
-  baseUrl: typeof window === 'undefined' ? (process.env.INTERNAL_API_URL || process.env.NEXT_PUBLIC_BASE_URL) : process.env.NEXT_PUBLIC_BASE_URL,
+  baseUrl: typeof window === 'undefined' ? (process.env.INTERNAL_API_URL || defaultApiUrl) : defaultApiUrl,
   prepareHeaders: async (headers) => {
     const session: any = await getSession();
     if (session?.accessToken) {

@@ -82,7 +82,7 @@ const NewsCard = ({
 
                 {/* Content */}
                 <div className="p-5">
-                    <p className="text-xs font-semibold text-blue-600 mb-1">
+                    <p className="text-xs font-semibold text-primary mb-1">
                         {category} • {readingTime(excerpt)} min read
                     </p>
 

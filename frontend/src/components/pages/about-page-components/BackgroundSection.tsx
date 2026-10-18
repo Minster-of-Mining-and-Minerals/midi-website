@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import * as Icons from "lucide-react";
-import RotatingGlobe from "./RotatingGlobe";
 import { useGetBackgroundsQuery } from "@/redux/api/backgroundApi";
 import SplitTitle from "@/components/common/SplitTitle";
 
@@ -14,7 +13,7 @@ const BackgroundPage = () => {
     const IconComponent = (Icons as any)[iconName] || Icons.Building2;
 
     return (
-        <div className="h-auto  py-12 px-4">
+        <div className="h-auto py-12 px-4">
             <div className="max-w-7xl mx-auto">
                 {/* Hero Header */}
                 <div className="text-center mb-12">
@@ -28,9 +27,6 @@ const BackgroundPage = () => {
                     </div>
                     <p className="text-muted text-lg max-w-3xl mx-auto" dangerouslySetInnerHTML={{ __html: description }} />
                 </div>
-
-                <div className="flex items-center justify-center">
-                    <RotatingGlobe /></div>
             </div>
         </div>
     );

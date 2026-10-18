@@ -128,10 +128,10 @@ export default function Layout({
                     <div className="w-full md:pl-8">
                         <div className="flex items-start gap-6 mb-8">
                             <div>
-                                <h1 className="text-2xl flex gap-2 flex-col font-serif text-teal-800 leading-tight">
+                                <h1 className="text-2xl flex gap-2 flex-col font-serif text-slate-900 dark:text-white leading-tight">
                                     {title}
-                                    <span className="text-primary h-1 w-1/2 bg-teal-800"></span>
-                                    <p className="text-muted text-lg text-teal-800">{description}</p>
+                                    <span className="h-1 w-1/2 bg-primary"></span>
+                                    <p className="text-muted-foreground text-lg">{description}</p>
                                 </h1>
                             </div>
                         </div>

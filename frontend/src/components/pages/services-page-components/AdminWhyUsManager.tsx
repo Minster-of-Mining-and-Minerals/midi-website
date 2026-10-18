@@ -80,7 +80,7 @@ export default function AdminWhyUsManager() {
             <div className="flex justify-between items-center bg-white p-4 rounded-lg border shadow-sm">
                 <div>
                     <h2 className="text-lg font-bold text-primary">Service Why Us</h2>
-                    <p className="text-sm text-gray-500">Manage the 'Why Partner With Jarra' section.</p>
+                    <p className="text-sm text-gray-500">Manage the 'Why Choose MIDI' section.</p>
                 </div>
                 <div className="flex gap-2">
                     <Button

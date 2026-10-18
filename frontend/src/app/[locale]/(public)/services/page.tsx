@@ -7,7 +7,7 @@ import ServicesOverview from "@/components/pages/services-page-components/Servic
 import CoreServicesGrid from "@/components/pages/services-page-components/CoreServicesGrid";
 import ServiceExperience from "@/components/pages/services-page-components/ServiceExperience";
 import MultiSectorCapability from "@/components/pages/services-page-components/MultiSectorCapability";
-import WhyJarraHoldings from "@/components/pages/services-page-components/WhyJarraHoldings";
+import WhyMIDI from "@/components/pages/services-page-components/WhyMIDI";
 import ServicesCTA from "@/components/pages/services-page-components/ServicesCTA";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -32,7 +32,7 @@ export default function ServicesPage() {
             <CoreServicesGrid />
             <ServiceExperience />
             <MultiSectorCapability />
-            <WhyJarraHoldings />
+            <WhyMIDI />
             <ServicesCTA />
         </main>
     );

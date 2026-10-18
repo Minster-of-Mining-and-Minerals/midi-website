@@ -10,7 +10,7 @@ export default function SplitTitle({ title, className = "" }: { title: string, c
     if (words.length <= 1) {
         return (
             <span className={className}>
-                <span className="text-[#003B5C]">{cleanTitle}</span>
+                <span className="text-slate-900 dark:text-white">{cleanTitle}</span>
             </span>
         );
     }
@@ -21,8 +21,8 @@ export default function SplitTitle({ title, className = "" }: { title: string, c
 
     return (
         <span className={className}>
-            <span className="text-[#003B5C]">{firstHalf}</span>{' '}
-            <span className="text-[#00B4D8]">{secondHalf}</span>
+            <span className="text-slate-900 dark:text-white">{firstHalf}</span>{' '}
+            <span className="text-[#ba8200]">{secondHalf}</span>
         </span>
     );
 }

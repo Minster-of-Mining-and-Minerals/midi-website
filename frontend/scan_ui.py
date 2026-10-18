@@ -1,7 +1,7 @@
 import os
 import re
 
-FEATURES_DIR = r"c:\Users\Amanuel Daniel\Desktop\PLC-AND-HOLDING-GROUPS\jarra-holding-group-website\frontend\src\features"
+FEATURES_DIR = r"c:\Users\Amanuel Daniel\Desktop\MoM\projects\midi-website-1\frontend\src\features"
 
 def scan():
     for root, dirs, files in os.walk(FEATURES_DIR):

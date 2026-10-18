@@ -1,7 +1,7 @@
 {
-  "name": "jarra-holding-group-website-backend",
+  "name": "midi-website-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Backend API for Mineral Industry Development Institute (MIDI) Portal",
   "main": "index.js",
   "type": "commonjs",
   "scripts": {

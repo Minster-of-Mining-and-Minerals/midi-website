@@ -1,8 +1,8 @@
 import os
 import re
 
-MIGRATIONS_DIR = r"c:\Users\Amanuel Daniel\Desktop\PLC-AND-HOLDING-GROUPS\jarra-holding-group-website\backend\migrations"
-SEEDERS_DIR = r"c:\Users\Amanuel Daniel\Desktop\PLC-AND-HOLDING-GROUPS\jarra-holding-group-website\backend\seeders"
+MIGRATIONS_DIR = r"c:\Users\Amanuel Daniel\Desktop\MoM\projects\midi-website-1\backend\migrations"
+SEEDERS_DIR = r"c:\Users\Amanuel Daniel\Desktop\MoM\projects\midi-website-1\backend\seeders"
 
 def run_audit():
     migrations = sorted([f for f in os.listdir(MIGRATIONS_DIR) if f.endswith('.js')])

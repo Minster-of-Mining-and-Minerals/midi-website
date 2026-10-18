@@ -26,7 +26,7 @@ export default function ProductImageGallery({ images, title, status }: ProductIm
     const getStatusColor = (status: string) => {
         switch (status) {
             case 'Available': return 'bg-green-100 text-green-800 border-green-200';
-            case 'Available on Request': return 'bg-blue-100 text-blue-800 border-blue-200';
+            case 'Available on Request': return 'bg-[#ba8200]/10 text-[#ba8200] border-[#ba8200]/30';
             case 'Inquiry Required': return 'bg-amber-100 text-amber-800 border-amber-200';
             case 'Currently Unavailable': return 'bg-red-100 text-red-800 border-red-200';
             default: return 'bg-gray-100 text-gray-800 border-gray-200';

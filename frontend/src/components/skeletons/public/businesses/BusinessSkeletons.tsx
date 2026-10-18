@@ -107,7 +107,7 @@ export function ImportExportSkeleton() {
                         <Skeleton className="h-[400px] w-full rounded-2xl" />
                     </div>
 
-                    {/* CENTER: JARRA HOLDINGS */}
+                    {/* CENTER: MIDI ETHIOPIA */}
                     <div className="w-full lg:w-1/3 flex justify-center items-center py-8 lg:py-0">
                         <Skeleton className="w-56 h-56 rounded-full" />
                     </div>

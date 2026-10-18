@@ -1,7 +1,7 @@
 /** Server-side API helpers for metadata generation (no auth required for public data). */
 
-function getApiBaseUrl(): string | null {
-  return process.env.NEXT_PUBLIC_BASE_URL ?? null;
+function getApiBaseUrl(): string {
+  return process.env.INTERNAL_API_URL || process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:4000/api";
 }
 
 export async function fetchPublicNewsById(id: string) {

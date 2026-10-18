@@ -45,8 +45,8 @@ export default function AdminFooterManager() {
 
     const [footerData, setFooterData] = useState({
         footer_id: "",
-        title: "Jarra Holdings",
-        text: `© ${new Date().getFullYear()} Jarra Holdings. All rights reserved.`,
+        title: "Mineral Industry Development Institute",
+        text: `© ${new Date().getFullYear()} Mineral Industry Development Institute (MIDI). All rights reserved.`,
         content: "",
         attachment_id: "",
         sections: [
@@ -93,8 +93,8 @@ export default function AdminFooterManager() {
 
             setFooterData({
                 footer_id: f.footer_id,
-                title: f.title || "Jarra Holdings",
-                text: f.text || `© ${new Date().getFullYear()} Jarra Holdings. All rights reserved.`,
+                title: f.title || "Mineral Industry Development Institute",
+                text: f.text || `© ${new Date().getFullYear()} Mineral Industry Development Institute (MIDI). All rights reserved.`,
                 content: f.content || "",
                 attachment_id: f.attachment_id || "",
                 sections: displayedSections,

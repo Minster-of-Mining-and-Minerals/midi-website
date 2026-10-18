@@ -188,7 +188,7 @@ const ImportExportAdminPage = () => {
     return (
         <div className="mx-auto space-y-10 w-full pb-10">
             <div>
-                <h1 className="text-3xl font-bold text-teal-900">Manage "Import & Export"</h1>
+                <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Manage "Import & Export"</h1>
                 <p className="text-muted-foreground mt-2">Manage the content for the public Import/Export trading page.</p>
             </div>
 

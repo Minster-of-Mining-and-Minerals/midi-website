@@ -36,9 +36,11 @@ const config = {
           foreground: "#ffffff",
         },
         "golden-dark": "#ba8200",
+        "golden-classic": "#ba8200",
         golden: {
           DEFAULT: "#ba8200",
           dark: "#ba8200",
+          classic: "#ba8200",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",

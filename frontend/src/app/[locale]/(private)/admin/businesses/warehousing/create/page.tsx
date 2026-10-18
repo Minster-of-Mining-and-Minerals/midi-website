@@ -82,7 +82,7 @@ const CreateWarehousePage = () => {
                     <ArrowLeft className="w-4 h-4" />
                 </Button>
                 <div>
-                    <h1 className="text-3xl font-bold text-teal-900">Add New Facility</h1>
+                    <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Add New Facility</h1>
                     <p className="text-muted-foreground mt-1">Create a new warehousing facility.</p>
                 </div>
             </div>

@@ -81,9 +81,9 @@ export default function Layout({
                 <div className="w-full">
                     <div className="flex">
                         <div>
-                            <h1 className="text-2xl flex gap-1 flex-col font-serif text-teal-800 leading-tight">
+                            <h1 className="text-2xl flex gap-1 flex-col font-serif text-slate-900 dark:text-white leading-tight">
                                 {/* {title} */}
-                                <span className="text-primary h-1 w-1/2 bg-teal-800"></span>
+                                <span className="h-1 w-1/2 bg-primary"></span>
                             </h1>
                         </div>
                     </div>

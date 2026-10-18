@@ -51,7 +51,7 @@ export default function PhysicalFootprint() {
                             {locations.length > 0 ? (
                                 locations.map((loc) => (
                                     <div key={loc.id} className="flex items-center space-x-4 border-b border-white/20 pb-4">
-                                        <div className="w-2 h-2 rounded-full bg-[#00B4D8] shrink-0" />
+                                        <div className="w-2 h-2 rounded-full bg-[#ba8200] shrink-0" />
                                         <h3 className="text-xl md:text-2xl font-semibold text-white tracking-wide">
                                             {loc.name}
                                         </h3>
@@ -66,7 +66,7 @@ export default function PhysicalFootprint() {
                     {/* Stats or text */}
                     <div className="relative z-10 w-full md:w-1/2">
                         <div className="bg-white/10 backdrop-blur-md border border-white/20 p-8 rounded-2xl text-white">
-                            <h4 className="text-xl font-bold mb-4 text-[#00B4D8]">{cardHeading}</h4>
+                            <h4 className="text-xl font-bold mb-4 text-[#ba8200]">{cardHeading}</h4>
                             <p className="leading-relaxed opacity-90 whitespace-pre-line">
                                 {cardDescription}
                             </p>

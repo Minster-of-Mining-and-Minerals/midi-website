@@ -5,9 +5,9 @@ const options = {
   swaggerDefinition: {
     openapi: "3.0.0",
     info: {
-      title: "Jarra Holdings API",
+      title: "MIDI API",
       version: "1.0.0",
-      description: "API Documentation for Jarra Holdings Website",
+      description: "API Documentation for Mineral Industry Development Institute (MIDI) Portal",
     },
     servers: [
       {

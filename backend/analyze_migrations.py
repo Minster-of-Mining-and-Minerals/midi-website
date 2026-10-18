@@ -2,7 +2,7 @@ import os
 import re
 import json
 
-migrations_dir = r"c:\Users\Amanuel Daniel\Desktop\PLC-AND-HOLDING-GROUPS\jarra-holding-group-website\backend\migrations"
+migrations_dir = r"c:\Users\Amanuel Daniel\Desktop\MoM\projects\midi-website-1\backend\migrations"
 
 def analyze_migrations():
     files = sorted([f for f in os.listdir(migrations_dir) if f.endswith('.js')])

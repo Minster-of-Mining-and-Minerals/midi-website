@@ -95,7 +95,7 @@ const EventCard = ({
 
                 {/* Content */}
                 <div className="p-5 flex flex-col h-full">
-                    <p className="text-xs font-semibold text-blue-600 mb-1">
+                    <p className="text-xs font-semibold text-primary mb-1">
                         {category}
                     </p>
 

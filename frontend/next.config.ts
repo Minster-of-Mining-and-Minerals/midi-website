@@ -6,8 +6,18 @@ const nextConfig: NextConfig = {
   output: 'standalone',
   images: {
     unoptimized: true,
-    domains: ["localhost", "127.0.0.1", "jarra.et", "www.jarra.et", "backend"],
+    domains: ["localhost", "127.0.0.1", "midi.gov.et", "www.midi.gov.et", "jarra.et", "www.jarra.et", "backend"],
     remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "midi.gov.et",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "www.midi.gov.et",
+        pathname: "/**",
+      },
       {
         protocol: "https",
         hostname: "jarra.et",
