@@ -3,6 +3,7 @@ export const PUBLIC_STATIC_PATHS: string[] = [
   "/",
   "/about",
   "/services",
+  "/publications",
   "/products",
   "/facilities",
   "/careers",

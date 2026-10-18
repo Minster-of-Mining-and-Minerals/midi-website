@@ -57,7 +57,7 @@ export default function PublicNavbar() {
             { name: locale === "am" ? "ስለኛ" : "About", link: "/about" },
             { name: locale === "am" ? "የMIDI ፕሮጀክት" : "MIDI Project", link: "/midi-project" },
             { name: locale === "am" ? "ዘርፎች" : "Sectors", link: "/businesses" },
-            { name: locale === "am" ? "ምርቶች" : "Products", link: "/products" },
+            { name: locale === "am" ? "ህትመቶች እና ምርምር" : "Publications & Research", link: "/publications" },
             { name: locale === "am" ? "አገልግሎቶች" : "Services", link: "/services" },
             { name: locale === "am" ? "መገልገያዎች" : "Facilities", link: "/facilities" },
             { name: locale === "am" ? "ዜና" : "News", link: "/news" },

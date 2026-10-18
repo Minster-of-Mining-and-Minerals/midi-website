@@ -81,6 +81,12 @@ const productRoute = require("./routers/product/productRoutes");
 const productCategoryRoute = require("./routers/product/productCategoryRoutes");
 const productInquiryRoute = require("./routers/product/productInquiryRoutes");
 
+// ================== Publication Routes ==========================
+const publicationRoute = require("./routers/publication/publicationRoutes");
+const publicationCategoryRoute = require("./routers/publication/publicationCategoryRoutes");
+const publicationInquiryRoute = require("./routers/publication/publicationInquiryRoutes");
+const publicationPaymentRoute = require("./routers/publication/publicationPaymentRoutes");
+
 // ================== Business Routes ==========================
 const businessRoute = require("./routers/business/businessRoutes");
 
@@ -236,6 +242,12 @@ app.use("/api/page-headers", pageHeaderRoute);
 app.use("/api/products", productRoute);
 app.use("/api/product-categories", productCategoryRoute);
 app.use("/api/product-inquiries", productInquiryRoute);
+
+// ================== Publication Routes =====================
+app.use("/api/publications", publicationRoute);
+app.use("/api/publication-categories", publicationCategoryRoute);
+app.use("/api/publication-inquiries", publicationInquiryRoute);
+app.use("/api/publication-payments", publicationPaymentRoute);
 
 // ================== Business Routes =====================
 app.use("/api/business", businessRoute);

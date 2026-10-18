@@ -123,30 +123,41 @@ export const routePermissions: RouteConfig[] = [
 
     // ---------------- CONTENT ----------------
     {
-        path: "/admin/products",
-        label: "Products",
-        icon: "Briefcase",
+        path: "/admin/publications",
+        label: "Publications & Research",
+        icon: "BookOpen",
         permissions: {
-            anyPermissions: ["PRODUCTS:READ", "PRODUCT_CATEGORIES:READ", "PRODUCT_INQUIRIES:READ"],
+            anyPermissions: [
+                "PUBLICATIONS:READ",
+                "PUBLICATION_CATEGORIES:READ",
+                "PUBLICATION_INQUIRIES:READ",
+                "PUBLICATION_PAYMENTS:READ",
+            ],
         },
         children: [
             {
-                path: "/admin/products",
-                label: "All Products",
-                icon: "Briefcase",
-                permissions: { anyPermissions: ["PRODUCTS:READ"] },
+                path: "/admin/publications",
+                label: "All Publications",
+                icon: "BookOpen",
+                permissions: { anyPermissions: ["PUBLICATIONS:READ"] },
             },
             {
-                path: "/admin/products/categories",
+                path: "/admin/publications/categories",
                 label: "Categories",
                 icon: "Tag",
-                permissions: { anyPermissions: ["PRODUCT_CATEGORIES:READ"] },
+                permissions: { anyPermissions: ["PUBLICATION_CATEGORIES:READ"] },
             },
             {
-                path: "/admin/products/inquiries",
-                label: "Inquiries",
+                path: "/admin/publications/inquiries",
+                label: "Inquiries & Requests",
                 icon: "MessageSquare",
-                permissions: { anyPermissions: ["PRODUCT_INQUIRIES:READ"] },
+                permissions: { anyPermissions: ["PUBLICATION_INQUIRIES:READ"] },
+            },
+            {
+                path: "/admin/publications/payments",
+                label: "Payment Review",
+                icon: "CreditCard",
+                permissions: { anyPermissions: ["PUBLICATION_PAYMENTS:READ"] },
             },
         ],
     },

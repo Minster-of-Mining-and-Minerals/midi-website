@@ -47,6 +47,17 @@ exports.productInquiryLimiter = rateLimit({
     skip: skipIfAuthenticated
 });
 
+// 2b. Publication Inquiries (10 req / 15 min / IP)
+exports.publicationInquiryLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: "Too many publication inquiries from this IP, please try again after 15 minutes.",
+    handler,
+    skip: skipIfAuthenticated
+});
+
 // 3. Job Applications (5 req / 1 hour / IP)
 exports.jobApplicationLimiter = rateLimit({
     windowMs: 60 * 60 * 1000,

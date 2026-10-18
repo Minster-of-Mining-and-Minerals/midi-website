@@ -15,6 +15,11 @@ export const PAGE_SEO: Record<string, { title: string; description: string }> = 
     description:
       "Comprehensive laboratory testing, technical consultancy, feasibility studies, and capacity building for the Ethiopian mineral industry.",
   },
+  "/publications": {
+    title: "Publications & Research | MIDI",
+    description:
+      "Explore official research reports, mineral maps, technical manuals, and institutional publications by the Mineral Industry Development Institute (MIDI), Ethiopia.",
+  },
   "/products": {
     title: "Strategic Mineral Sectors",
     description:
