@@ -3,7 +3,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export function HeroSkeleton() {
     return (
-        <div className="relative w-full h-[600px] md:h-[700px] overflow-hidden bg-slate-900">
+        <div className="relative w-full h-[85vh] min-h-[560px] overflow-hidden bg-secondary">
             <div className="absolute inset-0 z-0">
                 <Skeleton className="w-full h-full rounded-none" />
             </div>
