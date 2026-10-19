@@ -18,8 +18,11 @@ COPY . .
 # Set permissions for uploads (if needed)
 RUN mkdir -p uploads && chmod -R 777 uploads
 
-# Expose the backend port
-EXPOSE 4000
+# Expose the backend API (4000) and Socket.IO (5000) ports
+EXPOSE 4000 5000
 
-# Start command with migration
-CMD ["sh", "-c", "npx sequelize-cli db:migrate && npx sequelize-cli db:seed --seed 20260622130000-seed-production-permissions.js && npm start"]
+# Make entrypoint script executable
+RUN chmod +x /app/docker-entrypoint.sh
+
+# Start command via entrypoint
+ENTRYPOINT ["/app/docker-entrypoint.sh"]

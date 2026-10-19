@@ -17,8 +17,9 @@
     "db:fresh": "sequelize-cli db:drop && sequelize-cli db:create && sequelize-cli db:migrate && sequelize-cli db:seed:all",
     "seed": "sequelize-cli db:seed:all",
     "seed:undo": "sequelize-cli db:seed:undo:all",
-    "db:dump": "docker exec jarra_postgres pg_dump -U postgres -d jarra_website -f /tmp/init_data.sql && docker cp jarra_postgres:/tmp/init_data.sql ./init_data.sql",
-    "db:restore": "docker cp ./init_data.sql jarra_postgres_prod:/tmp/init_data.sql && docker exec jarra_postgres_prod psql -U postgres -d jarra_website -f /tmp/init_data.sql"
+    "seed:production": "sequelize-cli db:seed --seed 20260622130000-seed-production-permissions.js && sequelize-cli db:seed --seed 20260914100000-standardize-admin-permissions.js && sequelize-cli db:seed --seed 20261018210500-seed-publication-permissions.js && sequelize-cli db:seed --seed 20261018211000-seed-publication-categories.js",
+    "db:dump": "docker exec midi_postgres pg_dump -U postgres -d midi_portal -f /tmp/init_data.sql && docker cp midi_postgres:/tmp/init_data.sql ./init_data.sql",
+    "db:restore": "docker cp ./init_data.sql midi_postgres_prod:/tmp/init_data.sql && docker exec midi_postgres_prod psql -U postgres -d midi_portal -f /tmp/init_data.sql"
   },
   "keywords": [],
   "author": "",

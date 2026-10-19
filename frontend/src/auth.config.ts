@@ -15,11 +15,12 @@ export default {
         const { email, password } = credentials;
 
         try {
-          // 🔥 FIX: Use the correct backend URL for Docker
-          const backendUrl =
-            process.env.NODE_ENV === "production"
-              ? "http://backend:4000/api/auth/login"
-              : `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:4000/api"}/auth/login`;
+          // Use internal docker network API URL when available
+          const backendUrl = process.env.INTERNAL_API_URL
+            ? `${process.env.INTERNAL_API_URL}/auth/login`
+            : process.env.NODE_ENV === "production"
+            ? "http://backend:4000/api/auth/login"
+            : `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:4000/api"}/auth/login`;
 
           console.log("Auth attempt to:", backendUrl);
 

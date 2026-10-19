@@ -147,15 +147,37 @@ app.use(
 );
 
 // ================== CORS Configuration ==================
-const allowedOrigins = [
+const defaultAllowedOrigins = [
+  "http://10.100.14.6:3005",
+  "http://10.100.14.6:8085",
+  "http://10.100.14.6:4005",
   "http://localhost:3000",
   "http://localhost:3001",
+  "http://localhost:3005",
   "http://localhost:4000",
+  "http://localhost:4005",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:3005",
   process.env.FRONTEND_URL,
-];
+].filter(Boolean);
+
+const envOrigins = (process.env.CORS_ALLOWED_ORIGINS || "")
+  .split(",")
+  .map((o) => o.trim())
+  .filter(Boolean);
+
+const allowedOrigins = Array.from(new Set([...defaultAllowedOrigins, ...envOrigins]));
+
 const corsOptions = {
-  origin: true, // Allow all origins for development
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  origin: (origin, callback) => {
+    // Allow non-browser requests (e.g. mobile apps, curl, server-to-server)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin) || process.env.NODE_ENV !== "production") {
+      return callback(null, true);
+    }
+    return callback(new Error(`CORS error: Origin ${origin} not allowed by Access-Control-Allow-Origin`));
+  },
+  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
   credentials: true,
   optionsSuccessStatus: 204,
 };
@@ -256,7 +278,15 @@ app.use("/api/business", businessRoute);
 app.use("/api/news", newsRoute);
 app.use("/api/tags", tagRoute);
 
-// ================== Root Endpoint ==================
+// ================== Health Checks & Root Endpoint ==================
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "healthy", service: "midi-backend", timestamp: new Date().toISOString() });
+});
+
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ status: "healthy", service: "midi-backend-api", timestamp: new Date().toISOString() });
+});
+
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to Mineral Industry Development Institute (MIDI) API 🚀" });
 });
@@ -272,14 +302,15 @@ app.use((err, req, res, next) => {
 
 // ================== Start App Server ==================
 const appPort = process.env.PORT || 4000;
-appServer.listen(appPort, () => {
-  console.log(` App server running at http://localhost:${appPort}`);
+appServer.listen(appPort, "0.0.0.0", () => {
+  console.log(`MIDI Backend API server running on 0.0.0.0:${appPort}`);
 });
 
 // ================== Socket.IO Setup ==================
 const socketServer = http.createServer();
 const io = new Server(socketServer, {
   cors: corsOptions,
+  transports: ["websocket", "polling"],
 });
 
 const onlineUsers = new Map();
@@ -299,11 +330,35 @@ io.on("connection", (socket) => {
 });
 
 const socketPort = process.env.SOCKET_PORT || 5000;
-socketServer.listen(socketPort, () => {
-  console.log(`Socket.IO server running at http://localhost:${socketPort}`);
+socketServer.listen(socketPort, "0.0.0.0", () => {
+  console.log(`MIDI Socket.IO server running on 0.0.0.0:${socketPort}`);
 });
 
 // Make Socket.IO accessible globally
 app.set("socketio", io);
+
+// ================== Graceful Shutdown ==================
+const gracefulShutdown = () => {
+  console.log("\n[backend] Received termination signal. Initiating graceful shutdown...");
+  io.close(() => {
+    console.log("[backend] Socket.IO server closed.");
+  });
+  socketServer.close(() => {
+    console.log("[backend] Socket HTTP server closed.");
+  });
+  appServer.close(async () => {
+    console.log("[backend] Express HTTP server closed.");
+    try {
+      await sequelize.close();
+      console.log("[backend] Database connection closed.");
+    } catch (err) {
+      console.error("[backend] Error closing database connection:", err);
+    }
+    process.exit(0);
+  });
+};
+
+process.on("SIGINT", gracefulShutdown);
+process.on("SIGTERM", gracefulShutdown);
 
 module.exports = { appServer, io, onlineUsers };

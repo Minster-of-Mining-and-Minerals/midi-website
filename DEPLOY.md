@@ -1,107 +1,49 @@
-# Production deploy
+# Mineral Industry Development Institute (MIDI) Portal — Deployment
 
-Deploy the upgraded **v2 database** and **reprocessed uploads** to `www.waaams.org`.
+Official Docker deployment documentation for the MIDI Portal.
 
-## What goes in git (push / pull)
+For full, dedicated instructions on deploying to internal server **10.100.14.6**, please see:
+👉 **[DEPLOY-SERVER-10.100.14.6.md](file:///c:/Users/Amanuel%20Daniel/Desktop/MoM/projects/midi-website-1/DEPLOY-SERVER-10.100.14.6.md)**
 
-| Artifact | Path | Size (approx.) |
-|---|---|---|
-| Upgraded database | `backend/db-snapshot.sql` | ~0.9 MB |
-| Application code | entire repo on `website-update` | — |
+---
 
-## What to transfer separately (too large for git)
+## Quick Reference — Server 10.100.14.6 Port Mappings
 
-| Artifact | Path | Size (approx.) |
-|---|---|---|
-| Reprocessed uploads | `backend/deploy-uploads.tar.gz` | ~1.8 GB |
+| Service | Host Port | Container Port | URL |
+| :--- | :---: | :---: | :--- |
+| **Frontend (Next.js)** | **3005** | `3000` | **http://10.100.14.6:3005** *(Primary Access URL)* |
+| **Backend (Express API)**| **4005** | `4000` | **http://10.100.14.6:4005** |
+| **Socket.IO Server** | **5005** | `5000` | **http://10.100.14.6:5005** |
+| **Nginx Reverse Proxy**| **8085** | `80` | **http://10.100.14.6:8085** |
+| **PostgreSQL Database**| *Internal* | `5432` | `db:5432` *(Isolated to Docker network)* |
 
-Create or refresh the tarball locally:
+---
 
-```bash
-cd backend
-npm run deploy:pack
-```
-
-Copy to the server (from your machine):
+## Quick Deploy Steps
 
 ```bash
-scp backend/deploy-uploads.tar.gz user@your-server:/path/to/website/backend/
+# 1. Switch to deployment branch
+git checkout test-production
+git pull origin test-production
+
+# 2. Copy and configure production environment
+cp .env.production.example .env.production
+nano .env.production
+
+# 3. Run automated deployment script
+chmod +x deploy.sh scripts/deploy-production.sh scripts/verify-deployment.sh
+./deploy.sh
+
+# 4. Verify deployment health
+./scripts/verify-deployment.sh
 ```
 
 ---
 
-## Server deploy steps
+## Access Endpoints
 
-SSH into the server, then:
-
-```bash
-cd /path/to/website
-
-# 1. Backup live DB (optional but recommended)
-mkdir -p backups/manual
-docker exec -e PGPASSWORD="$DB_PASSWORD" jarra-holding-group-website-db \
-  pg_dump -U postgres -d jarra_holding_group_website --clean --if-exists --no-owner \
-  > backups/manual/pre-deploy-$(date +%Y%m%d).sql
-
-# 2. Pull latest code + db snapshot
-git pull origin website-update
-
-# 3. Ensure uploads tarball is present (from scp above)
-ls -lh backend/deploy-uploads.tar.gz
-
-# 4. Run deploy script
-chmod +x scripts/deploy-production.sh
-./scripts/deploy-production.sh
-```
-
-The script will:
-
-1. Back up the current database (if Postgres is running)
-2. Start Postgres
-3. Import `backend/db-snapshot.sql`
-4. Extract `backend/deploy-uploads.tar.gz` → `backend/uploads/`
-5. `docker compose up -d --build`
-
-Uploads are mounted from `./backend/uploads` into the backend container (persist across rebuilds).
-
----
-
-## After deploy
-
-| Check | URL |
-|---|---|
-| Public site | https://www.waaams.org |
-| Admin login | https://www.waaams.org/en/access/identity/gateway |
-| API | https://www.waaams.org/api |
-
-Migrations run on backend start; with the imported snapshot they should be a no-op.  
-`seed:production` is idempotent (safe if permissions already exist).
-
----
-
-## Removed / do not use
-
-These were from the migration workflow and are **not** part of deploy:
-
-- `backend/db-snapshot-v1-original.sql` — raw server backup (local only)
-- `backend/db-snapshot-v2-final.sql` — duplicate of `db-snapshot.sql`
-- `backend/server-uploads.tar.gz` — old uncleaned server uploads
-- `backend/db-snapshot.sql.*.bak` — export backups (now under `backend/tmp/`)
-
----
-
-## Local upgrade pipeline (reference)
-
-To regenerate deploy artifacts from a fresh server export:
-
-```bash
-# Place raw server files locally (gitignored):
-#   backend/db-snapshot.sql          (v1 export from server)
-#   backend/server-uploads.tar.gz  (docker cp from jarra-holding-group-website-backend:/app/uploads)
-
-cd backend
-npm run db:upgrade-from-server   # imports v1, migrates, reprocesses, exports v2
-npm run deploy:pack              # creates deploy-uploads.tar.gz
-```
-
-Then commit `db-snapshot.sql`, push code, and `scp` the uploads tarball.
+- **Portal Homepage**: `http://10.100.14.6:3005`
+- **Admin Gateway**: `http://10.100.14.6:3005/en/access/identity/gateway`
+- **API Health**: `http://10.100.14.6:4005/health`
+- **API Docs (Swagger)**: `http://10.100.14.6:4005/api-docs`
+- **Nginx Reverse Proxy**: `http://10.100.14.6:8085`

@@ -1,76 +1,108 @@
 services:
   db:
     image: postgres:16-alpine
-    container_name: jarra_postgres
-    restart: always
+    container_name: midi_postgres
+    restart: unless-stopped
     environment:
       POSTGRES_USER: ${DB_USER:-postgres}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-root}
-      POSTGRES_DB: ${DB_NAME:-jarra_website}
+      POSTGRES_DB: ${DB_NAME:-midi_portal}
       TZ: UTC
-    ports:
-      - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - midi_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-postgres} -d $${POSTGRES_DB:-midi_portal}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - midi_network
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: jarra_backend
-    restart: always
+    container_name: midi_backend
+    restart: unless-stopped
+    ports:
+      - "${BACKEND_PORT:-4005}:4000"
+      - "${SOCKET_PORT:-5005}:5000"
     environment:
+      - NODE_ENV=development
       - DB_HOST=db
       - DB_PORT=5432
       - DB_USER=${DB_USER:-postgres}
       - DB_PASSWORD=${DB_PASSWORD:-root}
-      - DB_NAME=${DB_NAME:-jarra_website}
+      - DB_NAME=${DB_NAME:-midi_portal}
       - PORT=4000
-      - JWT_SECRET=${JWT_SECRET:-fallback_secret}
-      - FRONTEND_URL=http://localhost
+      - SOCKET_PORT=5000
+      - JWT_SECRET=${JWT_SECRET:-fallback_secret_for_development}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3005}
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-http://localhost:3005,http://localhost:8085,http://10.100.14.6:3005,http://10.100.14.6:8085}
       - TZ=UTC
       - APP_TIMEZONE=Africa/Addis_Ababa
-    expose:
-      - "4000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     volumes:
       - ./backend/uploads:/app/uploads
+    networks:
+      - midi_network
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        - NEXT_PUBLIC_BASE_URL=http://localhost/api
-        - NEXT_PUBLIC_BASE=http://localhost
+        - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL:-http://localhost:4005/api}
+        - NEXT_PUBLIC_BASE=${NEXT_PUBLIC_BASE:-http://localhost:4005}
+        - NEXT_PUBLIC_FILE_URL=${NEXT_PUBLIC_FILE_URL:-http://localhost:4005}
+        - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-http://localhost:3005}
+        - NEXT_PUBLIC_SOCKET_URL=${NEXT_PUBLIC_SOCKET_URL:-http://localhost:5005}
         - NEXT_PUBLIC_TIMEZONE=Africa/Addis_Ababa
-    container_name: jarra_frontend
-    restart: always
+    container_name: midi_frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-3005}:3000"
     environment:
-      - NEXT_PUBLIC_BASE_URL=http://localhost/api
-      - NEXT_PUBLIC_BASE=http://localhost
+      - NODE_ENV=development
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+      - INTERNAL_API_URL=http://backend:4000/api
+      - NEXT_PUBLIC_BASE_URL=${NEXT_PUBLIC_BASE_URL:-http://localhost:4005/api}
+      - NEXT_PUBLIC_BASE=${NEXT_PUBLIC_BASE:-http://localhost:4005}
+      - NEXT_PUBLIC_FILE_URL=${NEXT_PUBLIC_FILE_URL:-http://localhost:4005}
+      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-http://localhost:3005}
+      - NEXT_PUBLIC_SOCKET_URL=${NEXT_PUBLIC_SOCKET_URL:-http://localhost:5005}
       - NEXT_PUBLIC_TIMEZONE=Africa/Addis_Ababa
       - AUTH_SECRET=${AUTH_SECRET:-fallback_nextauth_secret_6yuOtU4X6sQnw2BHlFjGO}
-      - AUTH_URL=http://localhost/api/auth
+      - AUTH_URL=${AUTH_URL:-http://localhost:3005/api/auth}
       - NEXTAUTH_SECRET=${AUTH_SECRET:-fallback_nextauth_secret_6yuOtU4X6sQnw2BHlFjGO}
-      - NEXTAUTH_URL=http://localhost/api/auth
-    expose:
-      - "3000"
+      - NEXTAUTH_URL=${AUTH_URL:-http://localhost:3005/api/auth}
     depends_on:
       - backend
+    networks:
+      - midi_network
 
   nginx:
     image: nginx:stable-alpine
-    container_name: jarra_nginx
-    restart: always
+    container_name: midi_nginx
+    restart: unless-stopped
     ports:
-      - "80:80"
+      - "${NGINX_PORT:-8085}:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - frontend
       - backend
+    networks:
+      - midi_network
 
 volumes:
-  postgres_data:
+  midi_postgres_data:
+    name: midi_postgres_data
+
+networks:
+  midi_network:
+    name: midi_network
+    driver: bridge

@@ -1,0 +1,5 @@
+# Enforce LF for shell scripts to prevent \r syntax errors in Linux containers
+*.sh text eol=lf
+*.sql text eol=lf
+Dockerfile* text eol=lf
+nginx.conf text eol=lf
