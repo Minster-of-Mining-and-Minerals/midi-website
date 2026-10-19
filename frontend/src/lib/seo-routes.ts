@@ -5,12 +5,11 @@ export const PUBLIC_STATIC_PATHS: string[] = [
   "/services",
   "/publications",
   "/products",
-  "/facilities",
   "/careers",
   "/contact",
   "/businesses",
   "/businesses/overview",
-  "/businesses/import-export",
-  "/businesses/trading",
-  "/businesses/warehousing"
+  "/businesses/mineral-processing",
+  "/businesses/value-addition",
+  "/businesses/research-innovation"
 ];

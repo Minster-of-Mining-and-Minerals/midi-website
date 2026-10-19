@@ -77,14 +77,6 @@ export const routePermissions: RouteConfig[] = [
             anyPermissions: ["SERVICES:READ"],
         },
     },
-    {
-        path: "/admin/facilities",
-        label: "Facilities",
-        icon: "Building",
-        permissions: {
-            anyPermissions: ["FACILITIES:READ"],
-        },
-    },
 
     {
         path: "/admin/contacts",

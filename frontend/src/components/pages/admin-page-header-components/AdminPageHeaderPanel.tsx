@@ -28,7 +28,6 @@ const PAGE_OPTIONS = [
     { value: "businesses", label: "Businesses Page" },
     { value: "careers", label: "Careers Page" },
     { value: "contact", label: "Contact Page" },
-    { value: "facilities", label: "Facilities Page" },
     { value: "news", label: "News Page" },
     { value: "products", label: "Products Page" },
     { value: "services", label: "Services Page" },

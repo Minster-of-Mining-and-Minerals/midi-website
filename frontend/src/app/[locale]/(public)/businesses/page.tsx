@@ -102,12 +102,12 @@ export default async function BusinessesPage({
   // Cross-module institutional links
   const institutionalLinks = [
     {
-      title: isAm ? "የላቦራቶሪ እና አውደ ጥናት ማዕከላት" : "Laboratories & Pilot Facilities",
+      title: isAm ? "ተቋማዊ ማዕቀፍ እና አጠቃላይ እይታ" : "Technical Framework & Overview",
       description: isAm
-        ? "የላቁ የኤክስሬይ (XRF/XRD) ማዕድን ምርመራዎች እና የስልጠና ወርክሾፖችን ይመልከቱ።"
-        : "Explore certified mineral characterization, assay laboratories, and foundry workshops.",
-      href: `/${locale}/facilities`,
-      icon: Building2,
+        ? "የተቋሙን ስትራቴጂካዊ የቴክኒክ ማዕቀፍ እና የልማት ፕሮግራሞች ይመልከቱ።"
+        : "Explore institutional technical framework, testing criteria, and development programs.",
+      href: `/${locale}/businesses/overview`,
+      icon: Layers,
     },
     {
       title: isAm ? "የቴክኒክ የማማከር አገልግሎቶች" : "Technical Advisory Services",

@@ -77,7 +77,6 @@ export const baseApi = createApi({
     "Purpose",
     "News",
     "Event",
-    "Facility",
     "Certification",
     "BusinessOverview",
     "BusinessNodes",

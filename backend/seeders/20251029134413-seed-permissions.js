@@ -20,7 +20,6 @@ module.exports = {
       { resource: "businesses", actions: crudActions },
       { resource: "business_overview", actions: ["read", "update"] },
       { resource: "services", actions: crudActions },
-      { resource: "facilities", actions: crudActions },
       { resource: "contacts", actions: crudActions },
       { resource: "contact_messages", actions: ["read", "delete"] },
       { resource: "footer", actions: ["read", "update"] },

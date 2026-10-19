@@ -25,11 +25,6 @@ export const PAGE_SEO: Record<string, { title: string; description: string }> = 
     description:
       "Explore Ethiopia's mineral potential across metallic, energy, agro-minerals, cement, ceramics, glass, dimensional stones, and gemstones.",
   },
-  "/facilities": {
-    title: "Facilities & Centers of Excellence",
-    description:
-      "Advanced mineral industry workshops, training centers, material testing laboratories, and tool rooms across Ethiopia.",
-  },
   "/careers": {
     title: "Careers & Opportunities",
     description:
@@ -64,21 +59,6 @@ export const PAGE_SEO: Record<string, { title: string; description: string }> = 
     title: "Applied Research, Technology Transfer & Innovation | MIDI",
     description:
       "Bench-scale testing, pilot trials, metallurgical solutions, and technical knowledge dissemination under the Mineral Industry Development Institute.",
-  },
-  "/businesses/import-export": {
-    title: "Mineral Industry Development | MIDI",
-    description:
-      "Mineral processing, beneficiation, and domestic value addition under the Mineral Industry Development Institute.",
-  },
-  "/businesses/trading": {
-    title: "Mineral Industry Development | MIDI",
-    description:
-      "Mineral value chains and industrial transformation supported by the Mineral Industry Development Institute.",
-  },
-  "/businesses/warehousing": {
-    title: "Facilities & Laboratories | MIDI",
-    description:
-      "Advanced testing laboratories, pilot plants, and workshop facilities of the Mineral Industry Development Institute.",
   },
   "/news": {
     title: "News & Publications",

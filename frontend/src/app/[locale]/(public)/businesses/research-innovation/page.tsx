@@ -270,11 +270,11 @@ export default function ResearchInnovationPage() {
                 <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-0.5 transition-transform" />
               </Link>
               <Link
-                href={`/${locale}/facilities`}
+                href={`/${locale}/services`}
                 className="inline-flex items-center px-5 py-3 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 font-semibold text-xs md:text-sm transition-all"
               >
-                <FlaskConical className="w-4 h-4 mr-2 text-primary" />
-                <span>{isAm ? "የላቦራቶሪ ፍተሻ አቅሞች" : "Research Facilities"}</span>
+                <Wrench className="w-4 h-4 mr-2 text-primary" />
+                <span>{isAm ? "የቴክኒክ የማማከር አገልግሎቶች" : "Technical Advisory Services"}</span>
               </Link>
             </div>
           </div>

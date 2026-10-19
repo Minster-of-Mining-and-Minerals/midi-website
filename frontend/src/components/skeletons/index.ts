@@ -55,8 +55,6 @@ export { ProductCardSkeleton } from "./public/products/ProductSkeletons";
 // Businesses
 export { BusinessOverviewSkeleton } from "./public/businesses/BusinessOverviewSkeleton";
 
-// Facilities
-export { PhysicalFootprintSkeleton, EditorialIntroSkeleton, FacilityEditorialShowcaseSkeleton } from "./public/facilities/FacilitySkeletons";
 
 // Layout
 export { PageHeaderSkeleton } from "./public/layout/PageHeaderSkeleton";
@@ -74,4 +72,4 @@ export { MultiSectorCapabilitySkeleton } from "./public/services/MultiSectorCapa
 export { ServiceExperienceSkeleton } from "./public/services/ServiceExperienceSkeleton";
 
 // Businesses
-export { OurBusinessesSkeleton, WarehousingTradingSkeleton, ImportExportSkeleton, WarehouseShowcaseSkeleton, TradingSkeleton } from "./public/businesses/BusinessSkeletons";
+export { OurBusinessesSkeleton } from "./public/businesses/BusinessSkeletons";

@@ -22,6 +22,7 @@ import {
   Compass,
   FileCheck,
   RotateCcw,
+  BookOpen,
 } from "lucide-react";
 
 export default function MineralProcessingPage() {
@@ -287,11 +288,11 @@ export default function MineralProcessingPage() {
             {/* CTAs */}
             <div className="flex flex-wrap gap-4 pt-3">
               <Link
-                href={`/${locale}/facilities`}
+                href={`/${locale}/publications`}
                 className="inline-flex items-center px-5 py-3 rounded-xl bg-primary text-white font-semibold text-xs md:text-sm shadow-sm hover:bg-primary/95 transition-all group"
               >
-                <Building2 className="w-4 h-4 mr-2" />
-                <span>{isAm ? "የላቦራቶሪ እና የሙከራ ማዕከላት" : "Analytical Testing Facilities"}</span>
+                <BookOpen className="w-4 h-4 mr-2" />
+                <span>{isAm ? "የሂደት ጥናቶች እና ህትመቶች" : "Processing Studies & Publications"}</span>
                 <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-0.5 transition-transform" />
               </Link>
               <Link

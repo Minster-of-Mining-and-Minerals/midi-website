@@ -29,8 +29,8 @@ module.exports = {
         path: "/businesses",
         order: 3,
         translations: {
-          en: "Businesses",
-          am: "ንግዶች",
+          en: "Mineral Industry Development",
+          am: "የማዕድን ኢንዱስትሪ ልማት",
         },
         children: [
           {
@@ -38,35 +38,35 @@ module.exports = {
             path: "/businesses/overview",
             order: 1,
             translations: {
-              en: "Overview",
-              am: "አጠቃላይ እይታ",
+              en: "Development Overview",
+              am: "የልማት አጠቃላይ እይታ",
             },
           },
           {
-            key: "trading",
-            path: "/businesses/trading",
+            key: "mineral-processing",
+            path: "/businesses/mineral-processing",
             order: 2,
             translations: {
-              en: "Trading",
-              am: "ንግድ",
+              en: "Mineral Processing & Beneficiation",
+              am: "የማዕድን ማቀነባበሪያ እና ማበልፀጊያ",
             },
           },
           {
-            key: "import-export",
-            path: "/businesses/import-export",
+            key: "value-addition",
+            path: "/businesses/value-addition",
             order: 3,
             translations: {
-              en: "Import & Export",
-              am: "አስመጪ እና ላኪ",
+              en: "Manufacturing & Value Addition",
+              am: "እሴት መጨመር እና ማኑፋክቸሪንግ",
             },
           },
           {
-            key: "warehousing",
-            path: "/businesses/warehousing",
+            key: "research-innovation",
+            path: "/businesses/research-innovation",
             order: 4,
             translations: {
-              en: "Warehousing",
-              am: "መጋዘን",
+              en: "Applied Research & Innovation",
+              am: "ተግባራዊ ምርምር እና ቴክኖሎጂ",
             },
           },
         ],
@@ -87,15 +87,6 @@ module.exports = {
         translations: {
           en: "Services",
           am: "አገልግሎቶች",
-        },
-      },
-      {
-        key: "facilities",
-        path: "/facilities",
-        order: 6,
-        translations: {
-          en: "Facilities",
-          am: "መገልገያዎች",
         },
       },
       {

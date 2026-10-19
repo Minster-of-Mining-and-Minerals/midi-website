@@ -29,7 +29,6 @@ module.exports = {
       { resource: "businesses", actions: crudActions },
       { resource: "business_overview", actions: ["read", "update"] },
       { resource: "services", actions: crudActions },
-      { resource: "facilities", actions: crudActions },
       
       // Content & Marketing
       { resource: "news", actions: [...crudActions, "publish"] },

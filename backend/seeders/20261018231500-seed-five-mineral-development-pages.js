@@ -336,10 +336,16 @@ module.exports = {
         }
       }
 
-      // Ensure retired subroutes remain hidden from navbar
+      // Remove retired subroutes and their translations
       await queryInterface.sequelize.query(`
-        UPDATE routes
-        SET show_in_navbar = false, updated_at = NOW()
+        DELETE FROM route_translations
+        WHERE route_id IN (
+          SELECT route_id FROM routes
+          WHERE path IN ('/businesses/trading', '/businesses/import-export', '/businesses/warehousing')
+        );
+      `);
+      await queryInterface.sequelize.query(`
+        DELETE FROM routes
         WHERE path IN ('/businesses/trading', '/businesses/import-export', '/businesses/warehousing');
       `);
     }

@@ -46,7 +46,35 @@ export default function Layout({
   const { data: routes = [], isLoading } = useGetRoutesQuery();
 
   const dynamicItems = useMemo(() => {
-    if (!routes || routes.length === 0) return [];
+    const defaultItems = [
+      {
+        label: isAm ? "የማዕድን ኢንዱስትሪ ልማት" : "Mineral Industry Development",
+        slug: "/businesses",
+        description: fallbackDescriptions["/businesses"][isAm ? "am" : "en"],
+      },
+      {
+        label: isAm ? "የልማት አጠቃላይ እይታ" : "Development Overview",
+        slug: "/businesses/overview",
+        description: fallbackDescriptions["/businesses/overview"][isAm ? "am" : "en"],
+      },
+      {
+        label: isAm ? "የማዕድን ማቀነባበሪያ እና ማበልፀጊያ" : "Mineral Processing & Beneficiation",
+        slug: "/businesses/mineral-processing",
+        description: fallbackDescriptions["/businesses/mineral-processing"][isAm ? "am" : "en"],
+      },
+      {
+        label: isAm ? "እሴት መጨመር እና ማኑፋክቸሪንግ" : "Manufacturing & Value Addition",
+        slug: "/businesses/value-addition",
+        description: fallbackDescriptions["/businesses/value-addition"][isAm ? "am" : "en"],
+      },
+      {
+        label: isAm ? "ተግባራዊ ምርምር እና ቴክኖሎጂ" : "Applied Research & Innovation",
+        slug: "/businesses/research-innovation",
+        description: fallbackDescriptions["/businesses/research-innovation"][isAm ? "am" : "en"],
+      },
+    ];
+
+    if (!routes || routes.length === 0) return defaultItems;
 
     const getLabel = (translations?: any[]) => {
       if (!translations || translations.length === 0) return "";
@@ -58,7 +86,7 @@ export default function Layout({
     };
 
     const businessesRoute = routes.find((r: any) => r.path === "/businesses");
-    if (!businessesRoute) return [];
+    if (!businessesRoute) return defaultItems;
 
     const defaultTitle = isAm ? "የማዕድን ኢንዱስትሪ ልማት" : "Mineral Industry Development";
     const defaultDesc = isAm

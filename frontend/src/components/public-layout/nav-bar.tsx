@@ -55,11 +55,17 @@ export default function PublicNavbar() {
         const fallbackNavItems: NavItem[] = [
             { name: locale === "am" ? "መነሻ" : "Home", link: "/" },
             { name: locale === "am" ? "ስለኛ" : "About", link: "/about" },
-            { name: locale === "am" ? "የMIDI ፕሮጀክት" : "MIDI Project", link: "/midi-project" },
-            { name: locale === "am" ? "የማዕድን ልማት" : "Mineral Industry Dev", link: "/businesses" },
-            { name: locale === "am" ? "ህትመቶች እና ምርምር" : "Publications & Research", link: "/publications" },
+            {
+                name: locale === "am" ? "የማዕድን ልማት" : "Mineral Industry Dev",
+                link: "/businesses",
+                children: [
+                    { name: locale === "am" ? "የልማት አጠቃላይ እይታ" : "Development Overview", link: "/businesses/overview" },
+                    { name: locale === "am" ? "የማዕድን ማቀነባበሪያ እና ማበልፀጊያ" : "Mineral Processing", link: "/businesses/mineral-processing" },
+                    { name: locale === "am" ? "እሴት መጨመር እና ማኑፋክቸሪንግ" : "Value Addition", link: "/businesses/value-addition" },
+                    { name: locale === "am" ? "ተግባራዊ ምርምር እና ቴክኖሎጂ" : "Research & Innovation", link: "/businesses/research-innovation" },
+                ],
+            },
             { name: locale === "am" ? "አገልግሎቶች" : "Services", link: "/services" },
-            { name: locale === "am" ? "መገልገያዎች" : "Facilities", link: "/facilities" },
             { name: locale === "am" ? "ዜና" : "News", link: "/news" },
             { name: locale === "am" ? "ስራዎች" : "Careers", link: "/careers" },
             { name: locale === "am" ? "እውቂያ" : "Contact", link: "/contact" },

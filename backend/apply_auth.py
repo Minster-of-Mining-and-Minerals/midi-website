@@ -24,9 +24,6 @@ mapping = {
     "serviceExperienceRoutes.js": "services",
     "serviceCapabilityRoutes.js": "services",
     
-    # facilities
-    "facilityRoutes.js": "facilities",
-    
     # news
     "newsRoutes.js": "news",
     "tagRoutes.js": "tags",
