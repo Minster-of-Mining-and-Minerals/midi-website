@@ -418,38 +418,34 @@ export default function MineralProcessingPage() {
                     setActiveStage(idx);
                   }
                 }}
-                className={`relative text-left p-5 rounded-2xl border transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary ${
-                  isSelected
+                className={`relative text-left p-5 rounded-2xl border transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary ${isSelected
                     ? "bg-slate-950 text-white border-primary shadow-lg ring-1 ring-primary"
                     : "bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-700"
-                }`}
+                  }`}
                 role="tab"
                 aria-selected={isSelected}
               >
                 <div className="flex items-center justify-between mb-3">
                   <span
-                    className={`text-xs font-mono px-2 py-0.5 rounded font-bold ${
-                      isSelected
+                    className={`text-xs font-mono px-2 py-0.5 rounded font-bold ${isSelected
                         ? "bg-primary text-white"
                         : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
-                    }`}
+                      }`}
                   >
                     STAGE {stage.stageNumber}
                   </span>
                   {idx < flowsheetStages.length - 1 && (
                     <ArrowRight
-                      className={`w-4 h-4 hidden lg:block ${
-                        isSelected ? "text-primary" : "text-slate-400"
-                      }`}
+                      className={`w-4 h-4 hidden lg:block ${isSelected ? "text-primary" : "text-slate-400"
+                        }`}
                     />
                   )}
                 </div>
 
                 <h3 className="font-bold text-sm sm:text-base mb-1 line-clamp-1">{stage.shortTitle}</h3>
                 <p
-                  className={`text-xs line-clamp-2 leading-relaxed ${
-                    isSelected ? "text-slate-300" : "text-slate-500 dark:text-slate-400"
-                  }`}
+                  className={`text-xs line-clamp-2 leading-relaxed ${isSelected ? "text-slate-300" : "text-slate-500 dark:text-slate-400"
+                    }`}
                 >
                   {stage.tagline}
                 </p>
@@ -574,28 +570,25 @@ export default function MineralProcessingPage() {
                 <button
                   key={method.id}
                   onClick={() => setActiveMethod(method.id)}
-                  className={`w-full text-left p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 focus:outline-none focus:ring-2 focus:ring-primary ${
-                    isSelected
+                  className={`w-full text-left p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 focus:outline-none focus:ring-2 focus:ring-primary ${isSelected
                       ? "bg-primary text-white border-primary shadow-md"
                       : "bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700"
-                  }`}
+                    }`}
                   role="tab"
                   aria-selected={isSelected}
                 >
                   <div className="flex items-center gap-3">
                     <div
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                        isSelected ? "bg-white/20 text-white" : "bg-primary/10 text-primary"
-                      }`}
+                      className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${isSelected ? "bg-white/20 text-white" : "bg-primary/10 text-primary"
+                        }`}
                     >
                       <Icon className="w-5 h-5" />
                     </div>
                     <div>
                       <p className="font-bold text-sm leading-tight">{method.name}</p>
                       <p
-                        className={`text-[11px] font-mono mt-0.5 ${
-                          isSelected ? "text-white/80" : "text-slate-500"
-                        }`}
+                        className={`text-[11px] font-mono mt-0.5 ${isSelected ? "text-white/80" : "text-slate-500"
+                          }`}
                       >
                         {method.badge}
                       </p>
@@ -664,75 +657,6 @@ export default function MineralProcessingPage() {
                 ))}
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 4: Engineering Report & Advisory Capabilities */}
-      <section className="bg-slate-900 text-white rounded-3xl p-8 lg:p-10 border border-slate-800 space-y-6">
-        <div className="flex items-center gap-2 text-amber-400 text-xs font-mono uppercase tracking-widest">
-          <FileCheck className="w-4 h-4" />
-          <span>{isAm ? "ተቋማዊ የቴክኒክ የማማከር ድጋፍ" : "ENGINEERING ADVISORY & FLOWSHEET SIMULATION"}</span>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-8 space-y-4">
-            <h3 className="text-2xl md:text-3xl font-extrabold text-white leading-tight">
-              {isAm
-                ? "ለሀገር ውስጥ አምራቾች የሚሰጥ የፍሎውሺት ማረጋገጫ እና የኪሳራ ቅነሳ ድጋፍ"
-                : "Independent Flowsheet Verification to Eliminate Scale-Up Processing Risks"}
-            </h3>
-            <p className="text-slate-300 text-sm leading-relaxed">
-              {isAm
-                ? "አዳዲስ የማዕድን ማበልፀጊያ ፋብሪካዎች ከመገንባታቸው በፊት ወይም ነባር ፋብሪካዎች የምርት አቅማቸውን ለማሳደግ ሲፈልጉ፣ ተቋሙ በላቦራቶሪ ደረጃ የኦር ባህሪ ጥናት እና የሂደት ፍሰት-ንድፍ (Flowsheet) ግምገማ በማድረግ ኪሳራን የሚቀንሱ እና የማዕድን ማገገምን (Recovery Rate) የሚያሳድጉ ምክረ-ሀሳቦችን ያቀርባል።"
-                : "Before committing significant capital to full-scale mineral processing plants, mining enterprises require bench-scale testing and flowsheet simulation. MIDI provides independent analytical evaluation to confirm whether domestic ore deposits can be economically beneficiated to target industrial purity standards."}
-            </p>
-
-            <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-400 space-y-1 font-mono">
-              <p className="text-amber-400 font-bold uppercase">
-                {isAm ? "ተቋማዊ ማስታወሻ:" : "INSTITUTIONAL NOTICE:"}
-              </p>
-              <p>
-                {isAm
-                  ? "የተገለጹት ቴክኒኮች በአጠቃላይ የማዕድን ማበልፀጊያ ምህንድስና ላይ የተመሰረቱ ናቸው። ተቋሙ በላቦራቶሪዎቹ የሚያከናውናቸው የተወሰኑ የፍተሻ አገልግሎቶች በይፋዊው የአገልግሎት ገጽ ላይ ተዘርዝረዋል።"
-                  : "The separation techniques described represent general mineral dressing engineering standards. Specific laboratory diagnostic and assay services officially offered by MIDI are cataloged under the institutional Services and Facilities modules."}
-              </p>
-            </div>
-          </div>
-
-          <div className="lg:col-span-4 space-y-3">
-            <Link
-              href={`/${locale}/facilities`}
-              className="w-full flex items-center justify-between p-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs md:text-sm transition-all border border-slate-700 group"
-            >
-              <div className="flex items-center gap-3">
-                <Microscope className="w-5 h-5 text-primary" />
-                <span>{isAm ? "የላቦራቶሪ ፍተሻ ማዕከላት" : "Characterization Facilities"}</span>
-              </div>
-              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
-            </Link>
-
-            <Link
-              href={`/${locale}/services`}
-              className="w-full flex items-center justify-between p-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs md:text-sm transition-all border border-slate-700 group"
-            >
-              <div className="flex items-center gap-3">
-                <Wrench className="w-5 h-5 text-amber-400" />
-                <span>{isAm ? "የቴክኒክ ድጋፍ መጠየቂያ" : "Request Flowsheet Advisory"}</span>
-              </div>
-              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
-            </Link>
-
-            <Link
-              href={`/${locale}/publications`}
-              className="w-full flex items-center justify-between p-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs md:text-sm transition-all border border-slate-700 group"
-            >
-              <div className="flex items-center gap-3">
-                <BarChart3 className="w-5 h-5 text-emerald-400" />
-                <span>{isAm ? "የማዕድን ቴክኒክ ህትመቶች" : "Mineral Technical Studies"}</span>
-              </div>
-              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
-            </Link>
           </div>
         </div>
       </section>
