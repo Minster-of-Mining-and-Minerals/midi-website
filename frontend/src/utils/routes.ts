@@ -121,18 +121,6 @@ export const routePermissions: RouteConfig[] = [
                 icon: "Tag",
                 permissions: { anyPermissions: ["PUBLICATION_CATEGORIES:READ"] },
             },
-            {
-                path: "/admin/publications/inquiries",
-                label: "Inquiries & Requests",
-                icon: "MessageSquare",
-                permissions: { anyPermissions: ["PUBLICATION_INQUIRIES:READ"] },
-            },
-            {
-                path: "/admin/publications/payments",
-                label: "Payment Review",
-                icon: "CreditCard",
-                permissions: { anyPermissions: ["PUBLICATION_PAYMENTS:READ"] },
-            },
         ],
     },
     {

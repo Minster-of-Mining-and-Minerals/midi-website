@@ -264,6 +264,7 @@ export const {
 
     useGetPublicationsQuery,
     useGetPublicationByIdentifierQuery,
+    useLazyGetPublicationByIdentifierQuery,
     useCreatePublicationMutation,
     useUpdatePublicationMutation,
     useDeletePublicationMutation,

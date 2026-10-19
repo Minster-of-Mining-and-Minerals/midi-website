@@ -241,6 +241,8 @@ exports.getPublication = async (req, res) => {
             "file_size",
             "mime_type",
             "is_public",
+            // Admins need the storage path to re-submit files when editing
+            ...(isAdmin ? ["file_path"] : []),
           ],
         },
         {

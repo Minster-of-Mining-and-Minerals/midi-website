@@ -84,6 +84,18 @@ const config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      fontFamily: {
+        display: ["var(--font-display)", "Georgia", "serif"],
+      },
+      keyframes: {
+        "hero-progress": {
+          from: { width: "0%" },
+          to: { width: "100%" },
+        },
+      },
+      animation: {
+        "hero-progress": "hero-progress linear forwards",
+      },
     },
   },
   plugins: [tailwindcssAnimate],

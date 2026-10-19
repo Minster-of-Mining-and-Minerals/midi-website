@@ -31,7 +31,7 @@ export default async function PublicationsPage({
     const { locale } = await params;
 
     return (
-        <main className="min-h-screen bg-slate-50 flex flex-col">
+        <main className="min-h-screen bg-[#f7f9fc] flex flex-col">
             <PageHeader
                 pageIdentifier="publications"
                 title={

@@ -1,325 +1,363 @@
-"use strict";
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import clsx from "clsx";
 import { useLocale } from "next-intl";
-import { Search, BookOpen, X, ChevronLeft, ChevronRight } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { BookOpen, ChevronLeft, ChevronRight, LayoutGrid, List, Search, Tag, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useGetPublicationsQuery, useGetPublicationCategoriesQuery } from "@/redux/api/publicationApi";
 import PublicationCard from "./PublicationCard";
-import {
-    useGetPublicationsQuery,
-    useGetPublicationCategoriesQuery,
-} from "@/redux/api/publicationApi";
+import PublicationListItem from "./PublicationListItem";
+import { SORT_OPTIONS } from "./publicationMeta";
+
+const PAGE_SIZE = 12;
+
+// Card widths close to pmo.gov.et (~270–300px) alongside the filter sidebar.
+const GRID = "grid grid-cols-1 gap-6 sm:grid-cols-2 lg:gap-8 xl:grid-cols-3 xl:gap-10";
+
+type FilterOption = { value: string; label: string; count?: number };
+
+function FilterGroup({
+    title,
+    options,
+    value,
+    onChange,
+}: {
+    title: string;
+    options: FilterOption[];
+    value: string;
+    onChange: (value: string) => void;
+}) {
+    return (
+        <fieldset>
+            <legend className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted">{title}</legend>
+            <div className="space-y-0.5">
+                {options.map((opt) => {
+                    const active = value === opt.value;
+                    return (
+                        <button
+                            key={opt.value}
+                            type="button"
+                            onClick={() => onChange(opt.value)}
+                            aria-pressed={active}
+                            className={clsx(
+                                "flex w-full items-center justify-between gap-2 rounded-md px-2.5 py-1.5 text-start text-sm transition",
+                                active ? "bg-primary/10 font-semibold text-primary" : "text-secondary hover:bg-slate-100"
+                            )}
+                        >
+                            <span className="truncate">{opt.label}</span>
+                            {opt.count !== undefined && (
+                                <span className={clsx("text-xs tabular-nums", active ? "text-primary" : "text-muted")}>
+                                    {opt.count}
+                                </span>
+                            )}
+                        </button>
+                    );
+                })}
+            </div>
+        </fieldset>
+    );
+}
+
+function pageList(current: number, total: number): (number | "…")[] {
+    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+    const pages: (number | "…")[] = [1];
+    const start = Math.max(2, current - 1);
+    const end = Math.min(total - 1, current + 1);
+    if (start > 2) pages.push("…");
+    for (let p = start; p <= end; p++) pages.push(p);
+    if (end < total - 1) pages.push("…");
+    pages.push(total);
+    return pages;
+}
 
 export default function PublicationGrid() {
     const locale = useLocale();
+    const lang = locale === "am" ? "am" : "en";
+    const tr = (en: string, am: string) => (lang === "am" ? am : en);
 
-    // Filters state
-    const [searchQuery, setSearchQuery] = useState("");
-    const [selectedCategory, setSelectedCategory] = useState<string>("all");
-    const [selectedDocType, setSelectedDocType] = useState<string>("all");
-    const [selectedAccessMode, setSelectedAccessMode] = useState<string>("all");
-    const [sortBy, setSortBy] = useState<string>("publication_date");
-    const [page, setPage] = useState<number>(1);
-    const limit = 12;
+    const [searchInput, setSearchInput] = useState("");
+    const [search, setSearch] = useState("");
+    const [category, setCategory] = useState("all");
+    const [sort, setSort] = useState("newest");
+    const [view, setView] = useState<"grid" | "list">("grid");
+    const [page, setPage] = useState(1);
 
-    // Fetch categories
-    const { data: categories = [] } = useGetPublicationCategoriesQuery({
-        isPublic: true,
-    });
+    // Debounce search so we don't query on every keystroke
+    useEffect(() => {
+        const id = setTimeout(() => {
+            setSearch(searchInput.trim());
+            setPage(1);
+        }, 400);
+        return () => clearTimeout(id);
+    }, [searchInput]);
 
-    // Fetch publications with server-side filtering
-    const {
-        data: publicationData,
-        isLoading: isPublicationsLoading,
-        isFetching,
-    } = useGetPublicationsQuery({
-        category: selectedCategory !== "all" ? selectedCategory : undefined,
-        search: searchQuery.trim() ? searchQuery.trim() : undefined,
-        document_type: selectedDocType !== "all" ? selectedDocType : undefined,
-        access_mode: selectedAccessMode !== "all" ? selectedAccessMode : undefined,
-        sort_by: sortBy,
-        sort_order: "DESC",
+    const sortOption = SORT_OPTIONS.find((s) => s.value === sort) ?? SORT_OPTIONS[0];
+
+    const { data: categories = [] } = useGetPublicationCategoriesQuery({ isPublic: true });
+    const { data: totals } = useGetPublicationsQuery({ page: 1, limit: 1 });
+    const { data, isLoading, isFetching } = useGetPublicationsQuery({
+        category: category !== "all" ? category : undefined,
+        search: search || undefined,
+        sort_by: sortOption.sort_by,
+        sort_order: sortOption.sort_order,
         page,
-        limit,
+        limit: PAGE_SIZE,
     });
 
-    const publications = publicationData?.data || [];
-    const meta = publicationData?.meta;
-    const totalPages = meta?.totalPages || 1;
+    const publications = data?.data ?? [];
+    const total = data?.meta?.total ?? publications.length;
+    const totalPages = data?.meta?.totalPages ?? 1;
+    const libraryTotal = totals?.meta?.total;
 
-    const resetFilters = () => {
-        setSearchQuery("");
-        setSelectedCategory("all");
-        setSelectedDocType("all");
-        setSelectedAccessMode("all");
-        setSortBy("publication_date");
+    const withReset = <T,>(setter: (v: T) => void) => (v: T) => {
+        setter(v);
         setPage(1);
     };
 
-    const hasActiveFilters =
-        searchQuery !== "" ||
-        selectedCategory !== "all" ||
-        selectedDocType !== "all" ||
-        selectedAccessMode !== "all";
+    const hasFilters = category !== "all" || !!search;
+
+    const resetAll = () => {
+        setSearchInput("");
+        setSearch("");
+        setCategory("all");
+        setPage(1);
+    };
+
+    const categoryOptions: FilterOption[] = [
+        { value: "all", label: tr("All categories", "ሁሉም ምድቦች"), count: libraryTotal },
+        ...categories.map((c) => ({
+            value: c.slug,
+            label: (lang === "am" && c.name_am) || c.name,
+            count: c.publication_count !== undefined ? Number(c.publication_count) : undefined,
+        })),
+    ];
+    const filterPanel = (
+        <FilterGroup
+            title={tr("Category", "ምድብ")}
+            options={categoryOptions}
+            value={category}
+            onChange={withReset(setCategory)}
+        />
+    );
 
     return (
-        <section className="py-12 px-4 md:px-8 max-w-7xl mx-auto w-full">
-            {/* Filter & Search Bar */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 mb-8 space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-                    {/* Search Input */}
-                    <div className="relative md:col-span-5">
-                        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                        <Input
-                            type="text"
-                            placeholder={
-                                locale === "am"
-                                    ? "በአርእስት፣ ደራሲ ወይም ቁልፍ ቃል ይፈልጉ..."
-                                    : "Search by title, author, or reference number..."
-                            }
-                            value={searchQuery}
-                            onChange={(e) => {
-                                setSearchQuery(e.target.value);
-                                setPage(1);
-                            }}
-                            className="pl-10 h-11 bg-slate-50/50 border-slate-200 focus-visible:ring-primary rounded-xl"
+        <section className="relative w-full">
+            <div
+                className="pointer-events-none absolute inset-0 opacity-[0.035]"
+                style={{ backgroundImage: "radial-gradient(hsl(var(--secondary)) 1px, transparent 0)", backgroundSize: "36px 36px" }}
+            />
+
+            <div className="relative mx-auto max-w-7xl px-4 pb-16 lg:px-8">
+                {/* Search */}
+                <div className="pb-8 pt-10 md:pt-12">
+                    <div className="relative mx-auto w-full max-w-xl">
+                        <Search className="absolute start-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+                        <input
+                            type="search"
+                            value={searchInput}
+                            onChange={(e) => setSearchInput(e.target.value)}
+                            placeholder={tr("Search title, author or reference…", "በርዕስ፣ ደራሲ ወይም ማጣቀሻ ይፈልጉ…")}
+                            aria-label={tr("Search publications", "ህትመቶችን ይፈልጉ")}
+                            className="h-12 w-full rounded-full border border-slate-200 bg-white ps-11 pe-11 text-sm text-secondary shadow-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
                         />
-                        {searchQuery && (
+                        {searchInput && (
                             <button
-                                onClick={() => setSearchQuery("")}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                                type="button"
+                                onClick={() => setSearchInput("")}
+                                aria-label={tr("Clear search", "ፍለጋ አጽዳ")}
+                                className="absolute end-4 top-1/2 -translate-y-1/2 text-muted hover:text-secondary"
                             >
-                                <X className="w-4 h-4" />
+                                <X className="h-4 w-4" />
                             </button>
                         )}
                     </div>
 
-                    {/* Category Selector */}
-                    <div className="md:col-span-3">
-                        <Select
-                            value={selectedCategory}
-                            onValueChange={(val) => {
-                                setSelectedCategory(val);
-                                setPage(1);
-                            }}
-                        >
-                            <SelectTrigger className="h-11 rounded-xl bg-slate-50/50 border-slate-200">
-                                <SelectValue placeholder={locale === "am" ? "ሁሉንም ምድቦች" : "All Categories"} />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="all">
-                                    {locale === "am" ? "ሁሉንም ምድቦች" : "All Categories"}
-                                </SelectItem>
-                                {categories.map((cat) => (
-                                    <SelectItem key={cat.category_id} value={cat.slug}>
-                                        {locale === "am" && cat.name_am ? cat.name_am : cat.name}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    {/* Document Type Selector */}
-                    <div className="md:col-span-2">
-                        <Select
-                            value={selectedDocType}
-                            onValueChange={(val) => {
-                                setSelectedDocType(val);
-                                setPage(1);
-                            }}
-                        >
-                            <SelectTrigger className="h-11 rounded-xl bg-slate-50/50 border-slate-200">
-                                <SelectValue placeholder={locale === "am" ? "የሰነድ አይነት" : "Document Type"} />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="all">{locale === "am" ? "ሁሉም አይነቶች" : "All Types"}</SelectItem>
-                                <SelectItem value="research_report">
-                                    {locale === "am" ? "የምርምር ሪፖርት" : "Research Report"}
-                                </SelectItem>
-                                <SelectItem value="mineral_map">
-                                    {locale === "am" ? "የማዕድን ካርታ" : "Mineral Map"}
-                                </SelectItem>
-                                <SelectItem value="book_manual">
-                                    {locale === "am" ? "መጽሐፍ / ማንዋል" : "Book & Manual"}
-                                </SelectItem>
-                                <SelectItem value="technical_publication">
-                                    {locale === "am" ? "ቴክኒካዊ ህትመት" : "Technical Paper"}
-                                </SelectItem>
-                                <SelectItem value="geological_study">
-                                    {locale === "am" ? "የጂኦሎጂ ጥናት" : "Geological Study"}
-                                </SelectItem>
-                                <SelectItem value="training_material">
-                                    {locale === "am" ? "የስልጠና ቁሳቁስ" : "Training Material"}
-                                </SelectItem>
-                                <SelectItem value="policy_strategy">
-                                    {locale === "am" ? "ፖሊሲ እና ስትራቴጂ" : "Policy Document"}
-                                </SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    {/* Access Mode Selector */}
-                    <div className="md:col-span-2">
-                        <Select
-                            value={selectedAccessMode}
-                            onValueChange={(val) => {
-                                setSelectedAccessMode(val);
-                                setPage(1);
-                            }}
-                        >
-                            <SelectTrigger className="h-11 rounded-xl bg-slate-50/50 border-slate-200">
-                                <SelectValue placeholder={locale === "am" ? "የመዳረሻ አይነት" : "Access Mode"} />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="all">{locale === "am" ? "ሁሉም መዳረሻዎች" : "All Access"}</SelectItem>
-                                <SelectItem value="open_access">
-                                    {locale === "am" ? "ነፃ መዳረሻ" : "Open Access"}
-                                </SelectItem>
-                                <SelectItem value="online_only">
-                                    {locale === "am" ? "ንባብ ብቻ" : "Online Only"}
-                                </SelectItem>
-                                <SelectItem value="enquiry_required">
-                                    {locale === "am" ? "ጥያቄ / ግዢ" : "Enquiry Required"}
-                                </SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
                 </div>
 
-                {/* Sub-bar: Category Pills & Reset */}
-                <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100">
-                    <div className="flex flex-wrap items-center gap-1.5 overflow-x-auto pb-1 max-w-full">
-                        <button
-                            onClick={() => {
-                                setSelectedCategory("all");
-                                setPage(1);
-                            }}
-                            className={`px-3 py-1 text-xs rounded-full font-medium transition-colors ${
-                                selectedCategory === "all"
-                                    ? "bg-primary text-white"
-                                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                            }`}
-                        >
-                            {locale === "am" ? "ሁሉም" : "All"}
-                        </button>
-                        {categories.map((cat) => (
-                            <button
-                                key={cat.category_id}
-                                onClick={() => {
-                                    setSelectedCategory(cat.slug);
-                                    setPage(1);
-                                }}
-                                className={`px-3 py-1 text-xs rounded-full font-medium transition-colors ${
-                                    selectedCategory === cat.slug
-                                        ? "bg-primary text-white"
-                                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                                }`}
-                            >
-                                {locale === "am" && cat.name_am ? cat.name_am : cat.name}
-                            </button>
-                        ))}
-                    </div>
+                {/* Toolbar */}
+                <div className="grid gap-8 lg:grid-cols-[220px_1fr] lg:gap-10">
+                    {/* Sidebar filters (desktop) */}
+                    <aside className="hidden lg:block">
+                        <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto rounded-xl border border-slate-200 bg-white p-4">
+                            {filterPanel}
+                        </div>
+                    </aside>
 
-                    {hasActiveFilters && (
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={resetFilters}
-                            className="text-xs text-rose-600 hover:text-rose-700 hover:bg-rose-50 h-8 gap-1 font-medium"
-                        >
-                            <X className="w-3.5 h-3.5" />
-                            {locale === "am" ? "ማጣሪያዎችን አጽዳ" : "Clear Filters"}
-                        </Button>
-                    )}
-                </div>
-            </div>
+                    <div className="min-w-0">
+                        <div className="mb-8 space-y-3 border-y border-slate-200 py-3">
+                            {/* Category dropdown (phones & tablets; desktop uses the sidebar) */}
+                            <div className="lg:hidden">
+                                <Select value={category} onValueChange={withReset(setCategory)}>
+                                    <SelectTrigger className="h-11 w-full bg-white text-sm" aria-label={tr("Category", "ምድብ")}>
+                                        <span className="flex min-w-0 items-center gap-2">
+                                            <Tag className="h-4 w-4 shrink-0 text-primary" />
+                                            <SelectValue />
+                                        </span>
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {categoryOptions.map((opt) => (
+                                            <SelectItem key={opt.value} value={opt.value}>
+                                                {opt.label}
+                                                {opt.count !== undefined && <span className="ms-1.5 text-xs text-muted">({opt.count})</span>}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
 
-            {/* Results Grid */}
-            {isPublicationsLoading ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {Array.from({ length: 6 }).map((_, idx) => (
-                        <div
-                            key={idx}
-                            className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm animate-pulse h-96"
-                        >
-                            <div className="aspect-[16/10] bg-slate-200 w-full" />
-                            <div className="p-5 space-y-3">
-                                <div className="h-4 bg-slate-200 rounded w-1/3" />
-                                <div className="h-6 bg-slate-200 rounded w-4/5" />
-                                <div className="h-4 bg-slate-100 rounded w-full" />
-                                <div className="h-4 bg-slate-100 rounded w-2/3" />
+                            <div className="flex items-center gap-3">
+                                <p className="min-w-0 flex-1 truncate text-sm text-muted" aria-live="polite">
+                                    <span className="font-semibold text-secondary">{total}</span> {tr("results", "ውጤቶች")}
+                                    {search && (
+                                        <>
+                                            {" "}
+                                            {tr("for", "ለ")} <span className="font-semibold text-secondary">“{search}”</span>
+                                        </>
+                                    )}
+                                </p>
+                                {hasFilters && (
+                                    <button
+                                        type="button"
+                                        onClick={resetAll}
+                                        className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-primary hover:underline"
+                                    >
+                                        <X className="h-3 w-3" />
+                                        {tr("Clear", "አጽዳ")}
+                                    </button>
+                                )}
+                                <Select value={sort} onValueChange={withReset(setSort)}>
+                                    <SelectTrigger className="h-9 w-[130px] shrink-0 bg-white text-sm sm:w-[150px]" aria-label={tr("Sort", "ደርድር")}>
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent align="end">
+                                        {SORT_OPTIONS.map((s) => (
+                                            <SelectItem key={s.value} value={s.value}>
+                                                {s[lang]}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <div className="flex shrink-0 rounded-md border border-slate-200 bg-white p-0.5">
+                                    {(["grid", "list"] as const).map((mode) => {
+                                        const Icon = mode === "grid" ? LayoutGrid : List;
+                                        return (
+                                            <button
+                                                key={mode}
+                                                type="button"
+                                                onClick={() => setView(mode)}
+                                                aria-pressed={view === mode}
+                                                aria-label={mode === "grid" ? tr("Grid view", "ፍርግርግ") : tr("List view", "ዝርዝር")}
+                                                className={clsx(
+                                                    "rounded p-1.5 transition",
+                                                    view === mode ? "bg-secondary text-white" : "text-muted hover:text-secondary"
+                                                )}
+                                            >
+                                                <Icon className="h-4 w-4" />
+                                            </button>
+                                        );
+                                    })}
+                                </div>
                             </div>
                         </div>
-                    ))}
-                </div>
-            ) : publications.length === 0 ? (
-                <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center max-w-xl mx-auto shadow-sm my-8">
-                    <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4 text-slate-400">
-                        <BookOpen className="w-8 h-8" />
+
+                        {/* Results */}
+                        {isLoading ? (
+                            <div className={GRID}>
+                                {Array.from({ length: 8 }).map((_, i) => (
+                                    <div key={i} className="animate-pulse overflow-hidden rounded-lg border border-slate-200 bg-white">
+                                        <div className="aspect-[3/4] bg-slate-100 p-[7%]">
+                                            <div className="h-full w-full bg-slate-200" />
+                                        </div>
+                                        <div className="space-y-2 p-4">
+                                            <div className="h-3 w-1/3 rounded bg-slate-200" />
+                                            <div className="h-4 w-4/5 rounded bg-slate-200" />
+                                            <div className="h-3 w-1/2 rounded bg-slate-100" />
+                                            <div className="mt-4 h-10 rounded-md bg-slate-200" />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : publications.length === 0 ? (
+                            <div className="mx-auto my-8 max-w-md rounded-2xl border border-slate-200 bg-white p-10 text-center">
+                                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
+                                    <BookOpen className="h-7 w-7" />
+                                </div>
+                                <h3 className="mb-1 text-lg font-bold text-secondary">{tr("No publications found", "ምንም ህትመቶች አልተገኙም")}</h3>
+                                <p className="mb-5 text-sm text-muted">
+                                    {tr("Try a different search term or remove some filters.", "ሌላ የፍለጋ ቃል ይሞክሩ ወይም አንዳንድ ማጣሪያዎችን ያስወግዱ።")}
+                                </p>
+                                {hasFilters && (
+                                    <Button variant="outline" onClick={resetAll}>
+                                        {tr("View all publications", "ሁሉንም ህትመቶች አሳይ")}
+                                    </Button>
+                                )}
+                            </div>
+                        ) : (
+                            <div className={clsx("transition-opacity", isFetching && "opacity-60")}>
+                                {view === "grid" ? (
+                                    <div className={GRID}>
+                                        {publications.map((p) => (
+                                            <PublicationCard key={p.publication_id} publication={p} />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="space-y-3">
+                                        {publications.map((p) => (
+                                            <PublicationListItem key={p.publication_id} publication={p} />
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Pagination */}
+                        {totalPages > 1 && (
+                            <nav className="mt-14 flex items-center justify-center gap-1" aria-label={tr("Pagination", "ገጾች")}>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    disabled={page <= 1 || isFetching}
+                                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                                    aria-label={tr("Previous page", "ቀዳሚ ገጽ")}
+                                >
+                                    <ChevronLeft className="h-4 w-4 rtl:rotate-180" />
+                                </Button>
+                                {pageList(page, totalPages).map((p, i) =>
+                                    p === "…" ? (
+                                        <span key={`gap-${i}`} className="px-2 text-sm text-muted">
+                                            …
+                                        </span>
+                                    ) : (
+                                        <button
+                                            key={p}
+                                            type="button"
+                                            onClick={() => setPage(p)}
+                                            aria-current={p === page ? "page" : undefined}
+                                            className={clsx(
+                                                "h-9 min-w-9 rounded-md px-3 text-sm font-medium transition",
+                                                p === page ? "bg-secondary text-white" : "text-secondary hover:bg-slate-100"
+                                            )}
+                                        >
+                                            {p}
+                                        </button>
+                                    )
+                                )}
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    disabled={page >= totalPages || isFetching}
+                                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                                    aria-label={tr("Next page", "ቀጣይ ገጽ")}
+                                >
+                                    <ChevronRight className="h-4 w-4 rtl:rotate-180" />
+                                </Button>
+                            </nav>
+                        )}
                     </div>
-                    <h3 className="text-xl font-bold text-slate-800 mb-2">
-                        {locale === "am" ? "ምንም ህትመቶች አልተገኙም" : "No Publications Found"}
-                    </h3>
-                    <p className="text-slate-500 text-sm mb-6 leading-relaxed">
-                        {locale === "am"
-                            ? "በተመረጡት ማጣሪያዎች መሰረት ምንም አይነት ህትመት አልተገኘም። እባክዎ ሌሎች ቃላትን ወይም ምድቦችን ይሞክሩ።"
-                            : "We couldn't find any publications matching your current search or filter criteria. Try adjusting your search query or reset filters."}
-                    </p>
-                    {hasActiveFilters && (
-                        <Button onClick={resetFilters} variant="outline" className="rounded-xl">
-                            {locale === "am" ? "ሁሉንም ህትመቶች አሳይ" : "View All Publications"}
-                        </Button>
-                    )}
                 </div>
-            ) : (
-                <>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {publications.map((publication) => (
-                            <PublicationCard key={publication.publication_id} publication={publication} />
-                        ))}
-                    </div>
-
-                    {/* Pagination */}
-                    {totalPages > 1 && (
-                        <div className="flex items-center justify-center gap-2 mt-12">
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                disabled={page <= 1 || isFetching}
-                                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                                className="rounded-xl"
-                            >
-                                <ChevronLeft className="w-4 h-4 mr-1" />
-                                {locale === "am" ? "ቀዳሚ" : "Previous"}
-                            </Button>
-
-                            <span className="text-sm text-slate-600 px-3">
-                                {page} / {totalPages}
-                            </span>
-
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                disabled={page >= totalPages || isFetching}
-                                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                                className="rounded-xl"
-                            >
-                                {locale === "am" ? "ቀጣይ" : "Next"}
-                                <ChevronRight className="w-4 h-4 ml-1" />
-                            </Button>
-                        </div>
-                    )}
-                </>
-            )}
+            </div>
         </section>
     );
 }
