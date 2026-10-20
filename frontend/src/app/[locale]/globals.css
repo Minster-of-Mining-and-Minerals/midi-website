@@ -102,30 +102,30 @@
   }
 
   .admin-theme {
-    --background: 216 19% 90%;
-    /* Light gray workspace #e2e8f0 or #d9e0e7 */
+    --background: 0 0% 100%;
+    /* White workspace #ffffff */
     --foreground: 215 28% 17%;
 
-    --card: 216 19% 19%;
-    /* Dark slate #242b35 */
-    --card-foreground: 0 0% 100%;
+    --card: 0 0% 100%;
+    /* White */
+    --card-foreground: 215 28% 17%;
 
-    --popover: 216 19% 19%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 28% 17%;
 
-    --muted: 216 19% 25%;
-    --muted-foreground: 215 20% 65%;
+    --muted: 215 16% 47%;
+    --muted-foreground: 215 16% 47%;
 
-    --border: 216 19% 25%;
-    --input: 216 19% 25%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
 
-    --accent: 216 19% 25%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 210 17% 96%;
+    --accent-foreground: 215 28% 17%;
 
-    --sidebar-background: 216 19% 15%;
-    /* Deep charcoal #222933 */
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-border: 216 19% 20%;
+    --sidebar-background: 0 0% 100%;
+    /* White */
+    --sidebar-foreground: 215 28% 17%;
+    --sidebar-border: 220 13% 91%;
 
     --chart-1: 42 100% 36.5%;
     /* Brand Golden #ba8200 */

@@ -180,7 +180,7 @@ export default function AdminCanvasManager() {
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="p-6">
-                        <p className="text-sm text-white mb-6">
+                        <p className="text-sm text-muted-foreground mb-6">
                             Edit the words that appear in the dynamic canvas. The layout positions are fixed to ensure the design remains intact.
                         </p>
 
@@ -194,7 +194,7 @@ export default function AdminCanvasManager() {
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         {WORD_KEYS.filter(k => k.key.startsWith(region)).map((w) => (
                                             <div key={w.key} className="space-y-1">
-                                                <Label className="text-xs text-white">{w.label}</Label>
+                                                <Label className="text-xs text-foreground">{w.label}</Label>
                                                 <Input
                                                     value={words[w.key] || ""}
                                                     onChange={(e) => handleWordChange(w.key, e.target.value)}

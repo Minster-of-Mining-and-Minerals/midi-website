@@ -202,7 +202,7 @@ export default function PaymentList() {
             header: "Requester",
             cell: ({ row }) => {
                 const inq = row.original.inquiry;
-                if (!inq) return <span className="text-xs text-slate-400">N/A</span>;
+                if (!inq) return <span className="text-xs text-muted-foreground">N/A</span>;
                 return (
                     <div className="flex flex-col">
                         <span className="font-semibold text-slate-900 text-sm">{inq.name}</span>
@@ -216,13 +216,13 @@ export default function PaymentList() {
             header: "Publication",
             cell: ({ row }) => {
                 const pub = row.original.publication;
-                if (!pub) return <span className="text-xs text-slate-400">N/A</span>;
+                if (!pub) return <span className="text-xs text-muted-foreground">N/A</span>;
                 return (
                     <div className="flex flex-col max-w-xs">
                         <span className="font-medium text-slate-800 text-xs line-clamp-1" title={pub.title}>
                             {pub.title}
                         </span>
-                        <span className="text-[10px] text-slate-400 font-medium">
+                        <span className="text-[10px] text-muted-foreground font-medium">
                             Expected: {pub.price} ETB
                         </span>
                     </div>
@@ -249,7 +249,7 @@ export default function PaymentList() {
                             {p.payment_method?.replace(/_/g, " ")}
                         </span>
                         {p.transaction_reference && (
-                            <span className="font-mono text-[11px] text-slate-400">
+                            <span className="font-mono text-[11px] text-muted-foreground">
                                 Ref: {p.transaction_reference}
                             </span>
                         )}
@@ -263,7 +263,7 @@ export default function PaymentList() {
             cell: ({ row }) => {
                 const slip = row.original.slipAttachment;
                 if (!slip) {
-                    return <span className="text-xs text-slate-400">None</span>;
+                    return <span className="text-xs text-muted-foreground">None</span>;
                 }
                 const url = getImageUrl(slip, "medium");
                 return (

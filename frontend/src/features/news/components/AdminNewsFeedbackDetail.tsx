@@ -117,7 +117,7 @@ export default function AdminNewsFeedbackDetail() {
             accessorKey: "thought",
             header: "Comment",
             cell: ({ row }) => (
-                <p className="text-sm text-white max-w-[400px] line-clamp-3" title={row.getValue("thought")}>
+                <p className="text-sm text-foreground max-w-[400px] line-clamp-3" title={row.getValue("thought")}>
                     {row.getValue("thought")}
                 </p>
             ),

@@ -188,12 +188,12 @@ export default function AdminInquiryDetailPage() {
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                             <div>
-                                <span className="text-xs font-medium text-slate-400 block mb-0.5">Full Name</span>
+                                <span className="text-xs font-medium text-slate-500 block mb-0.5">Full Name</span>
                                 <span className="font-semibold text-slate-800">{inquiry.name}</span>
                             </div>
 
                             <div>
-                                <span className="text-xs font-medium text-slate-400 block mb-0.5">Email</span>
+                                <span className="text-xs font-medium text-slate-500 block mb-0.5">Email</span>
                                 <a
                                     href={`mailto:${inquiry.email}`}
                                     className="font-medium text-primary hover:underline flex items-center gap-1"
@@ -205,7 +205,7 @@ export default function AdminInquiryDetailPage() {
 
                             {inquiry.phone && (
                                 <div>
-                                    <span className="text-xs font-medium text-slate-400 block mb-0.5">Phone</span>
+                                    <span className="text-xs font-medium text-slate-500 block mb-0.5">Phone</span>
                                     <span className="font-medium text-slate-700 flex items-center gap-1">
                                         <Phone className="w-3.5 h-3.5 text-slate-400" />
                                         {inquiry.phone}
@@ -215,7 +215,7 @@ export default function AdminInquiryDetailPage() {
 
                             {inquiry.company && (
                                 <div>
-                                    <span className="text-xs font-medium text-slate-400 block mb-0.5">Organization</span>
+                                    <span className="text-xs font-medium text-slate-500 block mb-0.5">Organization</span>
                                     <span className="font-medium text-slate-700 flex items-center gap-1">
                                         <Building2 className="w-3.5 h-3.5 text-slate-400" />
                                         {inquiry.company}
@@ -226,7 +226,7 @@ export default function AdminInquiryDetailPage() {
 
                         {/* Inquiry Message */}
                         <div className="pt-3 border-t border-slate-100">
-                            <span className="text-xs font-medium text-slate-400 block mb-1.5">Submitted Message</span>
+                            <span className="text-xs font-medium text-slate-500 block mb-1.5">Submitted Message</span>
                             <div className="bg-slate-50 p-4 rounded-xl text-slate-700 text-sm leading-relaxed whitespace-pre-wrap border border-slate-100">
                                 {inquiry.message}
                             </div>
@@ -292,20 +292,20 @@ export default function AdminInquiryDetailPage() {
 
                             <div className="grid grid-cols-2 gap-4 text-sm">
                                 <div>
-                                    <span className="text-xs text-slate-400 block mb-0.5">Amount</span>
+                                    <span className="text-xs text-slate-500 block mb-0.5">Amount</span>
                                     <span className="font-bold text-slate-900 font-mono">
                                         {payment.amount} {payment.currency}
                                     </span>
                                 </div>
                                 <div>
-                                    <span className="text-xs text-slate-400 block mb-0.5">Method</span>
+                                    <span className="text-xs text-slate-500 block mb-0.5">Method</span>
                                     <span className="font-medium text-slate-800 capitalize">
                                         {payment.payment_method?.replace(/_/g, " ")}
                                     </span>
                                 </div>
                                 {payment.transaction_reference && (
                                     <div className="col-span-2">
-                                        <span className="text-xs text-slate-400 block mb-0.5">Transaction Ref</span>
+                                        <span className="text-xs text-slate-500 block mb-0.5">Transaction Ref</span>
                                         <span className="font-mono text-xs font-semibold text-slate-700 bg-slate-50 px-2 py-1 rounded border border-slate-200">
                                             {payment.transaction_reference}
                                         </span>
@@ -315,7 +315,7 @@ export default function AdminInquiryDetailPage() {
 
                             {payment.slipAttachment && (
                                 <div>
-                                    <span className="text-xs font-medium text-slate-400 block mb-2">Deposit Slip</span>
+                                    <span className="text-xs font-medium text-slate-500 block mb-2">Deposit Slip</span>
                                     <div className="relative aspect-[16/9] w-full max-w-sm rounded-xl overflow-hidden bg-slate-100 border border-slate-200">
                                         <Image
                                             src={getImageUrl(payment.slipAttachment, "medium")}
@@ -372,7 +372,7 @@ export default function AdminInquiryDetailPage() {
                                         </div>
 
                                         <div className="flex items-center gap-2">
-                                            <span className="text-slate-400">Token:</span>
+                                            <span className="text-slate-500">Token:</span>
                                             <span className="font-mono text-[11px] text-slate-600 bg-white px-2 py-0.5 rounded border border-slate-200 truncate max-w-sm">
                                                 {grant.access_token}
                                             </span>

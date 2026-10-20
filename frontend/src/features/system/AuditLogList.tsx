@@ -86,7 +86,7 @@ export default function AuditLogList() {
                     <span className="font-semibold text-primary">
                         {row.original.user?.full_name || "System"}
                     </span>
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs text-muted-foreground">
                         {row.original.user?.email || ""}
                     </span>
                 </div>

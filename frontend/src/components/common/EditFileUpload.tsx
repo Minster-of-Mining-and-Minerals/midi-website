@@ -309,7 +309,7 @@ export const EditFileUpload: React.FC<FileUploadFieldProps> = ({
                         <Upload className="w-6 h-6 text-gray-500" />
                         <p className="text-sm text-gray-600">Click or drag to upload</p>
                         {accept && (
-                            <p className="text-xs text-gray-400">
+                            <p className="text-xs text-muted-foreground">
                                 Accepted: {accept.replace(/,/g, ', ')}
                             </p>
                         )}

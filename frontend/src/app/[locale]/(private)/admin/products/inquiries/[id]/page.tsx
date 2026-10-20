@@ -62,17 +62,17 @@ export default function InquiryDetailPage() {
     };
 
     return (
-        <div className="mx-auto space-y-6 bg-slate-950 text-white p-6 md:p-8 rounded-2xl shadow-xl border border-slate-800">
+        <div className="mx-auto space-y-6 bg-white text-foreground p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                    <Button variant="ghost" size="icon" onClick={() => router.back()} className="text-white hover:bg-slate-800 hover:text-white">
+                    <Button variant="ghost" size="icon" onClick={() => router.back()} className="text-slate-700 hover:bg-slate-100 hover:text-slate-900">
                         <ArrowLeft className="w-5 h-5" />
                     </Button>
                     <h1 className="text-2xl font-bold tracking-tight">Inquiry Details</h1>
                 </div>
                 <Badge
                     variant={inquiry.status === "replied" ? "default" : inquiry.status === "reviewed" ? "secondary" : "outline"}
-                    className="capitalize border-slate-700"
+                    className="capitalize border-slate-300"
                 >
                     {inquiry.status || "Pending"}
                 </Badge>
@@ -80,12 +80,12 @@ export default function InquiryDetailPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Customer Details */}
-                <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-4">
-                    <h2 className="text-lg font-semibold border-b border-slate-800 pb-2 text-white">Customer Information</h2>
+                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
+                    <h2 className="text-lg font-semibold border-b border-slate-100 pb-2 text-slate-900">Customer Information</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="flex items-center gap-2 text-sm">
                             <User className="w-4 h-4 text-slate-400" />
-                            <span className="font-medium text-slate-200">{inquiry.name}</span>
+                            <span className="font-medium text-slate-800">{inquiry.name}</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm">
                             <Mail className="w-4 h-4 text-slate-400" />
@@ -94,70 +94,70 @@ export default function InquiryDetailPage() {
                         {inquiry.phone && (
                             <div className="flex items-center gap-2 text-sm">
                                 <Phone className="w-4 h-4 text-slate-400" />
-                                <span className="text-slate-300">{inquiry.phone}</span>
+                                <span className="text-slate-700">{inquiry.phone}</span>
                             </div>
                         )}
                         {inquiry.company && (
                             <div className="flex items-center gap-2 text-sm">
                                 <Building className="w-4 h-4 text-slate-400" />
-                                <span className="text-slate-300">{inquiry.company}</span>
+                                <span className="text-slate-700">{inquiry.company}</span>
                             </div>
                         )}
                     </div>
                 </div>
 
                 {/* Product Details */}
-                <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm space-y-4">
-                    <h2 className="text-lg font-semibold border-b border-slate-800 pb-2 text-white">Inquiry Context</h2>
+                <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
+                    <h2 className="text-lg font-semibold border-b border-slate-100 pb-2 text-slate-900">Inquiry Context</h2>
                     <div className="space-y-3">
                         <div className="flex items-center gap-2 text-sm">
                             <Package className="w-4 h-4 text-slate-400" />
-                            <span className="text-slate-400">Product:</span>
+                            <span className="text-slate-500">Product:</span>
                             <span className="font-semibold text-primary">{inquiry.product?.name || "N/A"}</span>
                         </div>
                         {inquiry.quantity && (
                             <div className="flex items-center gap-2 text-sm">
-                                <span className="font-medium text-slate-400">Requested Quantity:</span>
-                                <span className="text-slate-200">{inquiry.quantity}</span>
+                                <span className="font-medium text-slate-500">Requested Quantity:</span>
+                                <span className="text-slate-800">{inquiry.quantity}</span>
                             </div>
                         )}
                         <div className="flex items-center gap-2 text-sm">
                             <Calendar className="w-4 h-4 text-slate-400" />
-                            <span className="text-slate-400">Received on:</span>
-                            <span className="text-slate-300">{new Date(inquiry.created_at).toLocaleString()}</span>
+                            <span className="text-slate-500">Received on:</span>
+                            <span className="text-slate-700">{new Date(inquiry.created_at).toLocaleString()}</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             {/* Original Message */}
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm">
-                <h2 className="text-lg font-semibold mb-3 text-white">Customer's Message</h2>
-                <div className="bg-slate-950 p-4 rounded-md whitespace-pre-wrap text-sm border border-slate-800 shadow-inner text-slate-300">
+            <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                <h2 className="text-lg font-semibold mb-3 text-slate-900">Customer's Message</h2>
+                <div className="bg-slate-50 p-4 rounded-md whitespace-pre-wrap text-sm border border-slate-200 text-slate-700">
                     {inquiry.message}
                 </div>
             </div>
 
             {/* Reply Form */}
-            <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm">
-                <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-white">
+            <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-slate-900">
                     <Send className="w-5 h-5 text-primary" />
                     Send Reply
                 </h2>
                 <form onSubmit={handleSendReply} className="space-y-4">
                     <div className="space-y-2">
-                        <Label htmlFor="subject" className="text-slate-300">Subject</Label>
+                        <Label htmlFor="subject" className="text-slate-700">Subject</Label>
                         <Input
                             id="subject"
                             value={subject}
                             onChange={(e) => setSubject(e.target.value)}
                             placeholder="Email Subject"
                             required
-                            className="bg-slate-950 border-slate-700 text-white placeholder:text-slate-600 focus-visible:ring-primary"
+                            className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary"
                         />
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="message" className="text-slate-300">Message</Label>
+                        <Label htmlFor="message" className="text-slate-700">Message</Label>
                         <Textarea
                             id="message"
                             value={message}
@@ -165,7 +165,7 @@ export default function InquiryDetailPage() {
                             placeholder="Write your reply here... (Will be sent via email)"
                             rows={6}
                             required
-                            className="bg-slate-950 border-slate-700 text-white placeholder:text-slate-600 focus-visible:ring-primary"
+                            className="bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus-visible:ring-primary"
                         />
                     </div>
                     <div className="flex justify-end pt-2">

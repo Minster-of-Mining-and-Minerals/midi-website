@@ -89,7 +89,7 @@ export default function AdminContactMessageDetail() {
                             <h3 className="text-xl font-bold text-primary break-words">
                                 {message.subject}
                             </h3>
-                            <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-gray-200">
+                            <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-foreground">
                                 <span className="inline-flex items-center gap-1.5">
                                     <User className="h-4 w-4" />
                                     {message.full_name}
@@ -104,7 +104,7 @@ export default function AdminContactMessageDetail() {
                                     </a>
                                 </span>
                             </div>
-                            <div className="text-sm text-gray-300">
+                            <div className="text-sm text-muted-foreground">
                                 <span>Received {formatDateTime(message.created_at)}</span>
                                 {message.updated_at && message.updated_at !== message.created_at && (
                                     <span className="ml-4">Updated {formatDate(message.updated_at)}</span>
@@ -138,7 +138,7 @@ export default function AdminContactMessageDetail() {
                     <h4 className="text-sm font-semibold uppercase tracking-wide text-primary mb-4">
                         Message
                     </h4>
-                    <p className="text-white whitespace-pre-wrap leading-relaxed break-words">
+                    <p className="text-foreground whitespace-pre-wrap leading-relaxed break-words">
                         {message.message}
                     </p>
                 </div>

@@ -187,7 +187,7 @@ export default function UserList() {
                                 </Badge>
                             ))
                         ) : (
-                            <span className="text-xs text-gray-400 italic">No roles</span>
+                            <span className="text-xs text-muted-foreground italic">No roles</span>
                         )}
                     </div>
                 );

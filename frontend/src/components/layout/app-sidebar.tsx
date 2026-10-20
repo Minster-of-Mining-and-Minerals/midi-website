@@ -150,7 +150,7 @@ const MenuItem = ({ item, pathname, isNested = false }: MenuItemProps) => {
         <SidebarMenuSubButton
           asChild
           isActive={isExactActive}
-          className="text-white/80 hover:bg-white/5 hover:text-white transition-colors
+          className="text-sidebar-foreground/80 hover:bg-accent hover:text-sidebar-foreground transition-colors
             group-data-[collapsible=icon]:justify-center
             data-[active=true]:bg-primary
             data-[active=true]:text-primary-foreground"
@@ -173,7 +173,7 @@ const MenuItem = ({ item, pathname, isNested = false }: MenuItemProps) => {
         asChild
         isActive={isActive}
         tooltip={item.label}
-        className="text-white/80 hover:bg-white/5 hover:text-white transition-colors px-5 py-5
+        className="text-sidebar-foreground/80 hover:bg-accent hover:text-sidebar-foreground transition-colors px-5 py-5
           group-data-[collapsible=icon]:px-2
           group-data-[collapsible=icon]:justify-center
           data-[active=true]:bg-primary
@@ -238,7 +238,7 @@ const CollapsibleSection = ({ route, pathname }: CollapsibleSectionProps) => {
           <SidebarMenuButton
             tooltip={route.label}
             isActive={isActive}
-            className="text-white/80 hover:bg-white/5 hover:text-white transition-colors px-5 py-5
+            className="text-sidebar-foreground/80 hover:bg-accent hover:text-sidebar-foreground transition-colors px-5 py-5
               group-data-[collapsible=icon]:px-2
               group-data-[collapsible=icon]:justify-center
               data-[active=true]:bg-primary

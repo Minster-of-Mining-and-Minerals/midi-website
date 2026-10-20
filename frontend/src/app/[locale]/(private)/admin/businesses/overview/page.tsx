@@ -146,8 +146,8 @@ const BusinessOverviewAdminPage = () => {
                         <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4 border-b pb-4">
                             <div className="flex-1 space-y-3">
                                 <div className="flex justify-between items-center">
-                                    <h2 className="text-xl text-white font-semibold flex items-center gap-2">
-                                        <Pencil className="w-5 h-5 text-white" /> General Overview & Operations
+                                    <h2 className="text-xl text-foreground font-semibold flex items-center gap-2">
+                                        <Pencil className="w-5 h-5 text-foreground" /> General Overview & Operations
                                     </h2>
                                     <ComponentGuard anyPermissions={['BUSINESS_OVERVIEW:UPDATE']}>
                                         <Button onClick={handleSave} disabled={isUpdating} className="flex items-center gap-2">
@@ -156,12 +156,12 @@ const BusinessOverviewAdminPage = () => {
                                         </Button>
                                     </ComponentGuard>
                                 </div>
-                                <div className="grid grid-cols-1 text-white md:grid-cols-2 gap-3">
-                                    <div className="space-y-1 text-white">
+                                <div className="grid grid-cols-1 text-foreground md:grid-cols-2 gap-3">
+                                    <div className="space-y-1 text-foreground">
                                         <label className="text-xs font-medium">Section Title</label>
                                         <Input value={formData.page_metadata?.general_overview_info?.title || ''} onChange={(e) => updatePageMetadata('general_overview_info', 'title', e.target.value)} />
                                     </div>
-                                    <div className="space-y-1 text-white">
+                                    <div className="space-y-1 text-foreground">
                                         <label className="text-xs font-medium">Section Description</label>
                                         <Input value={formData.page_metadata?.general_overview_info?.description || ''} onChange={(e) => updatePageMetadata('general_overview_info', 'description', e.target.value)} />
                                     </div>
@@ -230,15 +230,15 @@ const BusinessOverviewAdminPage = () => {
                                         <label className="text-sm font-medium flex items-center gap-2">
                                             Right Hand Side Content
                                         </label>
-                                        <div className="grid grid-cols-1 text-white md:grid-cols-2 gap-3">
-                                            <div className="space-y-1 text-white">
+                                        <div className="grid grid-cols-1 text-foreground md:grid-cols-2 gap-3">
+                                            <div className="space-y-1 text-foreground">
                                                 <label className="text-xs font-medium">Title</label>
                                                 <Input
                                                     value={formData.page_metadata?.general_overview_info?.right_content?.title || ''}
                                                     onChange={(e) => updatePageMetadata('general_overview_info', 'right_content', { ...formData.page_metadata?.general_overview_info?.right_content, title: e.target.value })}
                                                 />
                                             </div>
-                                            <div className="space-y-1 text-white">
+                                            <div className="space-y-1 text-foreground">
                                                 <label className="text-xs font-medium">Icon</label>
                                                 <LucideIconPicker
                                                     value={formData.page_metadata?.general_overview_info?.right_content?.icon || 'Box'}
@@ -259,12 +259,12 @@ const BusinessOverviewAdminPage = () => {
                         <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-6 gap-4 border-b pb-4">
                             <div className="flex-1 space-y-3">
                                 <div className="flex justify-between items-center">
-                                    <h2 className="text-xl text-white dark:text-white font-semibold flex items-center gap-2">
-                                        <TrendingUp className="w-5 h-5 text-white" /> Section Info: Key Metrics
+                                    <h2 className="text-xl text-foreground dark:text-white font-semibold flex items-center gap-2">
+                                        <TrendingUp className="w-5 h-5 text-foreground" /> Section Info: Key Metrics
                                     </h2>
                                     <ComponentGuard anyPermissions={['BUSINESS_OVERVIEW:UPDATE']}>
                                         <div className="flex items-center gap-3">
-                                            <Button onClick={() => addArrayItem('key_metrics', { title: '', value: '', change: '', period: '', icon: 'TrendingUp', color: '#ba8200' })} variant="outline" className="flex items-center gap-2 bg-transparent border-slate-700 text-white hover:bg-slate-800">
+                                            <Button onClick={() => addArrayItem('key_metrics', { title: '', value: '', change: '', period: '', icon: 'TrendingUp', color: '#ba8200' })} variant="outline" className="flex items-center gap-2 bg-transparent border-slate-700 text-foreground hover:bg-slate-800">
                                                 <Plus className="w-4 h-4" /> Add Metric
                                             </Button>
                                             <Button onClick={handleSave} disabled={isUpdating} className="flex items-center gap-2">
@@ -276,7 +276,7 @@ const BusinessOverviewAdminPage = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="grid grid-cols-1 text-white md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div className="grid grid-cols-1 text-foreground md:grid-cols-2 lg:grid-cols-4 gap-4">
                             {formData.key_metrics?.map((metric, index) => (
                                 <Card key={index} className="border-slate-200">
                                     <CardHeader className="py-2 px-4 border-b flex flex-row justify-between items-center">
@@ -288,27 +288,27 @@ const BusinessOverviewAdminPage = () => {
                                         </ComponentGuard>
                                     </CardHeader>
                                     <CardContent className="p-4 space-y-3">
-                                        <div className="space-y-1 text-white">
+                                        <div className="space-y-1 text-foreground">
                                             <label className="text-xs font-medium">Title</label>
                                             <Input value={metric.title} onChange={(e) => updateArrayItem('key_metrics', index, 'title', e.target.value)} className="h-8" />
                                         </div>
-                                        <div className="space-y-1 text-white">
+                                        <div className="space-y-1 text-foreground">
                                             <label className="text-xs font-medium">Value</label>
                                             <Input value={metric.value} onChange={(e) => updateArrayItem('key_metrics', index, 'value', e.target.value)} className="h-8" />
                                         </div>
-                                        <div className="space-y-1 text-white">
+                                        <div className="space-y-1 text-foreground">
                                             <label className="text-xs font-medium">Change Label</label>
                                             <Input value={metric.change} onChange={(e) => updateArrayItem('key_metrics', index, 'change', e.target.value)} className="h-8" />
                                         </div>
-                                        <div className="space-y-1 text-white">
+                                        <div className="space-y-1 text-foreground">
                                             <label className="text-xs font-medium">Period/Subtext</label>
                                             <Input value={metric.period} onChange={(e) => updateArrayItem('key_metrics', index, 'period', e.target.value)} className="h-8" />
                                         </div>
-                                        <div className="space-y-1 text-white">
+                                        <div className="space-y-1 text-foreground">
                                             <label className="text-xs font-medium">Icon</label>
                                             <LucideIconPicker value={metric.icon} onChange={(iconName) => updateArrayItem('key_metrics', index, 'icon', iconName)} />
                                         </div>
-                                        <div className="space-y-1 text-white">
+                                        <div className="space-y-1 text-foreground">
                                             <label className="text-xs font-medium">Color</label>
                                             <div className="flex items-center gap-2">
                                                 <input type="color" value={metric.color} onChange={(e) => updateArrayItem('key_metrics', index, 'color', e.target.value)} className="h-8 w-8 cursor-pointer border p-0 rounded-sm" />
@@ -328,12 +328,12 @@ const BusinessOverviewAdminPage = () => {
                         <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-6 gap-4 border-b pb-4">
                             <div className="flex-1 space-y-3">
                                 <div className="flex justify-between items-center">
-                                    <h2 className="text-xl text-white font-semibold flex items-center gap-2">
-                                        <Database className="w-5 h-5 text-white" /> Business Operations Table
+                                    <h2 className="text-xl text-foreground font-semibold flex items-center gap-2">
+                                        <Database className="w-5 h-5 text-foreground" /> Business Operations Table
                                     </h2>
                                     <ComponentGuard anyPermissions={['BUSINESS_OVERVIEW:UPDATE']}>
                                         <div className="flex items-center gap-3">
-                                            <Button onClick={() => addArrayItem('operations_data', { area: '', focus: '', infrastructure: '', status: '', statusIcon: 'TrendingUp', statusColor: '#22c55e' })} variant="outline" className="flex items-center gap-2 bg-transparent border-slate-700 text-white hover:bg-slate-800">
+                                            <Button onClick={() => addArrayItem('operations_data', { area: '', focus: '', infrastructure: '', status: '', statusIcon: 'TrendingUp', statusColor: '#22c55e' })} variant="outline" className="flex items-center gap-2 bg-transparent border-slate-700 text-foreground hover:bg-slate-800">
                                                 <Plus className="w-4 h-4" /> Add Row
                                             </Button>
                                             <Button onClick={handleSave} disabled={isUpdating} className="flex items-center gap-2">
@@ -343,16 +343,16 @@ const BusinessOverviewAdminPage = () => {
                                         </div>
                                     </ComponentGuard>
                                 </div>
-                                <div className="grid grid-cols-1 text-white md:grid-cols-3 gap-3">
-                                    <div className="space-y-1 text-white">
+                                <div className="grid grid-cols-1 text-foreground md:grid-cols-3 gap-3">
+                                    <div className="space-y-1 text-foreground">
                                         <label className="text-xs font-medium">Section Title</label>
-                                        <Input className='text-white' value={formData.page_metadata?.operations_table_info?.title || ''} onChange={(e) => updatePageMetadata('operations_table_info', 'title', e.target.value)} />
+                                        <Input className='text-foreground' value={formData.page_metadata?.operations_table_info?.title || ''} onChange={(e) => updatePageMetadata('operations_table_info', 'title', e.target.value)} />
                                     </div>
-                                    <div className="space-y-1 text-white">
+                                    <div className="space-y-1 text-foreground">
                                         <label className="text-xs font-medium">Section Description</label>
-                                        <Input className='text-white' value={formData.page_metadata?.operations_table_info?.description || ''} onChange={(e) => updatePageMetadata('operations_table_info', 'description', e.target.value)} />
+                                        <Input className='text-foreground' value={formData.page_metadata?.operations_table_info?.description || ''} onChange={(e) => updatePageMetadata('operations_table_info', 'description', e.target.value)} />
                                     </div>
-                                    <div className="space-y-1 text-white">
+                                    <div className="space-y-1 text-foreground">
                                         <label className="text-xs font-medium">Section Icon</label>
                                         <LucideIconPicker value={formData.page_metadata?.operations_table_info?.icon || 'Database'} onChange={(iconName) => updatePageMetadata('operations_table_info', 'icon', iconName)} />
                                     </div>
@@ -364,9 +364,9 @@ const BusinessOverviewAdminPage = () => {
                             {formData.operations_data?.map((data, index) => (
                                 <div key={index} className="flex flex-col gap-3 p-4 border rounded-lg">
                                     <div className="flex flex-col md:flex-row gap-3 items-center">
-                                        <Input placeholder="Business Area" value={data.area} onChange={(e) => updateArrayItem('operations_data', index, 'area', e.target.value)} className="flex-1 text-white" />
-                                        <Input placeholder="Strategic Focus" value={data.focus} onChange={(e) => updateArrayItem('operations_data', index, 'focus', e.target.value)} className="flex-1 text-white" />
-                                        <Input placeholder="Infrastructure" value={data.infrastructure} onChange={(e) => updateArrayItem('operations_data', index, 'infrastructure', e.target.value)} className="flex-1 text-white" />
+                                        <Input placeholder="Business Area" value={data.area} onChange={(e) => updateArrayItem('operations_data', index, 'area', e.target.value)} className="flex-1 text-foreground" />
+                                        <Input placeholder="Strategic Focus" value={data.focus} onChange={(e) => updateArrayItem('operations_data', index, 'focus', e.target.value)} className="flex-1 text-foreground" />
+                                        <Input placeholder="Infrastructure" value={data.infrastructure} onChange={(e) => updateArrayItem('operations_data', index, 'infrastructure', e.target.value)} className="flex-1 text-foreground" />
                                         <ComponentGuard anyPermissions={['BUSINESSES:DELETE']}>
                                             <Button variant="ghost" size="icon" className="h-10 w-10 text-red-500" onClick={() => removeArrayItem('operations_data', index)}>
                                                 <Trash2 className="w-4 h-4" />
@@ -374,14 +374,14 @@ const BusinessOverviewAdminPage = () => {
                                         </ComponentGuard>
                                     </div>
                                     <div className="flex flex-col md:flex-row gap-3 items-center border-t pt-3 mt-1">
-                                        <span className="text-sm font-medium text-white w-16">Status:</span>
-                                        <Input placeholder="Status Text (e.g. increasing 10%)" value={data.status} onChange={(e) => updateArrayItem('operations_data', index, 'status', e.target.value)} className="flex-1 text-white" />
-                                        <div className="w-32 text-white">
+                                        <span className="text-sm font-medium text-foreground w-16">Status:</span>
+                                        <Input placeholder="Status Text (e.g. increasing 10%)" value={data.status} onChange={(e) => updateArrayItem('operations_data', index, 'status', e.target.value)} className="flex-1 text-foreground" />
+                                        <div className="w-32 text-foreground">
                                             <LucideIconPicker value={data.statusIcon || 'TrendingUp'} onChange={(iconName) => updateArrayItem('operations_data', index, 'statusIcon', iconName)} />
                                         </div>
                                         <div className="flex items-center gap-2 w-32">
                                             <input type="color" value={data.statusColor || '#22c55e'} onChange={(e) => updateArrayItem('operations_data', index, 'statusColor', e.target.value)} className="h-9 w-9 cursor-pointer border p-0 rounded-sm" />
-                                            <Input value={data.statusColor || '#22c55e'} onChange={(e) => updateArrayItem('operations_data', index, 'statusColor', e.target.value)} className="h-9 flex-1 text-white" />
+                                            <Input value={data.statusColor || '#22c55e'} onChange={(e) => updateArrayItem('operations_data', index, 'statusColor', e.target.value)} className="h-9 flex-1 text-foreground" />
                                         </div>
 
                                     </div>
@@ -397,12 +397,12 @@ const BusinessOverviewAdminPage = () => {
                         <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-6 gap-4 border-b pb-4">
                             <div className="flex-1 space-y-3">
                                 <div className="flex justify-between items-center">
-                                    <h2 className="text-xl text-white font-semibold flex items-center gap-2">
-                                        <Truck className="w-5 h-5 text-white" /> Network Operations
+                                    <h2 className="text-xl text-foreground font-semibold flex items-center gap-2">
+                                        <Truck className="w-5 h-5 text-foreground" /> Network Operations
                                     </h2>
                                     <ComponentGuard anyPermissions={['BUSINESS_OVERVIEW:UPDATE']}>
                                         <div className="flex items-center gap-3">
-                                            <Button onClick={() => addArrayItem('network_operations', { title: '', description: '', full_description: '', icon: 'Truck' })} variant="outline" className="flex items-center gap-2 bg-transparent border-slate-700 text-white hover:bg-slate-800">
+                                            <Button onClick={() => addArrayItem('network_operations', { title: '', description: '', full_description: '', icon: 'Truck' })} variant="outline" className="flex items-center gap-2 bg-transparent border-slate-700 text-foreground hover:bg-slate-800">
                                                 <Plus className="w-4 h-4" /> Add Operation
                                             </Button>
                                             <Button onClick={handleSave} disabled={isUpdating} className="flex items-center gap-2">
@@ -412,16 +412,16 @@ const BusinessOverviewAdminPage = () => {
                                         </div>
                                     </ComponentGuard>
                                 </div>
-                                <div className="grid grid-cols-1 text-white md:grid-cols-3 gap-3">
-                                    <div className="space-y-1 text-white">
+                                <div className="grid grid-cols-1 text-foreground md:grid-cols-3 gap-3">
+                                    <div className="space-y-1 text-foreground">
                                         <label className="text-xs font-medium">Section Title</label>
                                         <Input value={formData.page_metadata?.network_operations_info?.title || ''} onChange={(e) => updatePageMetadata('network_operations_info', 'title', e.target.value)} />
                                     </div>
-                                    <div className="space-y-1 text-white">
+                                    <div className="space-y-1 text-foreground">
                                         <label className="text-xs font-medium">Section Description</label>
                                         <Input value={formData.page_metadata?.network_operations_info?.description || ''} onChange={(e) => updatePageMetadata('network_operations_info', 'description', e.target.value)} />
                                     </div>
-                                    <div className="space-y-1 text-white">
+                                    <div className="space-y-1 text-foreground">
                                         <label className="text-xs font-medium">Section Icon</label>
                                         <LucideIconPicker value={formData.page_metadata?.network_operations_info?.icon || 'Truck'} onChange={(iconName) => updatePageMetadata('network_operations_info', 'icon', iconName)} />
                                     </div>
@@ -429,7 +429,7 @@ const BusinessOverviewAdminPage = () => {
                             </div>
 
                         </div>
-                        <div className="grid grid-cols-1 text-white md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 text-foreground md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {formData.network_operations?.map((op, index) => (
                                 <Card key={index} className="border-slate-200">
                                     <CardHeader className="py-2 px-4 border-b flex flex-row justify-between items-center">
@@ -441,19 +441,19 @@ const BusinessOverviewAdminPage = () => {
                                         </ComponentGuard>
                                     </CardHeader>
                                     <CardContent className="p-4 space-y-3">
-                                        <div className="space-y-1 text-white">
+                                        <div className="space-y-1 text-foreground">
                                             <label className="text-xs font-medium">Title</label>
                                             <Input value={op.title} onChange={(e) => updateArrayItem('network_operations', index, 'title', e.target.value)} className="h-8" />
                                         </div>
-                                        <div className="space-y-1 text-white">
+                                        <div className="space-y-1 text-foreground">
                                             <label className="text-xs font-medium">Short Description</label>
                                             <Textarea value={op.description} onChange={(e) => updateArrayItem('network_operations', index, 'description', e.target.value)} rows={2} />
                                         </div>
-                                        <div className="space-y-1 text-white">
+                                        <div className="space-y-1 text-foreground">
                                             <label className="text-xs font-medium">Full Description (Expands on click)</label>
                                             <Textarea value={op.full_description} onChange={(e) => updateArrayItem('network_operations', index, 'full_description', e.target.value)} rows={3} />
                                         </div>
-                                        <div className="space-y-1 text-white">
+                                        <div className="space-y-1 text-foreground">
                                             <label className="text-xs font-medium">Icon</label>
                                             <LucideIconPicker value={op.icon} onChange={(iconName) => updateArrayItem('network_operations', index, 'icon', iconName)} />
                                         </div>
@@ -470,12 +470,12 @@ const BusinessOverviewAdminPage = () => {
                         <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-6 gap-4 border-b pb-4">
                             <div className="flex-1 space-y-3">
                                 <div className="flex justify-between items-center">
-                                    <h2 className="text-xl text-white font-semibold flex items-center gap-2">
-                                        <Filter className="w-5 h-5 text-white" /> Key Verticals (Sidebar)
+                                    <h2 className="text-xl text-foreground font-semibold flex items-center gap-2">
+                                        <Filter className="w-5 h-5 text-foreground" /> Key Verticals (Sidebar)
                                     </h2>
                                     <ComponentGuard anyPermissions={['BUSINESS_OVERVIEW:UPDATE']}>
                                         <div className="flex items-center gap-3">
-                                            <Button onClick={() => addArrayItem('business_categories', { title: '', description: '', growth: '', topFocus: [], icon: 'Filter', color: '#3b82f6' })} variant="outline" className="flex items-center gap-2 bg-transparent border-slate-700 text-white hover:bg-slate-800">
+                                            <Button onClick={() => addArrayItem('business_categories', { title: '', description: '', growth: '', topFocus: [], icon: 'Filter', color: '#3b82f6' })} variant="outline" className="flex items-center gap-2 bg-transparent border-slate-700 text-foreground hover:bg-slate-800">
                                                 <Plus className="w-4 h-4" /> Add Vertical
                                             </Button>
                                             <Button onClick={handleSave} disabled={isUpdating} className="flex items-center gap-2">
@@ -485,16 +485,16 @@ const BusinessOverviewAdminPage = () => {
                                         </div>
                                     </ComponentGuard>
                                 </div>
-                                <div className="grid grid-cols-1 text-white md:grid-cols-3 gap-3">
-                                    <div className="space-y-1 text-white">
+                                <div className="grid grid-cols-1 text-foreground md:grid-cols-3 gap-3">
+                                    <div className="space-y-1 text-foreground">
                                         <label className="text-xs font-medium">Section Title</label>
                                         <Input value={formData.page_metadata?.key_verticals_info?.title || ''} onChange={(e) => updatePageMetadata('key_verticals_info', 'title', e.target.value)} />
                                     </div>
-                                    <div className="space-y-1 text-white">
+                                    <div className="space-y-1 text-foreground">
                                         <label className="text-xs font-medium">Section Description</label>
                                         <Input value={formData.page_metadata?.key_verticals_info?.description || ''} onChange={(e) => updatePageMetadata('key_verticals_info', 'description', e.target.value)} />
                                     </div>
-                                    <div className="space-y-1 text-white">
+                                    <div className="space-y-1 text-foreground">
                                         <label className="text-xs font-medium">Section Icon</label>
                                         <LucideIconPicker value={formData.page_metadata?.key_verticals_info?.icon || 'Filter'} onChange={(iconName) => updatePageMetadata('key_verticals_info', 'icon', iconName)} />
                                     </div>
@@ -502,7 +502,7 @@ const BusinessOverviewAdminPage = () => {
                             </div>
 
                         </div>
-                        <div className="grid grid-cols-1 text-white md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 text-foreground md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {formData.business_categories?.map((cat, index) => (
                                 <Card key={index} className="border-slate-200">
                                     <CardHeader className="py-2 px-4 border-b flex flex-row justify-between items-center">
@@ -514,19 +514,19 @@ const BusinessOverviewAdminPage = () => {
                                         </ComponentGuard>
                                     </CardHeader>
                                     <CardContent className="p-4 space-y-3">
-                                        <div className="space-y-1 text-white">
+                                        <div className="space-y-1 text-foreground">
                                             <label className="text-xs font-medium">Title</label>
                                             <Input value={cat.title} onChange={(e) => updateArrayItem('business_categories', index, 'title', e.target.value)} className="h-8" />
                                         </div>
-                                        <div className="space-y-1 text-white">
+                                        <div className="space-y-1 text-foreground">
                                             <label className="text-xs font-medium">Growth Label</label>
                                             <Input value={cat.growth} onChange={(e) => updateArrayItem('business_categories', index, 'growth', e.target.value)} className="h-8" />
                                         </div>
-                                        <div className="space-y-1 text-white">
+                                        <div className="space-y-1 text-foreground">
                                             <label className="text-xs font-medium">Description</label>
                                             <Textarea value={cat.description} onChange={(e) => updateArrayItem('business_categories', index, 'description', e.target.value)} rows={2} />
                                         </div>
-                                        <div className="space-y-2 text-white">
+                                        <div className="space-y-2 text-foreground">
                                             <label className="text-xs font-medium flex justify-between items-center">
                                                 Focus Areas
                                                 <ComponentGuard anyPermissions={['BUSINESSES:UPDATE']}>
@@ -538,7 +538,7 @@ const BusinessOverviewAdminPage = () => {
                                                     </Button>
                                                 </ComponentGuard>
                                             </label>
-                                            <div className="space-y-2 text-white">
+                                            <div className="space-y-2 text-foreground">
                                                 {cat.topFocus?.map((focus, fIndex) => (
                                                     <div key={fIndex} className="flex gap-2 items-center">
                                                         <Input
@@ -567,12 +567,12 @@ const BusinessOverviewAdminPage = () => {
                                                 )}
                                             </div>
                                         </div>
-                                        <div className="grid grid-cols-2 text-white gap-3">
-                                            <div className="space-y-1 text-white">
+                                        <div className="grid grid-cols-2 text-foreground gap-3">
+                                            <div className="space-y-1 text-foreground">
                                                 <label className="text-xs font-medium">Icon</label>
                                                 <LucideIconPicker value={cat.icon} onChange={(iconName) => updateArrayItem('business_categories', index, 'icon', iconName)} />
                                             </div>
-                                            <div className="space-y-1 text-white">
+                                            <div className="space-y-1 text-foreground">
                                                 <label className="text-xs font-medium">Color</label>
                                                 <div className="flex items-center gap-2">
                                                     <input type="color" value={cat.color || '#3b82f6'} onChange={(e) => updateArrayItem('business_categories', index, 'color', e.target.value)} className="h-8 w-8 cursor-pointer border p-0 rounded-sm" />
@@ -592,7 +592,7 @@ const BusinessOverviewAdminPage = () => {
                     <div className="p-6 rounded-xl bg-card shadow-sm border border-slate-200">
                         <div className="mb-6 flex justify-between items-center border-b pb-4">
                             <div>
-                                <h2 className="text-xl font-semibold flex items-center gap-2 text-white"><TrendingUp className="w-5 h-5 text-white" /> Quick Stats Footer</h2>
+                                <h2 className="text-xl font-semibold flex items-center gap-2 text-foreground"><TrendingUp className="w-5 h-5 text-foreground" /> Quick Stats Footer</h2>
                                 <p className="text-sm text-muted-foreground mt-2">Manage stats that appear in a grid layout on the public page.</p>
                             </div>
                             <ComponentGuard anyPermissions={['BUSINESS_OVERVIEW:UPDATE']}>
@@ -606,7 +606,7 @@ const BusinessOverviewAdminPage = () => {
                             {['left', 'right'].map((pos) => (
                                 <div key={pos} className="space-y-4 p-4 border rounded-lg">
                                     <div className="flex justify-between items-center border-b pb-2">
-                                        <h3 className="font-medium capitalize text-white">{pos} Side Stats</h3>
+                                        <h3 className="font-medium capitalize text-foreground">{pos} Side Stats</h3>
                                         <ComponentGuard anyPermissions={['BUSINESSES:UPDATE']}>
                                             <Button className='bg-primary text-white' variant="ghost" size="sm" onClick={() => {
                                                 setFormData(prev => {
@@ -626,7 +626,7 @@ const BusinessOverviewAdminPage = () => {
                                         {formData.quick_stats?.[pos as 'left' | 'right']?.map((stat: any, index: number) => (
                                             <div key={index} className="flex gap-2 items-start border p-3 rounded-md relative group">
                                                 <div className="flex-1 space-y-2">
-                                                    <div className="space-y-1 text-white">
+                                                    <div className="space-y-1 text-foreground">
                                                         <label className="text-xs font-medium">Title</label>
                                                         <Input
                                                             value={stat.title}
@@ -640,7 +640,7 @@ const BusinessOverviewAdminPage = () => {
                                                             className="h-8"
                                                         />
                                                     </div>
-                                                    <div className="space-y-1 text-white">
+                                                    <div className="space-y-1 text-foreground">
                                                         <label className="text-xs font-medium">Subtitle</label>
                                                         <Input
                                                             value={stat.subtitle}

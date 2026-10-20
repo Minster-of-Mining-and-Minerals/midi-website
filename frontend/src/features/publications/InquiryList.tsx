@@ -209,7 +209,7 @@ export default function InquiryList() {
                         <span className="font-semibold text-slate-900 text-sm">{inq.name}</span>
                         <span className="text-xs text-slate-500">{inq.email}</span>
                         {inq.company && (
-                            <span className="text-[11px] text-slate-400 font-medium">{inq.company}</span>
+                            <span className="text-[11px] text-muted-foreground font-medium">{inq.company}</span>
                         )}
                     </div>
                 );
@@ -220,13 +220,13 @@ export default function InquiryList() {
             header: "Target Publication",
             cell: ({ row }) => {
                 const pub = row.original.publication;
-                if (!pub) return <span className="text-xs text-slate-400">N/A</span>;
+                if (!pub) return <span className="text-xs text-muted-foreground">N/A</span>;
                 return (
                     <div className="flex flex-col max-w-xs">
                         <span className="font-medium text-slate-800 text-xs line-clamp-1" title={pub.title}>
                             {pub.title}
                         </span>
-                        <span className="text-[10px] text-slate-400 capitalize">
+                        <span className="text-[10px] text-muted-foreground capitalize">
                             {pub.document_type?.replace(/_/g, " ")} • {pub.access_mode?.replace(/_/g, " ")}
                         </span>
                     </div>
@@ -248,7 +248,7 @@ export default function InquiryList() {
             header: "Submitted",
             cell: ({ row }) => {
                 const date = row.original.created_at;
-                if (!date) return <span className="text-xs text-slate-400">N/A</span>;
+                if (!date) return <span className="text-xs text-muted-foreground">N/A</span>;
                 return (
                     <span className="text-xs text-slate-500 whitespace-nowrap">
                         {new Date(date).toLocaleDateString("en-US", {
