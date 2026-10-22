@@ -4,6 +4,7 @@ const path = require("path");
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
+const { moveFileSync } = require("../../utils/fileMove");
 const {
   Publication,
   PublicationFile,
@@ -335,8 +336,9 @@ exports.uploadProtectedDocument = async (req, res) => {
     const uniqueName = `${uuidv4()}${ext}`;
     const destinationPath = path.join(PROTECTED_STORAGE_DIR, uniqueName);
 
-    // Move file from multer temp to protected storage
-    fs.renameSync(req.file.path, destinationPath);
+    // Move file from multer temp (uploads/temp) to protected storage; in Docker these are
+    // separate mounts, so a plain rename fails with EXDEV
+    moveFileSync(req.file.path, destinationPath);
 
     return res.status(201).json({
       success: true,
