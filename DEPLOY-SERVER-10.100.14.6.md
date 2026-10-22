@@ -23,6 +23,23 @@ The target server already hosts other services. To prevent conflicts, this proje
 > - Nginx is available on port **8085** for reverse-proxy access, debugging, or future centralized routing.
 > - PostgreSQL is strictly isolated to the internal Docker network and **not** published to the host, protecting other databases running on port 5432.
 
+### Notes on Socket.IO and Nginx access
+- Socket.IO runs **inside the backend container** as a second HTTP server on container port `5000` (published as `5005`). There is no separate Socket.IO container.
+- The current frontend does **not** include a Socket.IO client, so browsers do not open Socket.IO connections yet. The server is deployed and verified with a handshake test so it is ready when a client is added.
+- The frontend's API (`:4005`) and Socket.IO (`:5005`) URLs are baked into the build. Even when the site is opened through Nginx (`:8085`), the browser still calls ports `4005`/`5005` directly. Nginx's `/api` and `/socket.io/` routes matter once a domain name is put in front of the site.
+- `AUTH_URL` points at port `3005`, so signing in through `:8085` may send you back to `:3005`. Port `3005` is the primary entry point.
+
+### Firewall
+`10.100.14.6` is a private-network address; the site is not reachable from the internet. Make sure clients on the internal network can reach the four host ports:
+```bash
+# Example for ufw (check which firewall the server actually uses first)
+sudo ufw status
+sudo ufw allow from 10.100.0.0/16 to any port 3005,4005,5005,8085 proto tcp
+```
+
+### Do not run the dev and production stacks together
+`docker-compose.yml` (development) publishes the **same host ports** as `docker-compose.prod.yml`. Only ever start `docker-compose.prod.yml` on this server.
+
 ---
 
 ## 2. Pre-Deployment Preparation
@@ -75,7 +92,17 @@ DB_NAME=midi_portal
 
 *(Tip: Generate random secrets using `openssl rand -base64 32`)*
 
-### C. Verify Port Availability
+`DB_PASSWORD`, `JWT_SECRET` and `AUTH_SECRET` are required: Docker Compose refuses to start if any of them is missing.
+
+### C. Validate Docker and the Compose File
+```bash
+docker --version
+docker compose version
+# Renders the final config; fails with a clear message if a required variable is missing
+docker compose -f docker-compose.prod.yml --env-file .env.production config --quiet && echo "Compose config OK"
+```
+
+### D. Verify Port Availability
 Before launching, confirm that none of the assigned host ports are currently occupied:
 ```bash
 # Check listening TCP sockets
@@ -99,19 +126,23 @@ chmod +x deploy.sh scripts/deploy-production.sh scripts/verify-deployment.sh
 
 The deployment script executes the following stages:
 1. Validates Docker and Docker Compose engines.
-2. Checks host port availability for 3005, 4005, 5005, and 8085.
-3. Automatically backs up any existing live database to `backups/<timestamp>/pre-deploy.sql`.
-4. Unpacks `backend/deploy-uploads.tar.gz` to `backend/uploads/` (if present and directory is empty).
-5. Builds and launches all services via `docker compose -f docker-compose.prod.yml --env-file .env.production up -d --build`.
-6. Waits for container health checks to confirm healthy status.
+2. Checks host port availability for 3005, 4005, 5005, and 8085, and stops if an unrelated service uses one.
+3. Backs up the running `midi_postgres_prod` database to `backups/<timestamp>/pre-deploy.sql`. **If that backup fails, the deployment stops** before any migration runs. Only the MIDI database container is ever touched.
+4. Copies publication PDFs out of an older backend container (if they are still inside it) into `backend/storage/`, then archives `backend/storage` to `backups/<timestamp>/storage.tar.gz`.
+5. Unpacks `backend/deploy-uploads.tar.gz` to `backend/uploads/` (if present and directory is empty).
+6. Builds and launches all services via `docker compose -f docker-compose.prod.yml --env-file .env.production up -d --build`.
+7. Waits up to 180s for every container to report `healthy`. **If any container is not healthy, the script prints the backend logs and exits with an error.**
 
 ### Method 2: Manual Step-by-Step Commands
 ```bash
-# 1. Back up database if previously running
-mkdir -p backups/manual
+# 1. Back up database and publication files if previously running (stop if this fails)
+set -a; . ./.env.production; set +a
+BACKUP_DIR="backups/manual/$(date +%Y%m%d_%H%M%S)"; mkdir -p "$BACKUP_DIR"
 docker exec -e PGPASSWORD="$DB_PASSWORD" midi_postgres_prod \
-  pg_dump -U postgres -d midi_portal --clean --if-exists --no-owner \
-  > backups/manual/pre-deploy-$(date +%Y%m%d_%H%M%S).sql 2>/dev/null || true
+  pg_dump -U "$DB_USER" -d "$DB_NAME" --clean --if-exists --no-owner \
+  > "$BACKUP_DIR/pre-deploy.sql"
+mkdir -p backend/storage/publications
+tar -czf "$BACKUP_DIR/storage.tar.gz" -C backend storage
 
 # 2. Build and launch containers
 docker compose -f docker-compose.prod.yml --env-file .env.production up -d --build
@@ -120,20 +151,30 @@ docker compose -f docker-compose.prod.yml --env-file .env.production up -d --bui
 docker compose -f docker-compose.prod.yml --env-file .env.production logs -f backend
 ```
 
+### Updating to a New Version
+```bash
+git pull
+./deploy.sh                      # backs up, rebuilds, and waits for healthy containers
+./scripts/verify-deployment.sh
+```
+
 ---
 
 ## 4. Database Migrations and Seeding
 
 Database migrations and idempotent seeders run automatically on container startup through `backend/docker-entrypoint.sh`:
 1. **Migration check**: Executes `npx sequelize-cli db:migrate` against PostgreSQL.
-2. **Idempotent seeders**: Executes permissions and publication categories seeders (`ON CONFLICT DO NOTHING`), preserving all existing data and preventing duplicate records.
-3. **Existing data preservation**: Database state persists in the named Docker volume `midi_postgres_data_prod`.
+2. **Idempotent seeders**: Executes the four production seeders (permissions and publication categories). Each one checks for existing rows before inserting, so re-running them never duplicates records.
+3. **Failures are fatal**: if a migration or seeder fails, the backend exits with a `FATAL` message in `docker compose logs backend` instead of starting with a half-migrated database.
+4. **Existing data preservation**: Database state persists in the named Docker volume `midi_postgres_data_prod`. Publication PDFs persist on the host in `backend/storage/`, and uploads in `backend/uploads/`.
 
-To manually run migrations or seeds:
+To manually run migrations or the production seeders:
 ```bash
 docker exec -it midi_backend_prod npx sequelize-cli db:migrate
-docker exec -it midi_backend_prod npx sequelize-cli db:seed:all
+docker exec -it midi_backend_prod npm run seed:production
 ```
+
+> **Do not** run `db:seed:all`, `db:reset`, `db:fresh` or `migrate:undo*` on production. They load development data or drop tables.
 
 ---
 
@@ -149,8 +190,9 @@ Or perform manual checks:
 # 1. Verify container status and health
 docker compose -f docker-compose.prod.yml --env-file .env.production ps
 
-# 2. Check Frontend (Direct access on 3005)
-curl -I http://127.0.0.1:3005
+# 2. Check Frontend (Direct access on 3005). "/" returns 307 to /en; /en must return 200
+curl -I http://127.0.0.1:3005/
+curl -I http://127.0.0.1:3005/en
 
 # 3. Check Backend API health
 curl -s http://127.0.0.1:4005/health
@@ -209,4 +251,15 @@ docker exec -e PGPASSWORD="$DB_PASSWORD" midi_postgres_prod \
 cat backups/midi_portal_backup.sql | \
   docker exec -i -e PGPASSWORD="$DB_PASSWORD" midi_postgres_prod \
   psql -U postgres -d midi_portal -v ON_ERROR_STOP=1
+```
+
+### Publication Files Backup & Restore
+Protected publication PDFs live on the host in `backend/storage/` (mounted into the backend at `/app/storage`).
+```bash
+# Backup
+tar -czf backups/storage_$(date +%Y%m%d_%H%M%S).tar.gz -C backend storage
+
+# Restore (replace the timestamp with the backup you want)
+tar -xzf backups/storage_YYYYMMDD_HHMMSS.tar.gz -C backend
+docker compose -f docker-compose.prod.yml --env-file .env.production restart backend
 ```

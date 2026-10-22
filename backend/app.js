@@ -92,7 +92,16 @@ const tagRoute = require("./routers/news/tagRoutes");
 
 const app = express();
 app.set("trust proxy", 1);
+app.disable("x-powered-by");
 const appServer = http.createServer(app);
+
+// ================== Security Headers ==================
+// No X-Frame-Options here: publication PDFs from this server are embedded by the frontend.
+app.use((req, res, next) => {
+  res.set("X-Content-Type-Options", "nosniff");
+  res.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  next();
+});
 
 app.use(
   express.json({

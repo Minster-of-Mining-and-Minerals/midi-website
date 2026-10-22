@@ -39,12 +39,20 @@ if ! npx sequelize-cli db:migrate; then
 fi
 echo "[backend] Database migrations verified/applied successfully."
 
-# 3. Apply safe, idempotent production permission seeders
+# 3. Apply safe, idempotent production seeders (each checks for existing rows before inserting)
 echo "[backend] Checking idempotent production seeders..."
-npx sequelize-cli db:seed --seed 20260622130000-seed-production-permissions.js || true
-npx sequelize-cli db:seed --seed 20260914100000-standardize-admin-permissions.js || true
-npx sequelize-cli db:seed --seed 20261018210500-seed-publication-permissions.js || true
-npx sequelize-cli db:seed --seed 20261018211000-seed-publication-categories.js || true
+for SEEDER in \
+  20260622130000-seed-production-permissions.js \
+  20260914100000-standardize-admin-permissions.js \
+  20261018210500-seed-publication-permissions.js \
+  20261018211000-seed-publication-categories.js
+do
+  if ! npx sequelize-cli db:seed --seed "$SEEDER"; then
+    echo "[backend] FATAL: Seeder $SEEDER failed! Check the output above." >&2
+    exit 1
+  fi
+done
+echo "[backend] Production seeders applied successfully."
 
 # 4. Start the application
 echo "[backend] Starting Node.js server..."

@@ -115,28 +115,45 @@ echo "[deploy]    All assigned host ports ($FRONTEND_PORT, $BACKEND_PORT, $SOCKE
 BACKUP_DIR="$REPO_ROOT/backups/$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$BACKUP_DIR"
 
-echo "[deploy] 3. Checking for running database to perform pre-deploy backup..."
-DB_CONTAINER=""
-if docker ps --format '{{.Names}}' | grep -q '^midi_postgres_prod$'; then
-  DB_CONTAINER="midi_postgres_prod"
-elif docker ps --format '{{.Names}}' | grep -q '^jarra-holding-group-website-db$'; then
-  DB_CONTAINER="jarra-holding-group-website-db"
-elif docker ps --format '{{.Names}}' | grep -q '^jarra_postgres_prod$'; then
-  DB_CONTAINER="jarra_postgres_prod"
-fi
+echo "[deploy] 3. Checking for running MIDI database to perform pre-deploy backup..."
+# Only ever touch this project's own database container.
+DB_CONTAINER="midi_postgres_prod"
 
-if [ -n "$DB_CONTAINER" ]; then
+if docker ps --format '{{.Names}}' | grep -q "^${DB_CONTAINER}$"; then
   echo "[deploy]    Backing up database from $DB_CONTAINER to $BACKUP_DIR/pre-deploy.sql..."
+  # Migrations run automatically on backend start, so never continue without a backup.
   if docker exec -e "PGPASSWORD=$DB_PASSWORD" "$DB_CONTAINER" \
     pg_dump -U "$DB_USER" -d "$DB_NAME" --clean --if-exists --no-owner --no-acl \
-    > "$BACKUP_DIR/pre-deploy.sql" 2>/dev/null; then
+    > "$BACKUP_DIR/pre-deploy.sql"; then
     echo "[deploy]    Pre-deploy database backup successfully created."
   else
-    echo "[deploy]    Warning: Live backup failed or database does not exist yet. Continuing safely."
+    echo "[deploy] ERROR: Pre-deploy backup of $DB_CONTAINER failed. Aborting before any migrations run." >&2
+    exit 1
   fi
 else
-  echo "[deploy]    No active DB container found. Skipping pre-deploy dump."
+  echo "[deploy]    No running $DB_CONTAINER container (first deployment). Skipping pre-deploy dump."
 fi
+
+# Publication PDFs: persisted on the host at backend/storage (bind-mounted to /app/storage).
+echo "[deploy]    Preparing publication storage..."
+mkdir -p "$REPO_ROOT/backend/storage/publications"
+if docker ps -a --format '{{.Names}}' | grep -q '^midi_backend_prod$'; then
+  # Older deployments kept these files inside the container; copy them out before it is recreated.
+  if ! docker inspect --format '{{range .Mounts}}{{.Destination}} {{end}}' midi_backend_prod | grep -q '/app/storage'; then
+    echo "[deploy]    Copying existing publication files out of midi_backend_prod..."
+    if ! CP_ERR="$(docker cp midi_backend_prod:/app/storage/. "$REPO_ROOT/backend/storage/" 2>&1)"; then
+      if echo "$CP_ERR" | grep -qi "could not find"; then
+        echo "[deploy]    midi_backend_prod has no /app/storage yet. Nothing to copy."
+      else
+        echo "[deploy] ERROR: Could not copy /app/storage out of midi_backend_prod: $CP_ERR" >&2
+        echo "[deploy] Aborting to avoid losing uploaded publication files." >&2
+        exit 1
+      fi
+    fi
+  fi
+fi
+tar -czf "$BACKUP_DIR/storage.tar.gz" -C "$REPO_ROOT/backend" storage
+echo "[deploy]    Publication storage backed up to $BACKUP_DIR/storage.tar.gz"
 
 # 5. Extract uploads if archive is present and uploads directory is empty
 echo "[deploy] 4. Checking upload assets..."
@@ -156,7 +173,7 @@ docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" up -d --build
 
 # 7. Wait and verify health
 echo "[deploy] 6. Verifying service health..."
-MAX_WAIT=90
+MAX_WAIT=180
 ELAPSED=0
 ALL_HEALTHY=0
 
@@ -165,7 +182,7 @@ while [ "$ELAPSED" -lt "$MAX_WAIT" ]; do
   for svc in midi_postgres_prod midi_backend_prod midi_frontend_prod midi_nginx_prod; do
     if docker ps --format '{{.Names}}' | grep -q "^${svc}$"; then
       STATUS="$(docker inspect --format '{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' "$svc" 2>/dev/null || echo "unknown")"
-      if [ "$STATUS" != "healthy" ] && [ "$STATUS" != "running" ]; then
+      if [ "$STATUS" != "healthy" ]; then
         UNHEALTHY=1
       fi
     else
@@ -186,8 +203,12 @@ done
 if [ "$ALL_HEALTHY" -eq 1 ]; then
   echo "[deploy]    All MIDI containers are running and healthy!"
 else
-  echo "[deploy] Warning: Some containers took longer than ${MAX_WAIT}s to report healthy. Checking logs:"
+  echo "[deploy] ERROR: Not all MIDI containers reported healthy within ${MAX_WAIT}s." >&2
   docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" ps
+  echo "[deploy] Recent backend logs:" >&2
+  docker compose -f "$COMPOSE_FILE" --env-file "$ENV_FILE" logs --tail=50 backend || true
+  echo "[deploy] Pre-deploy backup: $BACKUP_DIR" >&2
+  exit 1
 fi
 
 echo ""

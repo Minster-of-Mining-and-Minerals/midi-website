@@ -82,7 +82,7 @@ test_http() {
   
   if command -v curl >/dev/null 2>&1; then
     HTTP_CODE="$(curl -s -o /dev/null -w "%{http_code}" --connect-timeout 5 "$url" || echo "000")"
-    if [ "$HTTP_CODE" = "$expected_code" ] || ([ "$expected_code" = "200" ] && [ "$HTTP_CODE" = "307" ]); then
+    if [ "$HTTP_CODE" = "$expected_code" ]; then
       echo "   [✓] $label: HTTP $HTTP_CODE (Passed) -> $url"
     else
       echo "   [✗] $label: HTTP $HTTP_CODE (Expected $expected_code) -> $url"
@@ -93,7 +93,10 @@ test_http() {
   fi
 }
 
-test_http "Frontend Direct (Host 3005)" "http://127.0.0.1:${FRONTEND_PORT}" "200"
+test_http "Frontend Root Redirect (Host 3005)" "http://127.0.0.1:${FRONTEND_PORT}/" "307"
+test_http "Frontend Home Page (Host 3005)" "http://127.0.0.1:${FRONTEND_PORT}/en" "200"
+test_http "Frontend via Nginx (Host 8085)" "http://127.0.0.1:${NGINX_PORT}/en" "200"
+test_http "Backend API via Nginx (Host 8085)" "http://127.0.0.1:${NGINX_PORT}/api/health" "200"
 test_http "Backend Health (Host 4005)" "http://127.0.0.1:${BACKEND_PORT}/health" "200"
 test_http "Backend API Health" "http://127.0.0.1:${BACKEND_PORT}/api/health" "200"
 test_http "Nginx Proxy Health (Host 8085)" "http://127.0.0.1:${NGINX_PORT}/health" "200"
@@ -111,8 +114,44 @@ if command -v curl >/dev/null 2>&1; then
     echo "       $SOCKET_RESP"
     ALL_OK=1
   fi
+  SOCKET_NGINX_RESP="$(curl -s --connect-timeout 5 "http://127.0.0.1:${NGINX_PORT}/socket.io/?EIO=4&transport=polling" || true)"
+  if echo "$SOCKET_NGINX_RESP" | grep -q "sid"; then
+    echo "   [✓] Socket.IO handshake also works through Nginx (port $NGINX_PORT)."
+  else
+    echo "   [✗] Socket.IO handshake through Nginx failed! Response:"
+    echo "       $SOCKET_NGINX_RESP"
+    ALL_OK=1
+  fi
 else
   echo "   [!] curl not installed; skipping Socket.IO handshake probe."
+fi
+
+# 5. Nginx redirect and security header checks
+echo ""
+echo "5. Checking Nginx redirects and security headers..."
+if command -v curl >/dev/null 2>&1; then
+  # The raw Location header must be relative (/en) or keep the Nginx port; anything else sends users elsewhere.
+  REDIRECT_HEADERS="$(curl -s -D - -o /dev/null --connect-timeout 5 -H "Host: ${SERVER_IP}:${NGINX_PORT}" "http://127.0.0.1:${NGINX_PORT}/" || true)"
+  LOCATION="$(echo "$REDIRECT_HEADERS" | grep -i '^location:' | tr -d '\r' | cut -d' ' -f2-)"
+  if echo "$LOCATION" | grep -qE "^/|:${NGINX_PORT}/"; then
+    echo "   [✓] Redirect through Nginx stays on port $NGINX_PORT -> $LOCATION"
+  else
+    echo "   [✗] Redirect through Nginx points elsewhere! Location: ${LOCATION:-<none>}"
+    ALL_OK=1
+  fi
+
+  for target in "Frontend|http://127.0.0.1:${FRONTEND_PORT}/en" "Backend|http://127.0.0.1:${BACKEND_PORT}/health"; do
+    label="${target%%|*}"; url="${target#*|}"
+    HEADERS="$(curl -s -D - -o /dev/null --connect-timeout 5 "$url" || true)"
+    if echo "$HEADERS" | grep -qi "^x-content-type-options: nosniff"; then
+      echo "   [✓] $label sends security headers"
+    else
+      echo "   [✗] $label is missing X-Content-Type-Options -> $url"
+      ALL_OK=1
+    fi
+  done
+else
+  echo "   [!] curl not installed; skipping redirect and header checks."
 fi
 
 echo ""
@@ -124,3 +163,4 @@ else
   echo "     docker compose -f docker-compose.prod.yml logs"
 fi
 echo "================================================================="
+exit "$ALL_OK"
