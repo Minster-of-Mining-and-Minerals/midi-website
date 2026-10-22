@@ -23,16 +23,36 @@ function FilterGroup({
     options,
     value,
     onChange,
+    onReset,
+    resetLabel,
 }: {
     title: string;
     options: FilterOption[];
     value: string;
     onChange: (value: string) => void;
+    onReset?: () => void;
+    resetLabel?: string;
 }) {
     return (
-        <fieldset>
-            <legend className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted">{title}</legend>
-            <div className="space-y-0.5">
+        <div>
+            <div className="mb-3 flex items-center justify-between border-b border-slate-100 pb-2.5">
+                <div className="flex items-center gap-2 text-secondary">
+                    <Tag className="h-4 w-4 text-primary" />
+                    <span className="text-xs font-bold uppercase tracking-wider text-secondary">
+                        {title}
+                    </span>
+                </div>
+                {value !== "all" && onReset && (
+                    <button
+                        type="button"
+                        onClick={onReset}
+                        className="text-xs font-semibold text-primary transition hover:text-primary/80 hover:underline"
+                    >
+                        {resetLabel || "Reset"}
+                    </button>
+                )}
+            </div>
+            <div className="space-y-1">
                 {options.map((opt) => {
                     const active = value === opt.value;
                     return (
@@ -41,14 +61,26 @@ function FilterGroup({
                             type="button"
                             onClick={() => onChange(opt.value)}
                             aria-pressed={active}
+                            title={opt.label}
                             className={clsx(
-                                "flex w-full items-center justify-between gap-2 rounded-md px-2.5 py-1.5 text-start text-sm transition",
-                                active ? "bg-primary/10 font-semibold text-primary" : "text-secondary hover:bg-slate-100"
+                                "group flex w-full items-start justify-between gap-2.5 rounded-lg px-3 py-2 text-start text-sm transition-all duration-150",
+                                active
+                                    ? "bg-primary/10 font-semibold text-primary shadow-xs ring-1 ring-primary/20"
+                                    : "text-slate-700 hover:bg-slate-50 hover:text-slate-900"
                             )}
                         >
-                            <span className="truncate">{opt.label}</span>
+                            <span className="min-w-0 flex-1 leading-snug break-words">
+                                {opt.label}
+                            </span>
                             {opt.count !== undefined && (
-                                <span className={clsx("text-xs tabular-nums", active ? "text-primary" : "text-muted")}>
+                                <span
+                                    className={clsx(
+                                        "ms-2 mt-0.5 inline-flex h-5 min-w-[22px] shrink-0 items-center justify-center rounded-full px-1.5 text-[11px] font-semibold tabular-nums transition-colors",
+                                        active
+                                            ? "bg-primary text-white"
+                                            : "bg-slate-100 text-slate-500 group-hover:bg-slate-200 group-hover:text-slate-700"
+                                    )}
+                                >
                                     {opt.count}
                                 </span>
                             )}
@@ -56,7 +88,7 @@ function FilterGroup({
                     );
                 })}
             </div>
-        </fieldset>
+        </div>
     );
 }
 
@@ -139,6 +171,11 @@ export default function PublicationGrid() {
             options={categoryOptions}
             value={category}
             onChange={withReset(setCategory)}
+            onReset={() => {
+                setCategory("all");
+                setPage(1);
+            }}
+            resetLabel={tr("Reset", "ዳግም አስጀምር")}
         />
     );
 
@@ -177,10 +214,10 @@ export default function PublicationGrid() {
                 </div>
 
                 {/* Toolbar */}
-                <div className="grid gap-8 lg:grid-cols-[220px_1fr] lg:gap-10">
+                <div className="grid gap-8 lg:grid-cols-[270px_1fr] lg:gap-10 xl:grid-cols-[290px_1fr]">
                     {/* Sidebar filters (desktop) */}
                     <aside className="hidden lg:block">
-                        <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto rounded-xl border border-slate-200 bg-white p-4">
+                        <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto overflow-x-hidden rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs">
                             {filterPanel}
                         </div>
                     </aside>
@@ -193,14 +230,18 @@ export default function PublicationGrid() {
                                     <SelectTrigger className="h-11 w-full bg-white text-sm" aria-label={tr("Category", "ምድብ")}>
                                         <span className="flex min-w-0 items-center gap-2">
                                             <Tag className="h-4 w-4 shrink-0 text-primary" />
-                                            <SelectValue />
+                                            <span className="truncate">
+                                                <SelectValue />
+                                            </span>
                                         </span>
                                     </SelectTrigger>
                                     <SelectContent>
                                         {categoryOptions.map((opt) => (
                                             <SelectItem key={opt.value} value={opt.value}>
-                                                {opt.label}
-                                                {opt.count !== undefined && <span className="ms-1.5 text-xs text-muted">({opt.count})</span>}
+                                                <div className="flex items-center justify-between gap-3 w-full">
+                                                    <span>{opt.label}</span>
+                                                    {opt.count !== undefined && <span className="ms-1 text-xs text-muted">({opt.count})</span>}
+                                                </div>
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
@@ -224,7 +265,7 @@ export default function PublicationGrid() {
                                         className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-primary hover:underline"
                                     >
                                         <X className="h-3 w-3" />
-                                        {tr("Clear", "አጽዳ")}
+                                        {tr("Clear all", "ሁሉንም አጽዳ")}
                                     </button>
                                 )}
                                 <Select value={sort} onValueChange={withReset(setSort)}>
@@ -260,6 +301,45 @@ export default function PublicationGrid() {
                                     })}
                                 </div>
                             </div>
+
+                            {/* Active filter pills */}
+                            {hasFilters && (
+                                <div className="flex flex-wrap items-center gap-2 pt-1">
+                                    {category !== "all" && (
+                                        <span className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 py-1 pe-2 ps-3 text-xs font-medium text-primary">
+                                            <span>{categoryOptions.find((c) => c.value === category)?.label}</span>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setCategory("all");
+                                                    setPage(1);
+                                                }}
+                                                className="rounded-full p-0.5 hover:bg-primary/20"
+                                                aria-label={tr("Remove category filter", "የምድብ ማጣሪያ አስወግድ")}
+                                            >
+                                                <X className="h-3 w-3" />
+                                            </button>
+                                        </span>
+                                    )}
+                                    {search && (
+                                        <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-100 py-1 pe-2 ps-3 text-xs font-medium text-secondary">
+                                            <span>“{search}”</span>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setSearchInput("");
+                                                    setSearch("");
+                                                    setPage(1);
+                                                }}
+                                                className="rounded-full p-0.5 hover:bg-slate-200"
+                                                aria-label={tr("Clear search", "ፍለጋ አጽዳ")}
+                                            >
+                                                <X className="h-3 w-3" />
+                                            </button>
+                                        </span>
+                                    )}
+                                </div>
+                            )}
                         </div>
 
                         {/* Results */}
