@@ -76,30 +76,32 @@ check_port() {
   local port="$1"
   local service_name="$2"
   local conflict=0
+  local details=""
 
-  # Check with ss or netstat if available
-  if command -v ss >/dev/null 2>&1; then
-    if ss -lntp 2>/dev/null | grep -E "[:.]${port}[[:space:]]" | grep -qv "docker"; then
-      conflict=1
-    fi
-  elif command -v netstat >/dev/null 2>&1; then
-    if netstat -tuln 2>/dev/null | grep -E "[:.]${port}[[:space:]]" | grep -qv "docker"; then
-      conflict=1
-    fi
-  fi
-
-  # Check if occupied by an unrelated container
+  # A container publishing the port: ours (midi_*) is fine on redeploy, anything else is a conflict
   local running_on_port
-  running_on_port="$(docker ps --format '{{.Names}}\t{{.Ports}}' 2>/dev/null | grep -E "0\.0\.0\.0:${port}->" || true)"
+  running_on_port="$(docker ps --format '{{.Names}}\t{{.Ports}}' 2>/dev/null | grep -E "(0\.0\.0\.0|\[::\]):${port}->" || true)"
   if [ -n "$running_on_port" ]; then
-    if ! echo "$running_on_port" | grep -Eq "^midi_"; then
+    if echo "$running_on_port" | grep -Evq "^midi_"; then
+      conflict=1
+      details="$running_on_port"
+    fi
+  else
+    # No container holds it: check for a host process listening on the port
+    # (without sudo, ss cannot show process names, so any listener counts)
+    if command -v ss >/dev/null 2>&1; then
+      details="$(ss -lnt 2>/dev/null | grep -E "[:.]${port}[[:space:]]" || true)"
+    elif command -v netstat >/dev/null 2>&1; then
+      details="$(netstat -tln 2>/dev/null | grep -E "[:.]${port}[[:space:]]" || true)"
+    fi
+    if [ -n "$details" ]; then
       conflict=1
     fi
   fi
 
   if [ "$conflict" -eq 1 ]; then
     echo "[deploy] ERROR: Port $port for $service_name is already in use by an unrelated host service or container!"
-    echo "Details: $running_on_port"
+    echo "Details: $details"
     echo "Stopping deployment to prevent modifying unrelated services."
     exit 1
   fi
