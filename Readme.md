@@ -2,7 +2,7 @@
 
 > Official institutional portal and content management platform for the Mineral Industry Development Institute (MIDI), Ethiopia, under the Ministry of Mines.
 
-You can run everything with **Docker Compose** or run **backend** and **frontend** locally against a Postgres instance.
+You can run everything with **Docker Compose** or run **backend** and **frontend** locally against a Postgres instance. For the production server, see [Production deployment (server 10.100.14.6)](#production-deployment-server-10100146).
 
 ---
 
@@ -24,13 +24,21 @@ You can run everything with **Docker Compose** or run **backend** and **frontend
 ## Project structure
 
 ```
-website/
-├── backend/          # Express API, uploads, Sequelize
-├── frontend/         # Next.js app (public site + admin)
-├── docker-compose.yml
-├── .env.example      # Docker Compose overrides (root)
-├── backend/example.env
-└── frontend/example.env
+midi-website/
+├── backend/                     # Express API, Socket.IO, Sequelize, uploads
+│   ├── migrations/ seeders/     # Database schema and initial data
+│   ├── uploads/                 # Uploaded images and files (not in git)
+│   └── storage/publications/    # Protected publication PDFs
+├── frontend/                    # Next.js app (public site + admin)
+├── nginx/nginx.conf             # Reverse proxy used by both compose files
+├── scripts/
+│   ├── deploy-production.sh     # Production deploy (backup, build, health wait)
+│   └── verify-deployment.sh     # Post-deploy checks
+├── docker-compose.yml           # Local / development stack
+├── docker-compose.prod.yml      # Production stack (server 10.100.14.6)
+├── deploy.sh                    # Shortcut for scripts/deploy-production.sh
+├── .env.example                 # Root env for docker-compose.yml
+└── .env.production.example      # Root env template for docker-compose.prod.yml
 ```
 
 ---
@@ -39,19 +47,16 @@ website/
 
 Copy the example files and adjust for your machine. **Do not commit real `.env` files** (they are gitignored).
 
-### Root `.env` (Docker Compose)
+Each way of running the app reads a different file:
 
-Used by `docker-compose.yml` for shared secrets:
+| Running | File | Template |
+|---|---|---|
+| Production (`docker-compose.prod.yml`) | `.env.production` (repo root) | `.env.production.example` |
+| Local Docker (`docker-compose.yml`) | `.env` (repo root) | `.env.example` |
+| Backend without Docker | `backend/.env` | `backend/.env.example` |
+| Frontend without Docker | `frontend/.env` | `frontend/.env.example` |
 
-```bash
-cp .env.example .env
-```
-
-| Variable | Purpose |
-|---|---|
-| `AUTH_SECRET` | NextAuth session signing (frontend container) |
-| `JWT_SECRET` | API JWT signing (backend container) |
-| `DB_USER` / `DB_PASSWORD` / `DB_NAME` | Postgres credentials |
+`backend/.env` and `frontend/.env` are excluded from the Docker images, so they never affect a Docker deployment.
 
 Generate strong secrets:
 
@@ -59,15 +64,11 @@ Generate strong secrets:
 openssl rand -base64 48
 ```
 
-Use the **same value** for `AUTH_SECRET` and `NEXTAUTH_SECRET` in the frontend env (see below).
-
 ### Backend `backend/.env`
 
 ```bash
-cp backend/example.env backend/.env
+cp backend/.env.example backend/.env
 ```
-
-Key variables:
 
 | Variable | Purpose |
 |---|---|
@@ -75,21 +76,20 @@ Key variables:
 | `DB_*` | Database connection |
 | `EMAIL_*` | Password reset / notifications |
 | `FRONTEND_URL` | CORS and email links |
-| `PORT` | API port (default `4000`) |
+| `PORT` / `SOCKET_PORT` | API port (default `4000`) / Socket.IO port (default `5000`) |
 
 ### Frontend `frontend/.env`
 
 ```bash
-cp frontend/example.env frontend/.env
+cp frontend/.env.example frontend/.env
 ```
 
 | Variable | Purpose |
 |---|---|
-| `AUTH_SECRET` | NextAuth (must match `NEXTAUTH_SECRET`) |
+| `AUTH_SECRET` | NextAuth session secret (must match `NEXTAUTH_SECRET`) |
 | `NEXTAUTH_SECRET` | NextAuth fallback secret |
 | `NEXT_PUBLIC_BASE_URL` | API base URL (e.g. `http://localhost:4000/api`) |
 | `NEXT_PUBLIC_FILE_URL` / `NEXT_PUBLIC_BASE` | Static files & uploads base |
-| `NEXT_PUBLIC_FRONTEND_URL` | Public site URL |
 
 **Local example**
 
@@ -97,7 +97,6 @@ cp frontend/example.env frontend/.env
 NEXT_PUBLIC_BASE_URL=http://localhost:4000/api
 NEXT_PUBLIC_FILE_URL=http://localhost:4000
 NEXT_PUBLIC_BASE=http://localhost:4000
-NEXT_PUBLIC_FRONTEND_URL=http://localhost:3000
 AUTH_SECRET=<generate-with-openssl>
 NEXTAUTH_SECRET=<same-as-AUTH_SECRET>
 ```
@@ -118,38 +117,26 @@ Legacy `/login` redirects to the public homepage. Unauthenticated access to `/ad
 
 ---
 
-## Run with Docker Compose
+## Run with Docker Compose (local)
 
 From the repository root:
 
 ```bash
+cp .env.example .env
 docker compose up -d --build
 ```
 
-**URLs (default local mapping via nginx in production; direct container ports in dev)**
+| Service | URL | Container |
+|---|---|---|
+| Frontend | http://localhost:3005 | `midi_frontend` |
+| Backend API | http://localhost:4005 | `midi_backend` |
+| Socket.IO | http://localhost:5005 | `midi_backend` |
+| Nginx | http://localhost:8085 | `midi_nginx` |
+| Database | internal only | `midi_postgres` |
 
-| Service | URL |
-|---|---|
-| Frontend | http://localhost:3000 |
-| Backend API | http://localhost:4000 |
-| Uploads | http://localhost:4000/uploads/... |
+Migrations and the production seeders run automatically when the backend container starts. To load the default starter content, see [Seeding initial data](#seeding-initial-data) and use `midi_backend` instead of `midi_backend_prod`.
 
-### Database setup (Docker)
-
-Migrations run automatically when the backend container starts. To run manually:
-
-```bash
-docker exec -it jarra-holding-group-website-backend npm run migrate
-docker exec -it jarra-holding-group-website-backend npm run seed
-```
-
-### Image reprocessing (Docker)
-
-After migrations, generate WebP variants for **existing** uploads:
-
-```bash
-docker exec -it jarra-holding-group-website-backend npm run reprocess-attachments
-```
+> `docker-compose.yml` publishes the same host ports as the production stack. Never run both on the same machine.
 
 ---
 
@@ -165,8 +152,7 @@ Create a Postgres database matching `DB_NAME` in `backend/.env` (e.g. `midi_port
 cd backend
 npm install
 npm run migrate
-npm run seed          # optional initial data
-npm run dev           # http://localhost:4000
+npm run dev           # API http://localhost:4000, Socket.IO :5000
 ```
 
 ### 3. Frontend
@@ -177,13 +163,137 @@ npm install
 npm run dev           # http://localhost:3000
 ```
 
-### 4. Image reprocessing (local)
+---
 
-With Postgres running and migrations applied:
+## Production deployment (server 10.100.14.6)
+
+This is how the site was first deployed on the Ministry server. The full reference (backups, restore, firewall, troubleshooting) is in **[DEPLOY-SERVER-10.100.14.6.md](./DEPLOY-SERVER-10.100.14.6.md)**.
+
+### Ports
+
+The server hosts other applications, so MIDI uses its own assigned ports:
+
+| Service | Address | Container |
+|---|---|---|
+| **Frontend (main URL)** | **http://10.100.14.6:3005** | `midi_frontend_prod` |
+| Backend API | http://10.100.14.6:4005 | `midi_backend_prod` |
+| Socket.IO | http://10.100.14.6:5005 | `midi_backend_prod` (same container, port 5000) |
+| Nginx reverse proxy | http://10.100.14.6:8085 | `midi_nginx_prod` |
+| PostgreSQL | internal Docker network only | `midi_postgres_prod` |
+
+Users open the site directly on port **3005**. Nginx on 8085 is an alternative entry point and is ready for a future domain name.
+
+### Step 1: Get the code on the server
+
+The server deploys the `deployment` branch. The repository is private, so cloning asks for a GitHub username and a **personal access token** as the password (GitHub → Settings → Developer settings → Fine-grained tokens; resource owner `Minster-of-Mining-and-Minerals`, repository `midi-website`, Contents: Read-only). Never paste the token anywhere except the terminal prompt.
 
 ```bash
-cd backend
-npm run reprocess-attachments
+ssh server-mom@10.100.14.6
+cd ~/Projects
+git clone -b deployment https://github.com/Minster-of-Mining-and-Minerals/midi-website.git
+cd midi-website
+```
+
+If the server cannot reach GitHub, copy the code from a developer machine instead:
+
+```bash
+# On your computer, in the repo
+git bundle create midi-deployment.bundle deployment
+scp midi-deployment.bundle server-mom@10.100.14.6:~/Projects/
+# On the server
+cd ~/Projects && git clone -b deployment midi-deployment.bundle midi-website
+```
+
+### Step 2: Create `.env.production`
+
+Real `.env` files are never in git, so create it on the server from the template and fill in random secrets:
+
+```bash
+cp .env.production.example .env.production
+chmod 600 .env.production
+
+sed -i "s|^AUTH_SECRET=.*|AUTH_SECRET=$(openssl rand -hex 24)|" .env.production
+sed -i "s|^NEXTAUTH_SECRET=.*|NEXTAUTH_SECRET=$(grep '^AUTH_SECRET=' .env.production | cut -d= -f2)|" .env.production
+sed -i "s|^JWT_SECRET=.*|JWT_SECRET=$(openssl rand -hex 24)|" .env.production
+sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=$(openssl rand -hex 16)|" .env.production
+
+nano .env.production    # set EMAIL_USER and EMAIL_PASS (Gmail app password)
+```
+
+Check the file without revealing secrets:
+
+```bash
+grep -E '^[A-Z_]+=' .env.production | sed -E 's/^((AUTH_SECRET|NEXTAUTH_SECRET|JWT_SECRET|DB_PASSWORD|EMAIL_PASS)=).+/\1****set****/'
+```
+
+- These secrets are only used between containers, which is why they are long and random. Nobody types them.
+- **Keep a safe copy of this file outside the server.** Losing `JWT_SECRET`/`AUTH_SECRET` logs everyone out; losing `DB_PASSWORD` locks you out of the existing database.
+- If MIDI was deployed on the server before, reuse the old `DB_PASSWORD`. Postgres keeps the password it was created with.
+
+### Step 3: Deploy
+
+```bash
+chmod +x deploy.sh scripts/*.sh
+./deploy.sh
+```
+
+The script checks Docker and the four ports (and stops if another application uses one), backs up the existing MIDI database and publication files, builds the images, starts the containers and waits until all of them are healthy. It exits with an error instead of reporting success if anything fails. The first build takes several minutes.
+
+### Step 4: Verify
+
+```bash
+./scripts/verify-deployment.sh
+```
+
+Every line should show ✓. Then open `http://10.100.14.6:3005` from a computer on the office network. Type `http://` explicitly: the site does not serve HTTPS.
+
+### Seeding initial data
+
+A first deployment creates an empty database (tables and permissions only). To load the default starter content (admin account, admin menu, home page slider, mineral development pages), run these seeders **once, on an empty database**:
+
+```bash
+for s in \
+  20251029134413-seed-permissions.js \
+  20251029134401-seed-routes.js \
+  admin-seeder.js \
+  20260824160000-product-permissions.js \
+  20261017-seed-midi-content.js \
+  20261018230500-seed-midi-mineral-development-nodes.js \
+  20261018231500-seed-five-mineral-development-pages.js
+do
+  echo "=== $s"
+  docker exec midi_backend_prod npx sequelize-cli db:seed --seed "$s" || { echo "FAILED: $s"; break; }
+done
+docker compose -f docker-compose.prod.yml --env-file .env.production restart backend
+```
+
+Then log in at `http://10.100.14.6:3005/en/access/identity/gateway` with `admin@gmail.com` / `#Admin123` and **change the password immediately**. That default password is in the source code.
+
+- **Never run `npm run seed` / `db:seed:all` on production.** It also runs the test (`seed-user-types`) and demo (`demo-users`) seeders.
+- `admin-seeder.js` deletes and recreates the admin user and Super Admin role. Do not re-run it on a live database.
+- Seeding only loads starter content. Real content (news, publications, images) comes from restoring a database dump and the uploads archive.
+
+### Updating the site later
+
+```bash
+cd ~/Projects/midi-website
+git pull origin deployment
+./deploy.sh
+./scripts/verify-deployment.sh
+```
+
+### Day-to-day commands (production)
+
+```bash
+# Status and logs
+docker compose -f docker-compose.prod.yml --env-file .env.production ps
+docker compose -f docker-compose.prod.yml --env-file .env.production logs -f backend
+
+# Restart
+docker compose -f docker-compose.prod.yml --env-file .env.production restart
+
+# Stop without losing data (never add -v: it deletes the database volume)
+docker compose -f docker-compose.prod.yml --env-file .env.production down
 ```
 
 ---
@@ -208,51 +318,41 @@ uploads/attachments/{attachment_id}/
   original_<name>.jpg   # kept for reference / download
 ```
 
-**PDFs, documents, audio, and video** are stored as a single file (no resizing).
+**PDFs, documents, audio, and video** are stored as a single file (no resizing). Protected publication PDFs are stored separately in `backend/storage/publications/`.
 
 ### Frontend usage
 
 Use `getImageUrl(attachment, size)` from `frontend/src/utils/fileUrl.ts`:
 
 ```ts
-getImageUrl(gem.attachment, "large")   // public display (default)
-getImageUrl(attachment, "large")       // admin preview
+getImageUrl(attachment, "large")   // public display (default)
+getImageUrl(attachment, "medium")  // admin preview
 ```
 
 If variants are missing (old uploads), the helper falls back to `file_path`.
 
-### When to run reprocess
+### Reprocessing older images
 
-Run `npm run reprocess-attachments` when:
+New uploads are processed automatically. To build WebP variants for images uploaded before the image pipeline existed (for example after restoring an old uploads archive):
 
-- Setting up a fresh environment with existing upload data
-- Deploying the image pipeline for the first time on production
-- Restoring uploads from a backup that predates variants
-
-**New uploads** are processed automatically; reprocess is only needed for older files.
+```bash
+# Production
+docker exec midi_backend_prod node scripts/reprocess-attachments.js
+# Local
+cd backend && node scripts/reprocess-attachments.js
+```
 
 ---
 
 ## Useful commands
-
-### Docker
-
-```bash
-docker compose stop          # stop containers
-docker compose down          # stop and remove containers
-docker compose down -v       # also remove DB volume (wipes data)
-docker compose logs -f       # all logs
-docker compose logs -f backend
-```
 
 ### Backend
 
 ```bash
 npm run dev                  # development server
 npm run migrate              # apply Sequelize migrations
-npm run migrate:undo         # undo last migration
-npm run seed                 # run seeders
-npm run reprocess-attachments  # build WebP variants for existing images
+npm run migrate:undo         # undo last migration (never on production)
+npm run seed:production      # the four idempotent production seeders
 ```
 
 ### Frontend
@@ -265,36 +365,14 @@ npm run start                # production server (after build)
 
 ---
 
-## Production deploy
-
-See **[DEPLOY.md](./DEPLOY.md)** for the full server rollout.
-
-**Quick summary**
-
-1. **Git:** push/pull `website-update` — includes upgraded `backend/db-snapshot.sql`.
-2. **SCP:** copy `backend/deploy-uploads.tar.gz` (~1.8 GB) to the server separately (too large for GitHub).
-3. **Server:** `chmod +x scripts/deploy-production.sh && ./scripts/deploy-production.sh`
-
-Uploads persist via `./backend/uploads` volume mount in `docker-compose.yml`.
-
----
-
-## Production notes
-
-- Set strong `JWT_SECRET`, `AUTH_SECRET`, and `DB_PASSWORD` via server env or secrets manager — never use placeholder values.
-- Ensure `NEXT_PUBLIC_*` URLs match your public domain (e.g. `https://www.waaams.org`).
-- After deploy, run migrations and `reprocess-attachments` once if upgrading from a version without image variants.
-- Uploads are served from `/uploads` with long-lived cache headers for images.
-
----
-
 ## Troubleshooting
 
 | Issue | Check |
 |---|---|
+| `No such container: midi-website-backend` | Containers are named `midi_backend_prod` (production) or `midi_backend` (local). Run `docker ps` to see the names. |
+| Login says "Invalid email or password" | Check the admin user exists (see [Seeding initial data](#seeding-initial-data)), then `docker compose -f docker-compose.prod.yml logs frontend` for the real error |
+| `504 Gateway Time-out` in the browser | Use `http://` (not `https://`), turn off VPNs/web shields, and make sure the device is on the office network |
 | Login redirect loop | `AUTH_SECRET` / `NEXTAUTH_SECRET` match and backend is reachable |
-| Images still slow | Run `reprocess-attachments`; confirm network loads `.webp` not huge `.jpg` |
-| Migration fails | Postgres running; `DB_*` in `backend/.env` correct |
-| Sharp error in Docker | Rebuild backend image after dependency changes |
-
-For full env templates, see `backend/example.env`, `frontend/example.env`, and `.env.example`.
+| `npm install` fails with `EBADPLATFORM` in Docker | A Windows/macOS-only package was added as a direct dependency in `package.json` |
+| Container not healthy after deploy | `docker compose -f docker-compose.prod.yml logs backend`: look for `FATAL` (failed migration or seeder) |
+| Images still slow | Run the reprocess script; confirm the browser loads `.webp`, not large `.jpg` files |
