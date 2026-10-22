@@ -4,13 +4,16 @@ import { MapPin, ExternalLink } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { useGetFederalOfficesQuery } from "@/redux/api/federalOfficeApi";
+import { useGetPageHeaderByIdentifierQuery } from "@/redux/api/pageHeaderApi";
 import { getGoogleMapsEmbedUrl, getGoogleMapsUrl } from "@/utils/mapUtils";
+import { CONTACT_SECTIONS } from "./contactSections";
 
 const MapSection = () => {
     const { data: federalOffices, isLoading, isError } = useGetFederalOfficesQuery();
+    const { data: mapText, isLoading: isMapTextLoading } = useGetPageHeaderByIdentifierQuery(CONTACT_SECTIONS.map.identifier);
     const office = federalOffices?.[0];
 
-    if (isLoading) {
+    if (isLoading || isMapTextLoading) {
         return (
             <section className="w-full">
                 <Skeleton className="h-80 w-full rounded-2xl" />
@@ -18,8 +21,17 @@ const MapSection = () => {
         );
     }
 
-    const embedUrl = getGoogleMapsEmbedUrl(office?.map_location || office?.office_address);
-    const googleMapsUrl = getGoogleMapsUrl(office?.map_location || office?.office_address);
+    const location = office?.map_location?.trim() || office?.office_address?.trim();
+
+    // Nothing saved in Contact Details yet: hide the map rather than pin a default location
+    if (!location && !isError) {
+        return null;
+    }
+
+    const embedUrl = getGoogleMapsEmbedUrl(location);
+    const googleMapsUrl = getGoogleMapsUrl(location);
+    const mapTitle = mapText?.title || CONTACT_SECTIONS.map.defaultTitle;
+    const mapDescription = mapText?.description || CONTACT_SECTIONS.map.defaultDescription;
 
     return (
         <section className="w-full bg-white rounded-2xl border border-gray-100 shadow-sm p-6 md:p-8">
@@ -27,10 +39,10 @@ const MapSection = () => {
                 <div>
                     <h2 className="text-2xl font-bold text-primary flex items-center gap-2">
                         <MapPin className="text-golden-dark w-6 h-6" />
-                        Office Location
+                        {mapTitle}
                     </h2>
                     <p className="text-muted-foreground mt-1">
-                        Find Mineral Industry Development Institute (MIDI) office on the interactive map below.
+                        {mapDescription}
                     </p>
                     {office?.office_address && (
                         <p className="text-sm text-gray-700 font-medium mt-2">

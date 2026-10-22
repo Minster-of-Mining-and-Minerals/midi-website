@@ -6,13 +6,18 @@ import { Mail, MapPin, Phone, Send, Loader2, ExternalLink, Globe } from "lucide-
 import { ContactPageSkeleton } from "@/components/skeletons";
 import { useGetFederalOfficesQuery } from "@/redux/api/federalOfficeApi";
 import { useCreateMessageMutation } from "@/redux/api/messageApi";
+import { useGetPageHeaderByIdentifierQuery } from "@/redux/api/pageHeaderApi";
 import { useState } from "react";
 import { notify, extractErrorMessage } from "@/utils/notification";
 import { getGoogleMapsUrl } from "@/utils/mapUtils";
+import { CONTACT_SECTIONS } from "./contactSections";
 
 const ContactForm = () => {
     const { data: federalOffices, isLoading } = useGetFederalOfficesQuery();
     const office = federalOffices?.[0];
+
+    const { data: infoText, isLoading: isInfoTextLoading } = useGetPageHeaderByIdentifierQuery(CONTACT_SECTIONS.info.identifier);
+    const { data: formText, isLoading: isFormTextLoading } = useGetPageHeaderByIdentifierQuery(CONTACT_SECTIONS.form.identifier);
 
     const [createMessage, { isLoading: sending }] = useCreateMessageMutation();
 
@@ -75,45 +80,57 @@ const ContactForm = () => {
         }
     };
 
-    if (isLoading) {
+    if (isLoading || isInfoTextLoading || isFormTextLoading) {
         return <ContactPageSkeleton />;
     }
 
-    const officeAddress = office?.office_address || "Addis Ababa, Ethiopia (Ministry of Mines Complex)";
-    const officePhone = office?.phone || "+251 11 667 2020";
-    const officeEmail = office?.email || "info@midi.gov.et";
+    // Only show what the admin has saved in Contact Details; empty fields are hidden
+    const officeAddress = office?.office_address?.trim();
+    const officePhone = office?.phone?.trim();
+    const officeEmail = office?.email?.trim();
     const mapLocation = office?.map_location;
+
+    const infoTitle = infoText?.title || CONTACT_SECTIONS.info.defaultTitle;
+    const infoDescription = infoText?.description || CONTACT_SECTIONS.info.defaultDescription;
+    const formTitle = formText?.title || CONTACT_SECTIONS.form.defaultTitle;
+    const formDescription = formText?.description || CONTACT_SECTIONS.form.defaultDescription;
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* LEFT SIDE – CONTACT INFO */}
             <div className="space-y-4">
                 <div className="mb-6">
-                    <h2 className="text-2xl font-bold text-primary">Get In Touch</h2>
+                    <h2 className="text-2xl font-bold text-primary">{infoTitle}</h2>
                     <p className="text-muted-foreground mt-1">
-                        Have questions about our businesses, products, or services? Reach out to our team directly.
+                        {infoDescription}
                     </p>
                 </div>
 
-                <InfoCard
-                    icon={<MapPin className="text-golden-dark" />}
-                    title="Head Office Address"
-                    value={officeAddress}
-                />
+                {officeAddress && (
+                    <InfoCard
+                        icon={<MapPin className="text-golden-dark" />}
+                        title="Head Office Address"
+                        value={officeAddress}
+                    />
+                )}
 
-                <InfoCard
-                    icon={<Phone className="text-golden-dark" />}
-                    title="Phone Number"
-                    value={officePhone}
-                    href={`tel:${officePhone.replace(/\s+/g, "")}`}
-                />
+                {officePhone && (
+                    <InfoCard
+                        icon={<Phone className="text-golden-dark" />}
+                        title="Phone Number"
+                        value={officePhone}
+                        href={`tel:${officePhone.replace(/\s+/g, "")}`}
+                    />
+                )}
 
-                <InfoCard
-                    icon={<Mail className="text-golden-dark" />}
-                    title="Email Address"
-                    value={officeEmail}
-                    href={`mailto:${officeEmail}`}
-                />
+                {officeEmail && (
+                    <InfoCard
+                        icon={<Mail className="text-golden-dark" />}
+                        title="Email Address"
+                        value={officeEmail}
+                        href={`mailto:${officeEmail}`}
+                    />
+                )}
 
                 {mapLocation && (
                     <InfoCard
@@ -129,10 +146,10 @@ const ContactForm = () => {
             {/* RIGHT SIDE – CONTACT FORM */}
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
                 <h2 className="text-2xl font-bold text-golden-dark mb-2">
-                    Send Us a Message
+                    {formTitle}
                 </h2>
                 <p className="text-muted-foreground text-sm mb-6">
-                    Fill in the form below and we will respond to your inquiry as soon as possible.
+                    {formDescription}
                 </p>
 
                 <form className="space-y-5" onSubmit={handleSubmit}>
