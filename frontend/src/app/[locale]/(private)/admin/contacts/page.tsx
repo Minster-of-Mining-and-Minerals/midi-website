@@ -16,7 +16,7 @@ const AdminContactsPage = () => {
                 </p>
             </div>
 
-            <Tabs defaultValue="messages" className="w-full">
+            <Tabs defaultValue="contact-info" className="w-full">
                 <TabsList className="grid max-w-md grid-cols-2 mb-8 h-12">
                     <TabsTrigger value="messages" className="flex items-center gap-2">
                         <Mail className="w-4 h-4" />
@@ -25,7 +25,7 @@ const AdminContactsPage = () => {
 
                     <TabsTrigger value="contact-info" className="flex items-center gap-2">
                         <MapPin className="w-4 h-4" />
-                        Contact Details
+                        Contact Information
                     </TabsTrigger>
                 </TabsList>
 

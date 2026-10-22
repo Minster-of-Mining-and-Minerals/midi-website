@@ -2,15 +2,14 @@
 
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, MapPin, Phone, Send, Loader2, ExternalLink, Globe } from "lucide-react";
+import { Mail, MapPin, Phone, Send, Loader2, ExternalLink } from "lucide-react";
 import { ContactPageSkeleton } from "@/components/skeletons";
 import { useGetFederalOfficesQuery } from "@/redux/api/federalOfficeApi";
 import { useCreateMessageMutation } from "@/redux/api/messageApi";
 import { useGetPageHeaderByIdentifierQuery } from "@/redux/api/pageHeaderApi";
 import { useState } from "react";
 import { notify, extractErrorMessage } from "@/utils/notification";
-import { getGoogleMapsUrl } from "@/utils/mapUtils";
-import { CONTACT_SECTIONS } from "./contactSections";
+import { CONTACT_SECTIONS, DEFAULT_CONTACT_DETAILS } from "./contactSections";
 
 const ContactForm = () => {
     const { data: federalOffices, isLoading } = useGetFederalOfficesQuery();
@@ -84,11 +83,12 @@ const ContactForm = () => {
         return <ContactPageSkeleton />;
     }
 
-    // Only show what the admin has saved in Contact Details; empty fields are hidden
-    const officeAddress = office?.office_address?.trim();
-    const officePhone = office?.phone?.trim();
-    const officeEmail = office?.email?.trim();
-    const mapLocation = office?.map_location;
+    // Saved Contact Information, or the defaults until the admin saves their own
+    const officeAddress = office?.office_address?.trim() || DEFAULT_CONTACT_DETAILS.address;
+    const officePhone = office?.phone?.trim() || DEFAULT_CONTACT_DETAILS.phone;
+    const officeEmail = office?.email?.trim() || DEFAULT_CONTACT_DETAILS.email;
+    // Several numbers may be listed ("011… | 011…"); the link dials the first one
+    const dialNumber = officePhone.split(/[|,/]/)[0].replace(/[^\d+]/g, "");
 
     const infoTitle = infoText?.title || CONTACT_SECTIONS.info.defaultTitle;
     const infoDescription = infoText?.description || CONTACT_SECTIONS.info.defaultDescription;
@@ -106,41 +106,25 @@ const ContactForm = () => {
                     </p>
                 </div>
 
-                {officeAddress && (
-                    <InfoCard
-                        icon={<MapPin className="text-golden-dark" />}
-                        title="Head Office Address"
-                        value={officeAddress}
-                    />
-                )}
+                <InfoCard
+                    icon={<MapPin className="text-golden-dark" />}
+                    title="Office Address"
+                    value={officeAddress}
+                />
 
-                {officePhone && (
-                    <InfoCard
-                        icon={<Phone className="text-golden-dark" />}
-                        title="Phone Number"
-                        value={officePhone}
-                        href={`tel:${officePhone.replace(/\s+/g, "")}`}
-                    />
-                )}
+                <InfoCard
+                    icon={<Phone className="text-golden-dark" />}
+                    title="Phone Number"
+                    value={officePhone}
+                    href={`tel:${dialNumber}`}
+                />
 
-                {officeEmail && (
-                    <InfoCard
-                        icon={<Mail className="text-golden-dark" />}
-                        title="Email Address"
-                        value={officeEmail}
-                        href={`mailto:${officeEmail}`}
-                    />
-                )}
-
-                {mapLocation && (
-                    <InfoCard
-                        icon={<Globe className="text-golden-dark" />}
-                        title="Map Location"
-                        value="View on Google Maps"
-                        href={getGoogleMapsUrl(mapLocation)}
-                        isExternal
-                    />
-                )}
+                <InfoCard
+                    icon={<Mail className="text-golden-dark" />}
+                    title="Email Address"
+                    value={officeEmail}
+                    href={`mailto:${officeEmail}`}
+                />
             </div>
 
             {/* RIGHT SIDE – CONTACT FORM */}

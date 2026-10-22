@@ -31,12 +31,19 @@ export default function MapPicker({
     const [searchQuery, setSearchQuery] = useState("");
     const [isSearching, setIsSearching] = useState(false);
     const [searchError, setSearchError] = useState<string | null>(null);
+    const [searchResults, setSearchResults] = useState<{ name: string; lat: number; lng: number }[]>([]);
+
+    // The map's click/drag handlers are bound once, so read the latest onChange through a ref
+    const onChangeRef = useRef(onChange);
+    useEffect(() => {
+        onChangeRef.current = onChange;
+    }, [onChange]);
 
     // Update position and trigger onChange with clean Google Maps URL
     const updatePosition = useCallback((newLat: number, newLng: number, panMap = false) => {
         setCoords({ lat: newLat, lng: newLng });
         const cleanUrl = getGoogleMapsUrl(`${newLat},${newLng}`);
-        onChange(cleanUrl);
+        onChangeRef.current(cleanUrl);
 
         if (markerRef.current) {
             markerRef.current.setLatLng([newLat, newLng]);
@@ -53,7 +60,7 @@ export default function MapPicker({
         if (panMap && mapInstanceRef.current) {
             mapInstanceRef.current.flyTo([newLat, newLng], 16, { duration: 1.2 });
         }
-    }, [onChange]);
+    }, []);
 
     // Synchronize when value changes externally (e.g. from asynchronous API fetch)
     useEffect(() => {
@@ -82,11 +89,12 @@ export default function MapPicker({
 
             if (!isMounted || !mapContainerRef.current) return;
 
-            // Custom SVG Marker Icon
+            // Custom SVG Marker Icon. Leaflet positions it with iconAnchor, so the HTML must not
+            // shift itself: the bottom of the stem (x 20, y 45) is the exact selected point.
             const customIcon = L.divIcon({
                 className: "custom-leaflet-marker",
                 html: `
-                    <div style="transform: translate(-50%, -100%); display: flex; flex-direction: column; align-items: center; cursor: grab;">
+                    <div style="width: 40px; display: flex; flex-direction: column; align-items: center; cursor: grab;">
                         <div style="background-color: #f59e0b; color: white; padding: 7px; border-radius: 9999px; box-shadow: 0 4px 10px rgba(0,0,0,0.35); border: 2.5px solid white; display: flex; align-items: center; justify-content: center;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/>
@@ -94,12 +102,13 @@ export default function MapPicker({
                             </svg>
                         </div>
                         <div style="width: 2px; height: 6px; background-color: #f59e0b;"></div>
-                        <div style="width: 8px; height: 8px; background-color: rgba(0,0,0,0.3); border-radius: 9999px; filter: blur(1px);"></div>
+                        <div style="width: 8px; height: 8px; margin-top: -4px; background-color: rgba(0,0,0,0.3); border-radius: 9999px; filter: blur(1px);"></div>
                     </div>
                 `,
-                iconSize: [32, 44],
-                iconAnchor: [16, 44],
-                popupAnchor: [0, -44],
+                // 39px circle + 6px stem = 45px to the tip; the shadow is centred on the tip
+                iconSize: [40, 49],
+                iconAnchor: [20, 45],
+                popupAnchor: [0, -45],
             });
 
             // Initialize map instance
@@ -170,21 +179,26 @@ export default function MapPicker({
 
         setIsSearching(true);
         setSearchError(null);
+        setSearchResults([]);
 
         try {
             const res = await fetch(
-                `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+                `https://nominatim.openstreetmap.org/search?format=json&limit=5&q=${encodeURIComponent(
                     searchQuery + (searchQuery.toLowerCase().includes("ethiopia") ? "" : ", Ethiopia")
                 )}`
             );
             const data = await res.json();
 
             if (data && data.length > 0) {
-                const firstResult = data[0];
-                const lat = parseFloat(firstResult.lat);
-                const lng = parseFloat(firstResult.lon);
+                const results = data.map((r: { display_name: string; lat: string; lon: string }) => ({
+                    name: r.display_name as string,
+                    lat: parseFloat(r.lat),
+                    lng: parseFloat(r.lon),
+                }));
 
-                updatePosition(lat, lng, true);
+                // Jump to the best match; list the others so the right place can be picked
+                updatePosition(results[0].lat, results[0].lng, true);
+                setSearchResults(results.length > 1 ? results : []);
                 setSearchError(null);
             } else {
                 setSearchError("No locations found. Try searching a different place or click the map directly.");
@@ -298,6 +312,27 @@ export default function MapPicker({
 
             {searchError && (
                 <p className="text-xs text-amber-600 mt-1">{searchError}</p>
+            )}
+
+            {searchResults.length > 0 && (
+                <div className="rounded-lg border border-gray-200 bg-white divide-y divide-gray-100 text-xs">
+                    <p className="px-3 py-1.5 text-gray-500">Several places match. Pick the right one:</p>
+                    {searchResults.map((r, i) => {
+                        const isSelected =
+                            Math.abs(r.lat - coords.lat) < 0.00001 && Math.abs(r.lng - coords.lng) < 0.00001;
+                        return (
+                            <button
+                                key={`${r.lat},${r.lng},${i}`}
+                                type="button"
+                                onClick={() => updatePosition(r.lat, r.lng, true)}
+                                className={`w-full text-left px-3 py-2 flex items-start gap-2 hover:bg-amber-50 ${isSelected ? "bg-amber-50 font-medium text-amber-900" : "text-gray-700"}`}
+                            >
+                                <MapPin className={`w-3.5 h-3.5 mt-0.5 shrink-0 ${isSelected ? "text-golden-dark" : "text-gray-400"}`} />
+                                <span className="line-clamp-2">{r.name}</span>
+                            </button>
+                        );
+                    })}
+                </div>
             )}
 
             {/* Interactive Leaflet Map Box */}

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useGetFederalOfficesQuery } from "@/redux/api/federalOfficeApi";
 import { useGetPageHeaderByIdentifierQuery } from "@/redux/api/pageHeaderApi";
 import { getGoogleMapsEmbedUrl, getGoogleMapsUrl } from "@/utils/mapUtils";
-import { CONTACT_SECTIONS } from "./contactSections";
+import { CONTACT_SECTIONS, DEFAULT_CONTACT_DETAILS } from "./contactSections";
 
 const MapSection = () => {
     const { data: federalOffices, isLoading, isError } = useGetFederalOfficesQuery();
@@ -21,12 +21,10 @@ const MapSection = () => {
         );
     }
 
-    const location = office?.map_location?.trim() || office?.office_address?.trim();
-
-    // Nothing saved in Contact Details yet: hide the map rather than pin a default location
-    if (!location && !isError) {
-        return null;
-    }
+    // Saved pin, else saved address, else the default location
+    const location =
+        office?.map_location?.trim() || office?.office_address?.trim() || DEFAULT_CONTACT_DETAILS.mapQuery;
+    const officeAddress = office?.office_address?.trim() || DEFAULT_CONTACT_DETAILS.address;
 
     const embedUrl = getGoogleMapsEmbedUrl(location);
     const googleMapsUrl = getGoogleMapsUrl(location);
@@ -44,12 +42,10 @@ const MapSection = () => {
                     <p className="text-muted-foreground mt-1">
                         {mapDescription}
                     </p>
-                    {office?.office_address && (
-                        <p className="text-sm text-gray-700 font-medium mt-2">
-                            <span className="text-muted-foreground font-normal">Address: </span>
-                            {office.office_address}
-                        </p>
-                    )}
+                    <p className="text-sm text-gray-700 font-medium mt-2">
+                        <span className="text-muted-foreground font-normal">Address: </span>
+                        {officeAddress}
+                    </p>
                 </div>
                 <Button
                     variant="outline"
