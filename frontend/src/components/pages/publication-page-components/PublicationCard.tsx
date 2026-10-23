@@ -30,7 +30,7 @@ export default function PublicationCard({ publication }: PublicationCardProps) {
                 {/* Cover with a curtain that slides down on hover */}
                 <Link href={href} className="relative block" aria-label={title} tabIndex={-1}>
                     <PublicationCover coverUrl={coverUrl} title={title} className="rounded-none" />
-                    <span className="pointer-events-none absolute inset-x-0 top-0 h-0 bg-secondary/45 backdrop-blur-[2px] transition-all duration-500 ease-in-out group-hover:h-full" />
+                    <span className="pointer-events-none absolute inset-x-0 top-0 h-0 bg-slate-950/45 backdrop-blur-[2px] transition-all duration-500 ease-in-out group-hover:h-full" />
                     <span className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-hover:delay-200">
                         <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-semibold text-secondary shadow-lg">
                             <BookOpen className="h-4 w-4 text-primary" />
@@ -56,7 +56,7 @@ export default function PublicationCard({ publication }: PublicationCardProps) {
                     <div className="mt-auto flex flex-col gap-2 pt-4">
                         <Link
                             href={href}
-                            className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-secondary text-sm font-semibold text-white transition hover:bg-primary"
+                            className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-slate-900 text-sm font-semibold text-white transition hover:bg-primary"
                         >
                             <BookOpen className="h-4 w-4" />
                             {tr("Read online", "በመስመር ላይ አንብብ")}
@@ -75,7 +75,7 @@ export default function PublicationCard({ publication }: PublicationCardProps) {
                 </div>
             </div>
             {/* Soft glow under the card on hover */}
-            <div className="mx-4 mt-2 h-1 rounded-full bg-secondary/15 opacity-0 blur-[2px] transition-opacity duration-500 group-hover:opacity-100" />
+            <div className="mx-4 mt-2 h-1 rounded-full bg-slate-950/15 opacity-0 blur-[2px] transition-opacity duration-500 group-hover:opacity-100" />
         </article>
     );
 }

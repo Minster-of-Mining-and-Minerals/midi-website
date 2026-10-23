@@ -128,7 +128,7 @@ export default function ExternalLogin() {
               {/* Submit */}
               <button
                 type="submit"
-                className="w-full bg-[#073954] h-14 hover:bg-[#073954]/90 text-xl text-white py-2 rounded-md shadow-md"
+                className="w-full bg-primary h-14 hover:bg-primary-hover text-xl text-white py-2 rounded-md shadow-md"
               >
                 Log In
               </button>

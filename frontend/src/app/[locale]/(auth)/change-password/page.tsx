@@ -119,7 +119,7 @@ export default function ChangePasswordPage() {
                   name="current_password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-[#0C4A6E]">Current Password</FormLabel>
+                      <FormLabel className="text-slate-900">Current Password</FormLabel>
                       <div className="relative">
                         <FormControl>
                           <Input
@@ -134,7 +134,7 @@ export default function ChangePasswordPage() {
                           onClick={() => setShowPasswords(!showPasswords)}
                           className="absolute top-1/2 right-3 -translate-y-1/2"
                         >
-                          {showPasswords ? <EyeIcon className="h-5 w-5 text-[#0C4A6E]" /> : <EyeOffIcon className="h-5 w-5 text-[#0C4A6E]" />}
+                          {showPasswords ? <EyeIcon className="h-5 w-5 text-slate-900" /> : <EyeOffIcon className="h-5 w-5 text-slate-900" />}
                         </button>
                       </div>
                       <FormMessage />
@@ -147,7 +147,7 @@ export default function ChangePasswordPage() {
                   name="new_password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-[#0C4A6E]">New Password</FormLabel>
+                      <FormLabel className="text-slate-900">New Password</FormLabel>
                       <div className="relative">
                         <FormControl>
                           <Input
@@ -168,7 +168,7 @@ export default function ChangePasswordPage() {
                   name="confirm_password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-[#0C4A6E]">Confirm New Password</FormLabel>
+                      <FormLabel className="text-slate-900">Confirm New Password</FormLabel>
                       <div className="relative">
                         <FormControl>
                           <Input
@@ -186,7 +186,7 @@ export default function ChangePasswordPage() {
 
                 <Button
                   type="submit"
-                  className="w-full bg-[#073954] hover:bg-[#073954]/90 h-14 text-xl text-white font-semibold rounded-md shadow-md transition-all duration-200 mt-6 flex items-center justify-center gap-2"
+                  className="w-full bg-primary hover:bg-primary-hover h-14 text-xl text-white font-semibold rounded-md shadow-md transition-all duration-200 mt-6 flex items-center justify-center gap-2"
                   disabled={isLoading}
                 >
                   {isLoading && <Loader2 className="w-5 h-5 animate-spin" />}

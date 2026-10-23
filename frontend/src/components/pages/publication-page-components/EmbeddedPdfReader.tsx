@@ -61,12 +61,12 @@ export default function EmbeddedPdfReader({ publication }: EmbeddedPdfReaderProp
         <div
             className={
                 isFullscreen
-                    ? "fixed inset-0 z-[100] flex flex-col bg-secondary"
+                    ? "fixed inset-0 z-[100] flex flex-col bg-slate-950"
                     : "overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
             }
         >
             {/* Reader toolbar */}
-            <div className="flex flex-wrap items-center justify-between gap-2 bg-secondary px-4 py-3 text-xs text-white">
+            <div className="flex flex-wrap items-center justify-between gap-2 bg-slate-950 px-4 py-3 text-xs text-white">
                 <div className="flex min-w-0 items-center gap-2">
                     <FileText className="h-4 w-4 shrink-0 text-[#f5c451]" />
                     <span className="truncate font-medium">{title}</span>

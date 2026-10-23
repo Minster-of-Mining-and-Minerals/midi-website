@@ -144,7 +144,7 @@ export default function ForgotPasswordPage() {
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-[#0C4A6E]">Email Address</FormLabel>
+                          <FormLabel className="text-slate-900">Email Address</FormLabel>
                           <FormControl>
                             <Input placeholder="example@gov.et" {...field} className="h-14 border-blue-300 focus:ring-0" />
                           </FormControl>
@@ -154,7 +154,7 @@ export default function ForgotPasswordPage() {
                     />
                     <Button
                       type="submit"
-                      className="w-full bg-[#073954] hover:bg-[#073954]/90 h-14 text-xl text-white font-semibold rounded-md shadow-md mt-6 flex items-center justify-center gap-2"
+                      className="w-full bg-primary hover:bg-primary-hover h-14 text-xl text-white font-semibold rounded-md shadow-md mt-6 flex items-center justify-center gap-2"
                       disabled={requesting}
                     >
                       {requesting && <Loader2 className="w-5 h-5 animate-spin" />}
@@ -168,11 +168,11 @@ export default function ForgotPasswordPage() {
             {step === 2 && (
               <div className="space-y-6">
                 <div className="text-center mb-8">
-                  <div className="bg-[#0C4A6E]/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <ShieldCheck className="h-8 w-8 text-[#0C4A6E]" />
+                  <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <ShieldCheck className="h-8 w-8 text-primary" />
                   </div>
-                  <h1 className="text-3xl font-bold text-[#0C4A6E] mb-2">Verify OTP</h1>
-                  <p className="text-sm text-[#0C4A6E]/70">Enter the 6-digit code sent to <span className="font-bold">{email}</span></p>
+                  <h1 className="text-3xl font-bold text-slate-900 mb-2">Verify OTP</h1>
+                  <p className="text-sm text-slate-600">Enter the 6-digit code sent to <span className="font-bold">{email}</span></p>
                 </div>
 
                 <Form {...otpForm}>
@@ -182,7 +182,7 @@ export default function ForgotPasswordPage() {
                       name="otp"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-[#0C4A6E]">6-Digit OTP</FormLabel>
+                          <FormLabel className="text-slate-900">6-Digit OTP</FormLabel>
                           <FormControl>
                             <Input placeholder="123456" maxLength={6} {...field} className="h-14 text-center text-2xl tracking-[1em] border-blue-300 focus:ring-0" />
                           </FormControl>
@@ -192,14 +192,14 @@ export default function ForgotPasswordPage() {
                     />
                     <Button
                       type="submit"
-                      className="w-full bg-[#073954] hover:bg-[#073954]/90 h-14 text-xl text-white font-semibold rounded-md shadow-md mt-6 flex items-center justify-center gap-2"
+                      className="w-full bg-primary hover:bg-primary-hover h-14 text-xl text-white font-semibold rounded-md shadow-md mt-6 flex items-center justify-center gap-2"
                       disabled={verifying}
                     >
                       {verifying && <Loader2 className="w-5 h-5 animate-spin" />}
                       {verifying ? "Verifying..." : "Verify OTP"}
                     </Button>
-                    <p className="text-center text-sm text-[#0C4A6E]/70 mt-4">
-                      Didn't receive code? <button type="button" onClick={() => onEmailSubmit({ email })} className="text-[#0C4A6E] font-bold hover:underline">Resend</button>
+                    <p className="text-center text-sm text-slate-600 mt-4">
+                      Didn't receive code? <button type="button" onClick={() => onEmailSubmit({ email })} className="text-primary font-bold hover:underline">Resend</button>
                     </p>
                   </form>
                 </Form>
@@ -209,11 +209,11 @@ export default function ForgotPasswordPage() {
             {step === 3 && (
               <div className="space-y-6">
                 <div className="text-center mb-8">
-                  <div className="bg-[#0C4A6E]/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Lock className="h-8 w-8 text-[#0C4A6E]" />
+                  <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Lock className="h-8 w-8 text-primary" />
                   </div>
-                  <h1 className="text-3xl font-bold text-[#0C4A6E] mb-2">New Password</h1>
-                  <p className="text-sm text-[#0C4A6E]/70">Set a strong password to secure your account.</p>
+                  <h1 className="text-3xl font-bold text-slate-900 mb-2">New Password</h1>
+                  <p className="text-sm text-slate-600">Set a strong password to secure your account.</p>
                 </div>
 
                 <Form {...resetForm}>
@@ -223,7 +223,7 @@ export default function ForgotPasswordPage() {
                       name="newPassword"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-[#0C4A6E]">New Password</FormLabel>
+                          <FormLabel className="text-slate-900">New Password</FormLabel>
                           <div className="relative">
                             <FormControl>
                               <Input
@@ -238,7 +238,7 @@ export default function ForgotPasswordPage() {
                               onClick={() => setShowPassword(!showPassword)}
                               className="absolute top-1/2 right-3 -translate-y-1/2"
                             >
-                              {showPassword ? <EyeIcon className="h-5 w-5 text-[#0C4A6E]" /> : <EyeOffIcon className="h-5 w-5 text-[#0C4A6E]" />}
+                              {showPassword ? <EyeIcon className="h-5 w-5 text-slate-900" /> : <EyeOffIcon className="h-5 w-5 text-slate-900" />}
                             </button>
                           </div>
                           <FormMessage />
@@ -250,7 +250,7 @@ export default function ForgotPasswordPage() {
                       name="confirmPassword"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-[#0C4A6E]">Confirm Password</FormLabel>
+                          <FormLabel className="text-slate-900">Confirm Password</FormLabel>
                           <FormControl>
                             <Input
                               type={showPassword ? "text" : "password"}
@@ -265,7 +265,7 @@ export default function ForgotPasswordPage() {
                     />
                     <Button
                       type="submit"
-                      className="w-full bg-[#073954] hover:bg-[#073954]/90 h-14 text-xl text-white font-semibold rounded-md shadow-md mt-6 flex items-center justify-center gap-2"
+                      className="w-full bg-primary hover:bg-primary-hover h-14 text-xl text-white font-semibold rounded-md shadow-md mt-6 flex items-center justify-center gap-2"
                       disabled={resetting}
                     >
                       {resetting && <Loader2 className="w-5 h-5 animate-spin" />}

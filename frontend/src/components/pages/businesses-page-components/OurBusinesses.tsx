@@ -190,7 +190,7 @@ export default function OurBusinesses() {
             <div className="absolute inset-0 bg-[#0F172A] rounded-3xl overflow-hidden shadow-2xl border border-white/5">
               <div className="absolute inset-0 bg-gradient-to-br from-[#1E293B]/60 via-transparent to-transparent"></div>
               <div className="absolute top-0 right-0 w-[450px] h-[450px] bg-primary/10 rounded-full blur-[100px] transform translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
-              <div className="absolute bottom-0 left-0 w-[450px] h-[450px] bg-secondary/10 rounded-full blur-[100px] transform -translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
+              <div className="absolute bottom-0 left-0 w-[450px] h-[450px] bg-primary/5 rounded-full blur-[100px] transform -translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
 
               {/* Desktop Connecting Lines SVG */}
               <svg className="hidden md:block absolute inset-0 w-full h-full pointer-events-none">
@@ -286,7 +286,7 @@ export default function OurBusinesses() {
                             className={`w-11 h-11 rounded-full flex items-center justify-center mb-2.5 transition-colors duration-300 ${
                               hoveredNode === node.business_node_id
                                 ? "bg-primary text-white"
-                                : "bg-secondary/80 text-white"
+                                : "bg-slate-800 text-white"
                             }`}
                           >
                             <Icon className="w-5 h-5" />
@@ -358,7 +358,7 @@ export default function OurBusinesses() {
                       >
                         <div className="absolute left-[2.25rem] w-2 h-2 rounded-full bg-primary/50 -translate-x-1/2 top-4"></div>
 
-                        <div className="relative z-10 w-9 h-9 rounded-full bg-secondary/80 flex-shrink-0 flex items-center justify-center border border-white/10 mt-1">
+                        <div className="relative z-10 w-9 h-9 rounded-full bg-slate-800 flex-shrink-0 flex items-center justify-center border border-white/10 mt-1">
                           <Icon className="w-4 h-4 text-white" />
                         </div>
                         <div className="flex-1 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-3.5">
