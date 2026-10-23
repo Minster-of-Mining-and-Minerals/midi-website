@@ -150,6 +150,11 @@
   }
 }
 
+/* Rich text editors (news, products, vacancies): typed text is dark, not inherited from the page */
+.ql-editor {
+  color: hsl(var(--foreground));
+}
+
 /* Success Toast */
 .sonner-toast[data-type="success"] {
   background: #e6f7ee;
