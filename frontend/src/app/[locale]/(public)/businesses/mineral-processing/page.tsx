@@ -1,29 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import { useLocale } from "next-intl";
-import {
-  Layers,
-  Wrench,
-  Building2,
-  Filter,
-  Zap,
-  Sliders,
-  FlaskConical,
-  ArrowRight,
-  ShieldCheck,
-  CheckCircle2,
-  ChevronRight,
-  Microscope,
-  Gauge,
-  Cpu,
-  BarChart3,
-  Compass,
-  FileCheck,
-  RotateCcw,
-  BookOpen,
-} from "lucide-react";
+import { Link } from "@/i18n/navigation";
+import { Filter, Zap, Sliders, FlaskConical, ArrowRight, BookOpen, Wrench } from "lucide-react";
 
 export default function MineralProcessingPage() {
   const locale = useLocale();
@@ -199,468 +179,146 @@ export default function MineralProcessingPage() {
   const currentMethodData =
     separationMethods.find((m) => m.id === activeMethod) || separationMethods[0];
 
+  const MethodIcon = currentMethodData.icon;
+
   return (
-    <div className="w-full max-w-7xl mx-auto space-y-16">
-      {/* Precision Engineering Breadcrumb */}
-      <nav
-        aria-label="Breadcrumb"
-        className="flex items-center space-x-2 text-xs font-mono text-slate-500 uppercase tracking-wider"
-      >
-        <Link href={`/${locale}`} className="hover:text-primary transition-colors">
-          {isAm ? "መነሻ" : "PORTAL"}
-        </Link>
-        <span>//</span>
-        <Link href={`/${locale}/businesses`} className="hover:text-primary transition-colors">
-          {isAm ? "የማዕድን ልማት" : "MINERAL_DEV"}
-        </Link>
-        <span>//</span>
-        <span className="text-primary font-semibold">
-          {isAm ? "ማቀነባበሪያ_እና_ማበልፀጊያ" : "BENEFICIATION_ENGINEERING"}
-        </span>
-      </nav>
+    <div className="flex flex-col gap-5">
+      {/* Flowsheet stage selector */}
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-1">
+        <h2 className="text-lg md:text-xl font-bold text-slate-900">
+          {isAm ? "የተቀናጀ የ4-ደረጃ የማዕድን ማበልፀጊያ ፍሰት" : "The 4-Stage Mineral Dressing Engineering Flowsheet"}
+        </h2>
+        <p className="text-sm text-slate-500">
+          {isAm ? "ዝርዝር መረጃውን ለማየት በማናቸውም ደረጃ ላይ ጠቅ ያድርጉ።" : "Select a stage to inspect its parameters."}
+        </p>
+      </div>
 
-      {/* SECTION 1: Asymmetric Engineering Hero Section */}
-      <section className="relative rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 lg:p-12 shadow-sm overflow-hidden">
-        {/* Engineering graph paper subtle grid overlay */}
-        <div
-          className="absolute inset-0 opacity-[0.03] dark:opacity-[0.07] pointer-events-none"
-          style={{
-            backgroundImage: `radial-gradient(circle, currentColor 1px, transparent 1px)`,
-            backgroundSize: "24px 24px",
-          }}
-        />
-
-        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          {/* Left Column: Technical Narrative & Spec Tags (7 cols) */}
-          <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-400 text-xs font-mono uppercase tracking-widest">
-              <Gauge className="w-3.5 h-3.5" />
-              <span>
-                {isAm
-                  ? "የቴክኒክ ማዕቀፍ // የማዕድን ማበልፀጊያ ምህንድስና"
-                  : "TECHNICAL SPECIFICATION // MINERAL DRESSING ENGINEERING"}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {flowsheetStages.map((stage, idx) => {
+          const active = idx === activeStage;
+          return (
+            <button
+              key={stage.id}
+              type="button"
+              onClick={() => setActiveStage(idx)}
+              aria-pressed={active}
+              className={`rounded-xl p-4 text-start flex flex-col gap-1.5 transition-colors ${
+                active
+                  ? "bg-slate-950 text-white"
+                  : "bg-white border border-slate-200 text-slate-900 hover:border-primary/50"
+              }`}
+            >
+              <span className={`font-mono text-xs ${active ? "text-amber-400" : "text-primary"}`}>
+                {isAm ? "ደረጃ" : "STAGE"} {stage.stageNumber}
               </span>
+              <span className="text-sm md:text-[15px] font-semibold leading-snug">{stage.name}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        {/* Selected stage */}
+        <div className="lg:col-span-7 bg-white border border-slate-200 rounded-2xl p-5 md:p-6 flex flex-col gap-4">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h3 className="text-lg md:text-xl font-bold text-slate-900">{currentStageData.name}</h3>
+              <p className="mt-1 text-sm text-slate-500">{currentStageData.tagline}</p>
             </div>
-
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-950 dark:text-white tracking-tight leading-[1.15]">
-              {isAm ? (
-                <>
-                  የጥሬ ማዕድን ይዘትን በማሳደግ{" "}
-                  <span className="text-primary underline decoration-primary/30 decoration-wavy">
-                    የኢንዱስትሪ ጥሬ ዕቃ
-                  </span>{" "}
-                  ዝግጅት
-                </>
-              ) : (
-                <>
-                  Upgrading Raw Ore Grades via{" "}
-                  <span className="text-primary underline decoration-primary/30 decoration-wavy">
-                    Precision Beneficiation
-                  </span>{" "}
-                  Engineering
-                </>
-              )}
-            </h1>
-
-            <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
-              {isAm
-                ? "የማዕድን ኢንዱስትሪ ልማት ኢንስቲትዩት (MIDI) በማዕድን ማውጣት እና በፋብሪካ ማኑፋክቸሪንግ መካከል ያለውን ወሳኝ የቴክኒክ ሽግግር ይመራል። ዝቅተኛ ይዘት ያላቸው የተፈጥሮ ኦሮች በሜካኒካል መፍጨት፣ በስበት ልዩነት፣ በመግነጢሳዊ ሃይል እና በፍሎቴሽን አረፋ አማካኝነት ቆሻሻቸው ተወግዶ ለቀጣይ የብረታብረት፣ የሲሚንቶ፣ የሴራሚክስ እና የመስታወት ፋብሪካዎች ከፍተኛ ጥራት ያላቸው ክምችቶች እንዲሆኑ ይደረጋል።"
-                : "The Mineral Industry Development Institute (MIDI) delivers technical diagnostics, liberation modeling, and beneficiation flowsheet verification. By separating gangue waste from run-of-mine ores through advanced physical dressing, the institute enables domestic mineral producers to achieve international concentrate specifications for downstream smelting and manufacturing."}
-            </p>
-
-            {/* Technical Parameters Badges */}
-            <div className="flex flex-wrap gap-2 pt-2">
-              {[
-                isAm ? "የኦር ባህሪ ትንተና" : "Grain Liberation Analysis",
-                isAm ? "የመፍጨት መጠን ቁጥጥር (P80)" : "P80 Comminution Sizing",
-                isAm ? "የክምችት ማሳደጊያ ቴክኖሎጂ" : "Recovery Optimization",
-                isAm ? "ተረፈ-ቆሻሻ ቅነሳ" : "Tailings Minimization",
-              ].map((badge, idx) => (
-                <span
-                  key={idx}
-                  className="px-2.5 py-1 text-xs font-mono font-medium rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700"
-                >
-                  ✓ {badge}
-                </span>
-              ))}
-            </div>
-
-            {/* CTAs */}
-            <div className="flex flex-wrap gap-4 pt-3">
-              <Link
-                href={`/${locale}/publications`}
-                className="inline-flex items-center px-5 py-3 rounded-xl bg-primary text-white font-semibold text-xs md:text-sm shadow-sm hover:bg-primary/95 transition-all group"
-              >
-                <BookOpen className="w-4 h-4 mr-2" />
-                <span>{isAm ? "የሂደት ጥናቶች እና ህትመቶች" : "Processing Studies & Publications"}</span>
-                <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-0.5 transition-transform" />
-              </Link>
-              <Link
-                href={`/${locale}/services`}
-                className="inline-flex items-center px-5 py-3 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 font-semibold text-xs md:text-sm transition-all"
-              >
-                <Wrench className="w-4 h-4 mr-2 text-primary" />
-                <span>{isAm ? "የቴክኒክ የማማከር አገልግሎቶች" : "Technical Process Advisory"}</span>
-              </Link>
-            </div>
+            <span className="font-mono text-xs text-slate-500 shrink-0">{activeStage + 1} / {flowsheetStages.length}</span>
           </div>
 
-          {/* Right Column: Industrial Process Telemetry Dashboard (5 cols) */}
-          <div className="lg:col-span-5 bg-slate-950 text-white rounded-2xl p-6 md:p-8 border border-slate-800 shadow-xl space-y-6">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span className="text-xs font-mono text-slate-400 uppercase tracking-widest">
-                  {isAm ? "የሂደት ፍሰት መለኪያ" : "BENEFICIATION TELEMETRY"}
-                </span>
-              </div>
-              <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-800 text-amber-400">
-                P-80 DRESSING
-              </span>
-            </div>
+          <p className="text-sm text-slate-700 leading-relaxed">{currentStageData.purpose}</p>
 
-            {/* Visual Ore Progression Bar */}
-            <div className="space-y-3">
-              <div className="flex justify-between text-xs font-mono">
-                <span className="text-slate-400">{isAm ? "ጥሬ ኦር (Run-of-Mine)" : "Raw Ore Feed"}</span>
-                <span className="text-emerald-400">{isAm ? "የበለፀገ ክምችት" : "Upgraded Concentrate"}</span>
-              </div>
-              <div className="w-full h-3 rounded-full bg-slate-800 overflow-hidden flex">
-                <div className="bg-amber-600 w-1/4 h-full" title="Raw ROM Ore" />
-                <div className="bg-blue-600 w-1/4 h-full" title="Comminution" />
-                <div className="bg-primary w-1/3 h-full" title="Separation Circuit" />
-                <div className="bg-emerald-500 w-1/6 h-full" title="Final Clean Cake" />
-              </div>
-              <div className="flex justify-between text-[11px] font-mono text-slate-400">
-                <span>15–35% Fe/Base Metal</span>
-                <span>→ Comminution →</span>
-                <span>&gt;85% Grade Purity</span>
-              </div>
-            </div>
-
-            {/* Diagnostic Parameters Grid */}
-            <div className="grid grid-cols-2 gap-3 pt-2">
-              <div className="p-3 rounded-lg bg-slate-900 border border-slate-800 space-y-1">
-                <p className="text-[11px] font-mono text-slate-400 uppercase">
-                  {isAm ? "የመፍጨት መጠን" : "Liberation Mesh"}
-                </p>
-                <p className="text-base font-bold text-white font-mono">-75 µm to 150 µm</p>
-                <p className="text-[10px] text-slate-400">{isAm ? "የጥራጥሬ ነፃ መውጣት" : "Hydrocyclone cut"}</p>
-              </div>
-              <div className="p-3 rounded-lg bg-slate-900 border border-slate-800 space-y-1">
-                <p className="text-[11px] font-mono text-slate-400 uppercase">
-                  {isAm ? "የክምችት ማሳደጊያ" : "Enrichment Factor"}
-                </p>
-                <p className="text-base font-bold text-emerald-400 font-mono">3.5x – 12x</p>
-                <p className="text-[10px] text-slate-400">{isAm ? "የይዘት ማሻሻያ" : "ROM to concentrate"}</p>
-              </div>
-              <div className="p-3 rounded-lg bg-slate-900 border border-slate-800 space-y-1">
-                <p className="text-[11px] font-mono text-slate-400 uppercase">
-                  {isAm ? "የፈሳሽ ጥግግት" : "Pulp Density"}
-                </p>
-                <p className="text-base font-bold text-blue-400 font-mono">25% – 35%</p>
-                <p className="text-[10px] text-slate-400">{isAm ? "የፍሎቴሽን አረፋ ፍሰት" : "Solids by weight"}</p>
-              </div>
-              <div className="p-3 rounded-lg bg-slate-900 border border-slate-800 space-y-1">
-                <p className="text-[11px] font-mono text-slate-400 uppercase">
-                  {isAm ? "የውሃ መልሶ ማግኛ" : "Recycle Ratio"}
-                </p>
-                <p className="text-base font-bold text-amber-400 font-mono">80% – 85%</p>
-                <p className="text-[10px] text-slate-400">{isAm ? "ዝግ የውሃ ዑደት" : "Closed water circuit"}</p>
-              </div>
-            </div>
-
-            <div className="pt-2 text-xs text-slate-400 border-t border-slate-800 flex items-center justify-between">
-              <span className="font-mono">BENEFICIATION FLOWSHEET v3.2</span>
-              <span className="text-emerald-400 flex items-center gap-1 font-mono text-[11px]">
-                <CheckCircle2 className="w-3.5 h-3.5" /> VERIFIED
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 2: Interactive Beneficiation Flowsheet Diagram */}
-      <section className="space-y-8">
-        <div className="border-b border-slate-200 dark:border-slate-800 pb-4 flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-primary mb-1">
-              <Cpu className="w-4 h-4" />
-              <span>{isAm ? "የሂደት ንድፍ አሳሽ" : "INTERACTIVE PROCESS FLOWSHEET"}</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white">
-              {isAm
-                ? "የተቀናጀ የ4-ደረጃ የማዕድን ማበልፀጊያ ፍሰት"
-                : "The 4-Stage Mineral Dressing Engineering Flowsheet"}
-            </h2>
-            <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm mt-1">
-              {isAm
-                ? "ዝርዝር መረጃውን ለማየት በማናቸውም ደረጃ ላይ ጠቅ ያድርጉ። እያንዳንዱ ደረጃ የቀጣዩ ደረጃ ቀጥተኛ ግብዓት ነው።"
-                : "Select any stage node to inspect technical considerations, equipment types, and feed-to-product transformations."}
-            </p>
+          <div className="flex flex-wrap items-center gap-2 text-xs">
+            <span className="rounded-md bg-slate-100 px-2.5 py-1.5 text-slate-700">
+              <span className="text-slate-500">{isAm ? "የደረጃው ግብዓት" : "Feed"}: </span>
+              {currentStageData.flowFeed}
+            </span>
+            <ArrowRight className="w-4 h-4 text-primary rtl:rotate-180" aria-hidden="true" />
+            <span className="rounded-md bg-amber-50 px-2.5 py-1.5 text-amber-900">
+              <span className="text-amber-800/80">{isAm ? "የደረጃው ምርት" : "Product"}: </span>
+              {currentStageData.flowProduct}
+            </span>
           </div>
 
-          <div className="text-xs font-mono text-slate-500 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 self-start md:self-auto">
-            {isAm ? "የተመረጠው ደረጃ:" : "ACTIVE STAGE:"} <span className="text-primary font-bold">{currentStageData.stageNumber}</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {currentStageData.parameters.map((param, idx) => (
+              <div key={idx} className="rounded-lg bg-slate-50 px-4 py-3 flex flex-col gap-1">
+                <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">{param.label}</span>
+                <span className="text-sm font-semibold text-slate-900">{param.val}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-auto flex flex-wrap gap-3 pt-1">
+            <Link
+              href="/services"
+              className="inline-flex items-center gap-2 h-11 px-5 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary-hover transition-colors"
+            >
+              <Wrench className="w-4 h-4" />
+              {isAm ? "የቴክኒክ የማማከር አገልግሎቶች" : "Technical Process Advisory"}
+            </Link>
+            <Link
+              href="/publications"
+              className="inline-flex items-center gap-2 h-11 px-5 rounded-lg border border-slate-300 text-slate-800 text-sm font-semibold hover:bg-slate-100 transition-colors"
+            >
+              <BookOpen className="w-4 h-4 text-primary" />
+              {isAm ? "የሂደት ጥናቶች እና ህትመቶች" : "Processing Studies & Publications"}
+            </Link>
           </div>
         </div>
 
-        {/* Connected Flowsheet Pipeline (Interactive on Desktop & Mobile) */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 relative">
-          {flowsheetStages.map((stage, idx) => {
-            const isSelected = activeStage === idx;
-            return (
-              <button
-                key={stage.id}
-                onClick={() => setActiveStage(idx)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    setActiveStage(idx);
-                  }
-                }}
-                className={`relative text-left p-5 rounded-2xl border transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary ${isSelected
-                    ? "bg-slate-950 text-white border-primary shadow-lg ring-1 ring-primary"
-                    : "bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-700"
-                  }`}
-                role="tab"
-                aria-selected={isSelected}
-              >
-                <div className="flex items-center justify-between mb-3">
-                  <span
-                    className={`text-xs font-mono px-2 py-0.5 rounded font-bold ${isSelected
-                        ? "bg-primary text-white"
-                        : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
-                      }`}
-                  >
-                    STAGE {stage.stageNumber}
-                  </span>
-                  {idx < flowsheetStages.length - 1 && (
-                    <ArrowRight
-                      className={`w-4 h-4 hidden lg:block ${isSelected ? "text-primary" : "text-slate-400"
-                        }`}
-                    />
-                  )}
-                </div>
+        {/* Separation methods */}
+        <div className="lg:col-span-5 bg-white border border-slate-200 rounded-2xl p-5 flex flex-col gap-4">
+          <h3 className="text-base font-semibold text-slate-900">
+            {isAm ? "አካላዊ እና ኬሚካላዊ የማዕድን መለያ ቴክኒኮች" : "Physical & Physicochemical Separation Technologies"}
+          </h3>
 
-                <h3 className="font-bold text-sm sm:text-base mb-1 line-clamp-1">{stage.shortTitle}</h3>
-                <p
-                  className={`text-xs line-clamp-2 leading-relaxed ${isSelected ? "text-slate-300" : "text-slate-500 dark:text-slate-400"
-                    }`}
-                >
-                  {stage.tagline}
-                </p>
-
-                {isSelected && (
-                  <div className="mt-3 pt-2 border-t border-slate-800 flex items-center justify-between text-[11px] font-mono text-emerald-400">
-                    <span>{isAm ? "ዝርዝር እየታየ ነው" : "INSPECTING..."}</span>
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                  </div>
-                )}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Selected Flowsheet Stage Deep-Dive Inspector Panel */}
-        <div className="bg-slate-950 text-white rounded-3xl p-6 md:p-10 border border-slate-800 shadow-xl space-y-8">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-6">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded text-xs font-mono bg-primary text-white font-bold">
-                  STAGE {currentStageData.stageNumber}
-                </span>
-                <span className="text-xs font-mono text-slate-400 uppercase tracking-widest">
-                  FLOWSHEET INSPECTOR
-                </span>
-              </div>
-              <h3 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
-                {currentStageData.name}
-              </h3>
-            </div>
-
-            {/* Quick Flow Vector */}
-            <div className="flex items-center gap-2 text-xs font-mono bg-slate-900 border border-slate-800 px-4 py-2 rounded-xl">
-              <span className="text-amber-400">{currentStageData.flowFeed}</span>
-              <ArrowRight className="w-3.5 h-3.5 text-slate-500" />
-              <span className="text-emerald-400 font-semibold">{currentStageData.flowProduct}</span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Left: Purpose and Process Role (7 cols) */}
-            <div className="lg:col-span-7 space-y-6">
-              <div>
-                <h4 className="text-xs font-mono uppercase text-slate-400 tracking-wider mb-2">
-                  {isAm ? "የደረጃው የቴክኒክ ዓላማ" : "ENGINEERING PURPOSE & ROLE"}
-                </h4>
-                <p className="text-slate-300 text-sm md:text-base leading-relaxed">
-                  {currentStageData.purpose}
-                </p>
-              </div>
-
-              {/* Connected Flow Indicator */}
-              <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div className="space-y-0.5">
-                  <p className="text-[11px] font-mono text-slate-400 uppercase">
-                    {isAm ? "የደረጃው ግብዓት" : "Feed Stream (Inflow)"}
-                  </p>
-                  <p className="text-sm font-semibold text-amber-300">{currentStageData.flowFeed}</p>
-                </div>
-                <ArrowRight className="w-4 h-4 text-slate-500 hidden sm:block" />
-                <div className="space-y-0.5">
-                  <p className="text-[11px] font-mono text-slate-400 uppercase">
-                    {isAm ? "የደረጃው ምርት" : "Product Discharge (Outflow)"}
-                  </p>
-                  <p className="text-sm font-semibold text-emerald-400">{currentStageData.flowProduct}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Right: Technical Specifications Matrix (5 cols) */}
-            <div className="lg:col-span-5 bg-slate-900 rounded-2xl p-6 border border-slate-800 space-y-4">
-              <h4 className="text-xs font-mono uppercase text-slate-400 tracking-wider flex items-center justify-between">
-                <span>{isAm ? "የቴክኒክ መለኪያዎች" : "TECHNICAL SPECIFICATIONS"}</span>
-                <Sliders className="w-3.5 h-3.5 text-primary" />
-              </h4>
-
-              <div className="space-y-3">
-                {currentStageData.parameters.map((param, pIdx) => (
-                  <div
-                    key={pIdx}
-                    className="p-3 rounded-lg bg-slate-950/70 border border-slate-800/80 flex items-start justify-between gap-2"
-                  >
-                    <span className="text-xs font-mono text-slate-400">{param.label}</span>
-                    <span className="text-xs font-mono font-semibold text-white text-right">
-                      {param.val}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 3: Selectable Engineering Separation Methods Explorer */}
-      <section className="space-y-8">
-        <div className="border-b border-slate-200 dark:border-slate-800 pb-4">
-          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-primary mb-1">
-            <Filter className="w-4 h-4" />
-            <span>{isAm ? "የማጣሪያ ቴክኖሎጂዎች" : "BENEFICIATION METHODS BENCH"}</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white">
-            {isAm
-              ? "አካላዊ እና ኬሚካላዊ የማዕድን መለያ ቴክኒኮች"
-              : "Physical & Physicochemical Separation Technologies"}
-          </h2>
-          <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm mt-1">
-            {isAm
-              ? "የማዕድናትን ተፈጥሯዊ የክብደት፣ የመግነጢሳዊ ስበት እና የገጽታ ኬሚስትሪ ልዩነት መሰረት ያደረጉ የማበልፀጊያ ዘዴዎች።"
-              : "Explore the core physical separation mechanisms evaluated for domestic ores to maximize concentrate recovery and mineral purity."}
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left Column: Method Selector Tabs (4 cols) */}
-          <div className="lg:col-span-4 space-y-3">
+          <div className="grid grid-cols-2 gap-2">
             {separationMethods.map((method) => {
               const Icon = method.icon;
-              const isSelected = activeMethod === method.id;
+              const active = method.id === activeMethod;
               return (
                 <button
                   key={method.id}
+                  type="button"
                   onClick={() => setActiveMethod(method.id)}
-                  className={`w-full text-left p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 focus:outline-none focus:ring-2 focus:ring-primary ${isSelected
-                      ? "bg-primary text-white border-primary shadow-md"
-                      : "bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700"
-                    }`}
-                  role="tab"
-                  aria-selected={isSelected}
+                  aria-pressed={active}
+                  className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-start text-sm font-semibold transition-colors ${
+                    active ? "bg-amber-50 text-amber-900 ring-1 ring-primary/40" : "bg-slate-50 text-slate-700 hover:bg-slate-100"
+                  }`}
                 >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${isSelected ? "bg-white/20 text-white" : "bg-primary/10 text-primary"
-                        }`}
-                    >
-                      <Icon className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <p className="font-bold text-sm leading-tight">{method.name}</p>
-                      <p
-                        className={`text-[11px] font-mono mt-0.5 ${isSelected ? "text-white/80" : "text-slate-500"
-                          }`}
-                      >
-                        {method.badge}
-                      </p>
-                    </div>
-                  </div>
-                  <ChevronRight
-                    className={`w-4 h-4 flex-shrink-0 ${isSelected ? "text-white" : "text-slate-400"}`}
-                  />
+                  <Icon className={`w-4 h-4 shrink-0 ${active ? "text-primary" : "text-slate-400"}`} />
+                  <span className="leading-snug">{method.name}</span>
                 </button>
               );
             })}
           </div>
 
-          {/* Right Column: Active Method Technical Spec Card (8 cols) */}
-          <div className="lg:col-span-8 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 md:p-8 shadow-sm space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
-              <div>
-                <span className="text-xs font-mono uppercase tracking-wider text-primary font-bold">
-                  {currentMethodData.badge}
-                </span>
-                <h3 className="text-xl md:text-2xl font-bold text-slate-950 dark:text-white mt-0.5">
-                  {currentMethodData.name}
-                </h3>
-              </div>
-              <span className="self-start sm:self-auto text-xs font-mono px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                BENEFICIATION CIRCUIT
-              </span>
-            </div>
-
-            {/* Target Commodities */}
-            <div className="space-y-1.5 p-4 rounded-xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200/50 dark:border-amber-800/40">
-              <p className="text-xs font-mono font-bold text-amber-800 dark:text-amber-400 uppercase tracking-wide">
-                {isAm ? "ዋና ተጠቃሚ የማዕድን አይነቶች" : "TARGET MINERAL COMMODITIES"}
+          <div className="flex flex-col gap-3 border-t border-slate-100 pt-4">
+            <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary">
+              <MethodIcon className="w-4 h-4" />
+              {currentMethodData.badge}
+            </span>
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                {isAm ? "ዋና ተጠቃሚ የማዕድን አይነቶች" : "Target Mineral Commodities"}
               </p>
-              <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 font-medium">
-                {currentMethodData.commodities}
-              </p>
+              <p className="mt-1 text-sm font-semibold text-slate-900">{currentMethodData.commodities}</p>
             </div>
-
-            {/* Engineering Mechanism */}
-            <div className="space-y-2">
-              <h4 className="text-xs font-mono uppercase text-slate-500 tracking-wider">
-                {isAm ? "የአሰራር ሂደት እና ፊዚካላዊ መርህ" : "OPERATIONAL PRINCIPLE & SEPARATION DYNAMICS"}
-              </h4>
-              <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed">
-                {currentMethodData.mechanism}
-              </p>
-            </div>
-
-            {/* Operational Specs Grid */}
-            <div className="space-y-3 pt-2">
-              <h4 className="text-xs font-mono uppercase text-slate-500 tracking-wider">
-                {isAm ? "የወረዳው የቴክኒክ መለኪያዎች" : "CIRCUIT SPECIFICATIONS"}
-              </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {currentMethodData.specs.map((item, sIdx) => (
-                  <div
-                    key={sIdx}
-                    className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 space-y-1"
-                  >
-                    <p className="text-[11px] font-mono text-slate-500 uppercase">{item.key}</p>
-                    <p className="text-xs font-semibold text-slate-900 dark:text-white">
-                      {item.value}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <p className="text-sm text-slate-600 leading-relaxed line-clamp-4">{currentMethodData.mechanism}</p>
+            <dl className="grid grid-cols-2 gap-2">
+              {currentMethodData.specs.map((spec, idx) => (
+                <div key={idx} className="rounded-lg border border-slate-100 px-3 py-2">
+                  <dt className="text-[11px] text-slate-500">{spec.key}</dt>
+                  <dd className="text-xs font-semibold text-slate-900">{spec.value}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 }

@@ -1,33 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import { useLocale } from "next-intl";
-import {
-  FlaskConical,
-  BookOpen,
-  ArrowRight,
-  Cpu,
-  GraduationCap,
-  Share2,
-  CheckCircle2,
-  Lightbulb,
-  Building2,
-  Wrench,
-  Microscope,
-  FileText,
-  ChevronRight,
-  Binary,
-  Layers,
-  Atom,
-  Network,
-  Sparkles,
-  HelpCircle,
-  FileCheck2,
-  Flame,
-  Recycle,
-  ShieldAlert,
-} from "lucide-react";
+import { Link } from "@/i18n/navigation";
+import { Atom, Recycle, Flame, Layers, BookOpen, GraduationCap, ChevronRight } from "lucide-react";
 
 export default function ResearchInnovationPage() {
   const locale = useLocale();
@@ -191,598 +167,147 @@ export default function ResearchInnovationPage() {
   const currentTheme =
     researchThemes.find((t) => t.id === activeThemeId) || researchThemes[0];
 
+  const ThemeIcon = currentTheme.icon;
+
   return (
-    <div className="w-full max-w-7xl mx-auto space-y-16">
-      {/* Scientific Breadcrumb */}
-      <nav
-        aria-label="Breadcrumb"
-        className="flex items-center space-x-2 text-xs font-mono text-slate-500 uppercase tracking-widest"
-      >
-        <Link href={`/${locale}`} className="hover:text-primary transition-colors">
-          {isAm ? "መነሻ" : "PORTAL"}
-        </Link>
-        <span>::</span>
-        <Link href={`/${locale}/businesses`} className="hover:text-primary transition-colors">
-          {isAm ? "የማዕድን ልማት" : "MINERAL_DEV"}
-        </Link>
-        <span>::</span>
-        <span className="text-primary font-semibold">
-          {isAm ? "ምርምር_እና_ኢኖቬሽን" : "APPLIED_RESEARCH_INNOVATION"}
-        </span>
-      </nav>
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+      {/* R&D pipeline */}
+      <div className="lg:col-span-7 flex flex-col gap-4">
+        <h2 className="text-lg md:text-xl font-bold text-slate-900">
+          {isAm ? "ከቤንች ላቦራቶሪ እስከ ፋብሪካ ሽግግር ያለው የ4-ደረጃ የምርምር ፍሰት" : "The 4-Stage Applied Research & Technology Pipeline"}
+        </h2>
 
-      {/* SECTION 1: Contemporary Research Institute Hero */}
-      <section className="relative rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 sm:p-12 lg:p-16 shadow-sm overflow-hidden">
-        {/* Subtle geometric research matrix background pattern */}
-        <div
-          className="absolute inset-0 opacity-[0.03] dark:opacity-[0.06] pointer-events-none"
-          style={{
-            backgroundImage: `linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)`,
-            backgroundSize: "32px 32px",
-          }}
-        />
-
-        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          {/* Left Column: Research Vision & Statement (7 cols) */}
-          <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-700 dark:text-blue-400 text-xs font-mono uppercase tracking-widest">
-              <Microscope className="w-3.5 h-3.5" />
-              <span>
-                {isAm
-                  ? "ተግባራዊ ምርምር እና ቴክኖሎጂ ሽግግር"
-                  : "APPLIED R&D // INDUSTRY TRANSFORMATION PIPELINE"}
-              </span>
-            </div>
-
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-950 dark:text-white tracking-tight leading-[1.15]">
-              {isAm ? (
-                <>
-                  የማዕድን ምርምርን ከተግባራዊ{" "}
-                  <span className="text-primary underline decoration-primary/30 decoration-wavy">
-                    የኢንዱስትሪ መፍትሄዎች
-                  </span>{" "}
-                  ጋር ማስተሳሰር
-                </>
-              ) : (
-                <>
-                  Bridging Fundamental Science and{" "}
-                  <span className="text-primary underline decoration-primary/30 decoration-wavy">
-                    Industrial Scalability
-                  </span>
-                </>
-              )}
-            </h1>
-
-            <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
-              {isAm
-                ? "የማዕድን ኢንዱስትሪ ልማት ኢንስቲትዩት (MIDI) በንድፈ-ሀሳብ ላይ ብቻ የተገደቡ ጥናቶችን በማስቀረት፣ ቀጥታ የሀገር ውስጥ አምራች ፋብሪካዎች የሚያጋጥሟቸውን የጥሬ ዕቃ፣ የማጣራት እና የኢነርጂ ተግዳሮቶች የሚፈቱ ተግባራዊ ምርምሮችን ያካሂዳል። በላቦራቶሪ የተረጋገጡ የሂደት ፍሰት-ንድፎች (Flowsheets) ወደ ፓይለት ደረጃ አድገው ለፋብሪካዎች እንዲሸጋገሩ ይደረጋል።"
-                : "Applied research at MIDI does not remain confined to academic papers. The institute focuses strictly on solving practical industrial bottlenecks: eliminating ultrafine mineral waste, formulating local refractory substitutes, optimizing cementitious clinker blends, and transferring verified flowsheet blueprints to operational domestic enterprises."}
-            </p>
-
-            {/* Direct Link to Publications & Technical Services */}
-            <div className="flex flex-wrap gap-4 pt-3">
-              <Link
-                href={`/${locale}/publications`}
-                className="inline-flex items-center px-5 py-3 rounded-xl bg-primary text-white font-semibold text-xs md:text-sm shadow-sm hover:bg-primary/95 transition-all group"
-              >
-                <BookOpen className="w-4 h-4 mr-2" />
-                <span>{isAm ? "የተቋሙን የምርምር ህትመቶች ይመልከቱ" : "Access Publications & Research"}</span>
-                <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-0.5 transition-transform" />
-              </Link>
-              <Link
-                href={`/${locale}/services`}
-                className="inline-flex items-center px-5 py-3 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 font-semibold text-xs md:text-sm transition-all"
-              >
-                <Wrench className="w-4 h-4 mr-2 text-primary" />
-                <span>{isAm ? "የቴክኒክ የማማከር አገልግሎቶች" : "Technical Advisory Services"}</span>
-              </Link>
-            </div>
-          </div>
-
-          {/* Right Column: Research Matrix Schematic Card (5 cols) */}
-          <div className="lg:col-span-5 bg-slate-950 text-white rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-xl space-y-6">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-              <div className="flex items-center gap-2">
-                <Atom className="w-4 h-4 text-primary" />
-                <span className="text-xs font-mono text-slate-400 uppercase tracking-widest">
-                  {isAm ? "የምርምር ማዕቀፍ ማትሪክስ" : "R&D TRANSLATION MATRIX"}
-                </span>
-              </div>
-              <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                ACTIVE PIPELINE
-              </span>
-            </div>
-
-            {/* Matrix Data Nodes */}
-            <div className="space-y-3">
-              <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-start gap-3">
-                <div className="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center flex-shrink-0 text-xs font-mono font-bold">
-                  01
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-white">
-                    {isAm ? "የኦር ባህሪ እና ሜታሎግራፊ" : "Mineral Liberation Modeling"}
-                  </p>
-                  <p className="text-[11px] text-slate-400 mt-0.5">
-                    {isAm ? "የማዕድናቱ ጥቃቅን መዋቅር እና ትስስር" : "XRF/XRD phase mapping and grain sizing"}
-                  </p>
-                </div>
-              </div>
-
-              <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-start gap-3">
-                <div className="w-7 h-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center flex-shrink-0 text-xs font-mono font-bold">
-                  02
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-white">
-                    {isAm ? "የማጣሪያ ኪነቲክስ እና የኬሚካል ቀመር" : "Flotation & Separation Kinetics"}
-                  </p>
-                  <p className="text-[11px] text-slate-400 mt-0.5">
-                    {isAm ? "የአረፋ እና የስበት ማጣሪያ ማመጣጠን" : "Reagent suite sweeps and pulp density"}
-                  </p>
-                </div>
-              </div>
-
-              <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-start gap-3">
-                <div className="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center flex-shrink-0 text-xs font-mono font-bold">
-                  03
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-white">
-                    {isAm ? "የፓይለት ፍሰት-ንድፍ ማረጋገጫ" : "Pilot Continuous Simulation"}
-                  </p>
-                  <p className="text-[11px] text-slate-400 mt-0.5">
-                    {isAm ? "የተከታታይ ሙከራ እና የማቴሪያል ሚዛን" : "Scale-up risk mitigation and mass balance"}
-                  </p>
-                </div>
-              </div>
-
-              <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-start gap-3">
-                <div className="w-7 h-7 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center flex-shrink-0 text-xs font-mono font-bold">
-                  04
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-white">
-                    {isAm ? "የቴክኖሎጂ ሽግግር እና SOP ዝግጅት" : "Industry Adaptation & SOPs"}
-                  </p>
-                  <p className="text-[11px] text-slate-400 mt-0.5">
-                    {isAm ? "ለፋብሪካዎች የሚሰጥ ቀጥተኛ የቴክኒክ ድጋፍ" : "Plant commissioning support and operator training"}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-2 text-xs text-slate-400 border-t border-slate-800 flex items-center justify-between font-mono">
-              <span>RESEARCH DISSEMINATION</span>
-              <span className="text-primary font-semibold">PEER-VERIFIED</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 2: Applied R&D Pipeline (Interactive Research Journey) */}
-      <section className="space-y-8">
-        <div className="border-b border-slate-200 dark:border-slate-800 pb-4 flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-primary mb-1">
-              <Network className="w-4 h-4" />
-              <span>{isAm ? "የምርምር ጉዞ መስመር" : "APPLIED R&D STAGED JOURNEY"}</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white">
-              {isAm
-                ? "ከቤንች ላቦራቶሪ እስከ ፋብሪካ ሽግግር ያለው የ4-ደረጃ የምርምር ፍሰት"
-                : "The 4-Stage Applied Research & Technology Pipeline"}
-            </h2>
-            <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm mt-1">
-              {isAm
-                ? "እያንዳንዱ የምርምር ደረጃ ምን አይነት ጥያቄዎችን እንደሚመልስ እና ምን አይነት ቴክኒካዊ ውጤቶችን እንደሚያስገኝ ለማየት ደረጃዎቹን ይምረጡ።"
-                : "Select any research phase to inspect the scientific questions addressed, applied methodologies, and technical deliverables."}
-            </p>
-          </div>
-
-          <div className="text-xs font-mono text-slate-500 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 self-start md:self-auto">
-            {isAm ? "ንቁ የምርምር ደረጃ:" : "INSPECTING PHASE:"} <span className="text-primary font-bold">{currentPipelineStage.stepNumber}</span>
-          </div>
-        </div>
-
-        {/* 4 Pipeline Stage Tabs */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-          {pipelineStages.map((stage, sIdx) => {
-            const isSelected = activePipelineStage === sIdx;
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+          {pipelineStages.map((stage, idx) => {
+            const active = idx === activePipelineStage;
             return (
               <button
                 key={stage.id}
-                onClick={() => setActivePipelineStage(sIdx)}
-                className={`text-left p-5 rounded-2xl border transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary ${
-                  isSelected
-                    ? "bg-slate-950 text-white border-primary shadow-lg ring-1 ring-primary"
-                    : "bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700"
+                type="button"
+                onClick={() => setActivePipelineStage(idx)}
+                aria-pressed={active}
+                className={`rounded-lg px-3.5 py-3 text-start flex flex-col gap-1 transition-colors ${
+                  active ? "bg-slate-950 text-white" : "bg-white border border-slate-200 text-slate-900 hover:border-primary/50"
                 }`}
-                role="tab"
-                aria-selected={isSelected}
               >
-                <div className="flex items-center justify-between mb-3">
-                  <span
-                    className={`text-xs font-mono px-2 py-0.5 rounded font-bold ${
-                      isSelected
-                        ? "bg-primary text-white"
-                        : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
-                    }`}
-                  >
-                    PHASE {stage.stepNumber}
-                  </span>
-                  {sIdx < pipelineStages.length - 1 && (
-                    <ArrowRight
-                      className={`w-4 h-4 hidden lg:block ${
-                        isSelected ? "text-primary" : "text-slate-400"
-                      }`}
-                    />
-                  )}
-                </div>
-
-                <h3 className="font-bold text-sm sm:text-base mb-1 line-clamp-1">
-                  {stage.shortTitle}
-                </h3>
-                <p
-                  className={`text-xs line-clamp-2 leading-relaxed ${
-                    isSelected ? "text-slate-300" : "text-slate-500 dark:text-slate-400"
-                  }`}
-                >
-                  {stage.subtitle}
-                </p>
-
-                {isSelected && (
-                  <div className="mt-3 pt-2 border-t border-slate-800 flex items-center justify-between text-[11px] font-mono text-blue-400">
-                    <span>{isAm ? "ደረጃው ተመርጧል" : "PHASE DOSSIER"}</span>
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-ping"></span>
-                  </div>
-                )}
+                <span className={`font-mono text-[11px] ${active ? "text-amber-400" : "text-primary"}`}>
+                  {isAm ? "ደረጃ" : "STAGE"} {stage.stepNumber}
+                </span>
+                <span className="text-sm font-semibold leading-snug">{stage.shortTitle}</span>
               </button>
             );
           })}
         </div>
 
-        {/* Selected Stage Deep-Dive Dossier */}
-        <div className="bg-slate-950 text-white rounded-3xl p-6 sm:p-10 border border-slate-800 shadow-xl space-y-8">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-6">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded text-xs font-mono bg-primary text-white font-bold">
-                  PHASE {currentPipelineStage.stepNumber}
-                </span>
-                <span className="text-xs font-mono text-slate-400 uppercase tracking-widest">
-                  RESEARCH DOSSIER
-                </span>
-              </div>
-              <h3 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
-                {currentPipelineStage.title}
-              </h3>
-            </div>
-
-            <div className="text-xs font-mono px-3.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300">
-              {currentPipelineStage.handoff}
-            </div>
+        <div className="flex-1 bg-white border border-slate-200 rounded-2xl p-5 md:p-6 flex flex-col gap-4">
+          <div>
+            <h3 className="text-lg md:text-xl font-bold text-slate-900">{currentPipelineStage.title}</h3>
+            <p className="mt-1 text-sm text-slate-500">{currentPipelineStage.subtitle}</p>
           </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Left: Questions & Methodology (7 cols) */}
-            <div className="lg:col-span-7 space-y-6">
-              {/* Question Answered */}
-              <div className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-2">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase text-amber-400 tracking-wider">
-                  <HelpCircle className="w-4 h-4" />
-                  <span>{isAm ? "ደረጃው የሚመልሰው ቁልፍ የምርምር ጥያቄ" : "PRIMARY RESEARCH QUESTIONS ANSWERED"}</span>
-                </div>
-                <p className="text-sm sm:text-base text-slate-200 leading-relaxed italic">
-                  &ldquo;{currentPipelineStage.questions}&rdquo;
-                </p>
-              </div>
-
-              {/* Applied Methodology */}
-              <div className="space-y-2">
-                <h4 className="text-xs font-mono uppercase text-slate-400 tracking-wider">
-                  {isAm ? "የተግባራዊ ፍተሻ ስነ-ዘዴ" : "TESTING METHODOLOGY & PROTOCOLS"}
-                </h4>
-                <p className="text-slate-300 text-sm leading-relaxed">
-                  {currentPipelineStage.methodology}
-                </p>
-              </div>
-            </div>
-
-            {/* Right: Deliverables Card (5 cols) */}
-            <div className="lg:col-span-5 bg-slate-900 rounded-2xl p-6 border border-slate-800 space-y-4">
-              <h4 className="text-xs font-mono uppercase text-slate-400 tracking-wider flex items-center justify-between">
-                <span>{isAm ? "ተጨባጭ የምርምር ውጤቶች" : "VERIFIED DELIVERABLES"}</span>
-                <FileCheck2 className="w-4 h-4 text-emerald-400" />
-              </h4>
-
-              <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1">
-                <p className="text-[11px] font-mono text-slate-500 uppercase">
-                  {isAm ? "የደረጃው የቴክኒክ ሰነድ" : "Technical Output"}
-                </p>
-                <p className="text-sm font-bold text-white">
-                  {currentPipelineStage.deliverables}
-                </p>
-              </div>
-
-              <div className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1">
-                <p className="text-[11px] font-mono text-slate-500 uppercase">
-                  {isAm ? "የቀጣይ ደረጃ ትስስር" : "Downstream Transition"}
-                </p>
-                <p className="text-xs text-slate-300 font-mono">
-                  {currentPipelineStage.handoff}
-                </p>
-              </div>
-
-              <div className="pt-2 text-[11px] font-mono text-slate-500">
-                {isAm
-                  ? "የምርምር ሂደቱ አለም አቀፍ የላቦራቶሪ ደረጃዎችን (ISO/IEC 17025) የተከተለ ነው"
-                  : "Conducted under rigorous laboratory quality assurance protocols"}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION 3: Research Themes Explorer */}
-      <section className="space-y-8">
-        <div className="border-b border-slate-200 dark:border-slate-800 pb-4">
-          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-primary mb-1">
-            <Atom className="w-4 h-4" />
-            <span>{isAm ? "ስልታዊ የምርምር መስኮች" : "CORE APPLIED RESEARCH THEMES"}</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white">
-            {isAm
-              ? "የሀገር ውስጥ ኢንዱስትሪዎችን ችግር የሚፈቱ የምርምር መስኮች"
-              : "Four Priority Applied Mineral Research Themes"}
-          </h2>
-          <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm mt-1">
-            {isAm
-              ? "የሀገር ውስጥ ፋብሪካዎች የሚያጋጥሟቸውን የጥሬ ዕቃ እጥረት፣ የሃይል ብክነት እና የተረፈ-ቆሻሻ አያያዝ ችግሮች የሚፈቱ የምርምር ስራዎች።"
-              : "Explore targeted research initiatives focused on recovery optimization, industrial circularity, energy reduction, and domestic refractory development."}
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left Column: Theme Selectors (4 cols) */}
-          <div className="lg:col-span-4 space-y-3">
-            {researchThemes.map((theme) => {
-              const Icon = theme.icon;
-              const isSelected = activeThemeId === theme.id;
-              return (
-                <button
-                  key={theme.id}
-                  onClick={() => setActiveThemeId(theme.id)}
-                  className={`w-full text-left p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 focus:outline-none focus:ring-2 focus:ring-primary ${
-                    isSelected
-                      ? "bg-primary text-white border-primary shadow-md"
-                      : "bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700"
-                  }`}
-                  role="tab"
-                  aria-selected={isSelected}
-                >
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                        isSelected ? "bg-white/20 text-white" : "bg-primary/10 text-primary"
-                      }`}
-                    >
-                      <Icon className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <p className="font-bold text-sm leading-tight">{theme.title}</p>
-                      <p
-                        className={`text-[11px] font-mono mt-0.5 ${
-                          isSelected ? "text-white/80" : "text-slate-500"
-                        }`}
-                      >
-                        {theme.badge}
-                      </p>
-                    </div>
-                  </div>
-                  <ChevronRight
-                    className={`w-4 h-4 flex-shrink-0 ${isSelected ? "text-white" : "text-slate-400"}`}
-                  />
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Right Column: Detailed Theme Explorer Card (8 cols) */}
-          <div className="lg:col-span-8 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 sm:p-8 shadow-sm space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
-              <div>
-                <span className="text-xs font-mono uppercase tracking-wider text-primary font-bold">
-                  {currentTheme.badge}
-                </span>
-                <h3 className="text-xl md:text-2xl font-bold text-slate-950 dark:text-white mt-0.5">
-                  {currentTheme.title}
-                </h3>
-              </div>
-              <span className="self-start sm:self-auto text-xs font-mono px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                ACTIVE R&D INITIATIVE
-              </span>
-            </div>
-
-            {/* Summary */}
-            <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
-              {currentTheme.summary}
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-primary">
+              {isAm ? "ደረጃው የሚመልሰው ቁልፍ የምርምር ጥያቄ" : "Primary Research Questions Answered"}
             </p>
-
-            {/* Problem & Approach Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-4 rounded-2xl bg-amber-50/60 dark:bg-amber-950/20 border border-amber-200/60 dark:border-amber-800/40 space-y-2">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase text-amber-800 dark:text-amber-400 font-bold">
-                  <ShieldAlert className="w-4 h-4" />
-                  <span>{isAm ? "የኢንዱስትሪው ችግር" : "INDUSTRIAL PROBLEM"}</span>
-                </div>
-                <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                  {currentTheme.problem}
-                </p>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-blue-50/60 dark:bg-blue-950/20 border border-blue-200/60 dark:border-blue-800/40 space-y-2">
-                <div className="flex items-center gap-2 text-xs font-mono uppercase text-blue-800 dark:text-blue-400 font-bold">
-                  <FlaskConical className="w-4 h-4" />
-                  <span>{isAm ? "የተቋሙ የምርምር አካሄድ" : "APPLIED R&D APPROACH"}</span>
-                </div>
-                <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                  {currentTheme.approach}
-                </p>
-              </div>
+            <p className="mt-1 text-sm text-slate-700 leading-relaxed">{currentPipelineStage.questions}</p>
+          </div>
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-primary">
+              {isAm ? "የተግባራዊ ፍተሻ ስነ-ዘዴ" : "Testing Methodology & Protocols"}
+            </p>
+            <p className="mt-1 text-sm text-slate-700 leading-relaxed">{currentPipelineStage.methodology}</p>
+          </div>
+          <div className="mt-auto rounded-lg bg-slate-50 px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                {isAm ? "ተጨባጭ የምርምር ውጤቶች" : "Verified Deliverables"}
+              </p>
+              <p className="mt-0.5 text-sm font-semibold text-slate-900">{currentPipelineStage.deliverables}</p>
             </div>
-
-            {/* Targeted Impact */}
-            <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-between">
-              <div>
-                <p className="text-[11px] font-mono text-slate-500 uppercase">
-                  {isAm ? "የታለመው ተጨባጭ ውጤት" : "TARGETED INDUSTRIAL IMPACT"}
-                </p>
-                <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white mt-0.5">
-                  {currentTheme.impact}
-                </p>
-              </div>
-              <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
-            </div>
+            <span className="text-xs text-slate-500 sm:text-end sm:max-w-[45%]">{currentPipelineStage.handoff}</span>
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* SECTION 4: Research-to-Industry Staged Flow Diagram */}
-      <section className="bg-slate-900 text-white rounded-3xl p-8 sm:p-12 border border-slate-800 space-y-8">
-        <div className="max-w-3xl space-y-2">
-          <span className="text-xs font-mono uppercase tracking-widest text-primary font-bold">
-            {isAm ? "የእውቀት እና ቴክኖሎጂ ሽግግር ፍሰት" : "RESEARCH TRANSLATION CONTINUUM"}
+      {/* Research themes + workforce / publications */}
+      <div className="lg:col-span-5 flex flex-col gap-4">
+        <div className="bg-white border border-slate-200 rounded-2xl p-5 flex flex-col gap-2">
+          <h2 className="text-base font-semibold text-slate-900 pb-1">
+            {isAm ? "የሀገር ውስጥ ኢንዱስትሪዎችን ችግር የሚፈቱ የምርምር መስኮች" : "Four Priority Applied Mineral Research Themes"}
+          </h2>
+          {researchThemes.map((theme) => {
+            const active = theme.id === activeThemeId;
+            const Icon = theme.icon;
+            return (
+              <button
+                key={theme.id}
+                type="button"
+                onClick={() => setActiveThemeId(theme.id)}
+                aria-expanded={active}
+                className={`rounded-xl px-4 py-3 text-start flex items-start gap-3 transition-colors ${
+                  active ? "bg-amber-50 ring-1 ring-primary/30" : "border border-slate-100 hover:bg-slate-50"
+                }`}
+              >
+                <Icon className={`mt-0.5 w-4 h-4 shrink-0 ${active ? "text-primary" : "text-slate-400"}`} />
+                <span className="flex flex-col gap-0.5 min-w-0">
+                  <span className={`text-[11px] font-semibold tracking-wider ${active ? "text-amber-800" : "text-slate-500"}`}>
+                    {theme.badge}
+                  </span>
+                  <span className="text-sm font-semibold text-slate-900">{theme.title}</span>
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="bg-white border border-slate-200 rounded-2xl p-5 flex flex-col gap-3">
+          <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary">
+            <ThemeIcon className="w-4 h-4" />
+            {currentTheme.title}
           </span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
-            {isAm
-              ? "ከምርምር ጥያቄ ወደ ኢንዱስትሪ አሰራር ሽግግር"
-              : "From Problem Statement to Commercial Factory Implementation"}
-          </h2>
-          <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
-            {isAm
-              ? "የተቋሙ ስራ በምርምር ውጤት ብቻ አያበቃም፤ የተገኙ አዳዲስ አሰራሮች ወደ ሀገር ውስጥ አምራቾች ተሸጋግረው ውጤት እስኪያመጡ ድረስ ቀጣይነት ያለው የቴክኒክ ድጋፍ ይሰጣል።"
-              : "Ensuring laboratory breakthroughs translate into higher factory yields, reduced energy overheads, and lower unit production costs for domestic mineral producers."}
+          <p className="text-sm text-slate-700 leading-relaxed">{currentTheme.summary}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="rounded-lg bg-slate-50 px-3 py-2.5">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                {isAm ? "የኢንዱስትሪው ችግር" : "Industrial Problem"}
+              </p>
+              <p className="mt-1 text-xs text-slate-700 leading-relaxed line-clamp-4">{currentTheme.problem}</p>
+            </div>
+            <div className="rounded-lg bg-slate-50 px-3 py-2.5">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                {isAm ? "የተቋሙ የምርምር አካሄድ" : "Applied R&D Approach"}
+              </p>
+              <p className="mt-1 text-xs text-slate-700 leading-relaxed line-clamp-4">{currentTheme.approach}</p>
+            </div>
+          </div>
+          <p className="text-sm font-semibold text-amber-800">
+            <span className="text-slate-500 font-normal">{isAm ? "የታለመው ተጨባጭ ውጤት" : "Targeted impact"}: </span>
+            {currentTheme.impact}
           </p>
         </div>
 
-        {/* 5-Step Staged Continuum */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-2">
-          {[
-            {
-              step: "01",
-              title: isAm ? "የኢንዱስትሪ ጥያቄ" : "Industry Bottleneck",
-              desc: isAm ? "የአምራቾችን የጥራት እና የማጣራት ተግዳሮቶች መለየት" : "Identifying recovery, energy or impurity challenges",
-            },
-            {
-              step: "02",
-              title: isAm ? "የላቦራቶሪ ፍተሻ" : "Lab Evaluation",
-              desc: isAm ? "በናሙናዎች ላይ ጥብቅ የኬሚካል እና ሜካኒካል ምርመራ" : "Bench characterization and liberation assaying",
-            },
-            {
-              step: "03",
-              title: isAm ? "የቴክኒክ ማረጋገጫ" : "Flowsheet Audit",
-              desc: isAm ? "የተመቻቸ የማጣሪያ ፍሰት-ንድፍ እና ኬሚካል ማረጋገጥ" : "Simulating optimal parameters and recovery kinetics",
-            },
-            {
-              step: "04",
-              title: isAm ? "የቴክኖሎጂ ሽግግር" : "Technology Transfer",
-              desc: isAm ? "የአሰራር መመሪያዎች (SOP) እና የስራ ላይ ስልጠና መስጠት" : "Delivering SOPs, manuals, and technical advisory",
-            },
-            {
-              step: "05",
-              title: isAm ? "የኢንዱስትሪ ትግበራ" : "Factory Adoption",
-              desc: isAm ? "በፋብሪካ ደረጃ የምርት ጥራት እና ቅልጥፍና ማሳደግ" : "Scaled production yielding commercial return",
-            },
-          ].map((item, idx) => (
-            <div
-              key={idx}
-              className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2 flex flex-col justify-between"
-            >
-              <div className="flex items-center justify-between text-xs font-mono">
-                <span className="text-primary font-bold">{item.step}</span>
-                {idx < 4 && <ArrowRight className="w-3.5 h-3.5 text-slate-600 hidden lg:block" />}
-              </div>
-              <div>
-                <p className="text-xs font-bold text-white mb-1">{item.title}</p>
-                <p className="text-[11px] text-slate-400 leading-snug">{item.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* SECTION 5: Workforce Skills Development & Publications Direct Integration */}
-      <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-        {/* Left: Workforce Technical Capacity (6 cols) */}
-        <div className="lg:col-span-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 sm:p-10 shadow-sm flex flex-col justify-between space-y-6">
-          <div className="space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
-              <GraduationCap className="w-6 h-6" />
-            </div>
-
-            <div className="space-y-1">
-              <span className="text-xs font-mono uppercase tracking-widest text-primary font-bold">
-                {isAm ? "የቴክኒክ የሰው ኃይል ልማት" : "HUMAN RESOURCE DEVELOPMENT"}
-              </span>
-              <h3 className="text-2xl font-bold text-slate-950 dark:text-white">
-                {isAm ? "ልዩ የተግባር ስልጠናዎች እና የክህሎት ሽግግር" : "Applied Technical Masterclasses & Workforce Skills"}
-              </h3>
-            </div>
-
-            <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
-              {isAm
-                ? "ተቋሙ በማዕድን ማጣራት፣ በብረታብረት ቀረጣ እና ማቅለጥ፣ በሞዴል ዝግጅት እና በከበሩ ድንጋዮች ላፒዳሪ ዘርፍ ለሀገር ውስጥ ፋብሪካ ሰራተኞች እና ለወጣት ባለሙያዎች የተግባር ስልጠናዎችን በመስጠት ብቁ የቴክኒክ የሰው ኃይል ይገነባል።"
-                : "Building national technological self-reliance requires a skilled engineering workforce. MIDI conducts specialized hands-on training in foundry technology, sand mold preparation, mineral dressing, and precision gemstone faceting to bridge the industrial skills gap."}
-            </p>
-          </div>
-
-          <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-mono text-slate-500">
-            <span>EXCELLENCE CENTERS & WORKSHOPS</span>
-            <span className="text-emerald-600 dark:text-emerald-400 font-semibold">
-              {isAm ? "ቀጣይነት ያለው ስልጠና" : "ONGOING WORKSHOPS"}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <Link
+            href="/publications"
+            className="group rounded-2xl bg-slate-950 text-white p-4 flex items-center justify-between gap-3 hover:bg-slate-900 transition-colors"
+          >
+            <span className="flex items-center gap-2 text-sm font-semibold">
+              <BookOpen className="w-4 h-4 text-amber-400" />
+              {isAm ? "ወደ ህትመቶች ማህደር ይሂዱ" : "Explore Publications"}
             </span>
-          </div>
-        </div>
-
-        {/* Right: Direct Publications Module Integration (6 cols) */}
-        <div className="lg:col-span-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-gradient-to-br from-slate-950 via-slate-900 to-primary/20 text-white p-8 sm:p-10 shadow-sm flex flex-col justify-between space-y-6">
-          <div className="space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-amber-400/10 text-amber-400 flex items-center justify-center">
-              <BookOpen className="w-6 h-6" />
-            </div>
-
-            <div className="space-y-1">
-              <span className="text-xs font-mono uppercase tracking-widest text-amber-400 font-bold">
-                {isAm ? "የህትመቶች እና የምርምር ማህደር" : "PUBLICATIONS & RESEARCH REPOSITORY"}
-              </span>
-              <h3 className="text-2xl font-bold text-white">
-                {isAm ? "የተቋሙን የምርምር ሰነዶች በድረ-ገጻችን ያግኙ" : "Verified Technical Monographs & Research Reports"}
-              </h3>
-            </div>
-
-            <p className="text-slate-300 text-sm leading-relaxed">
-              {isAm
-                ? "በማዕድን ዘርፉ የተዘጋጁ የቴክኒክ መመሪያዎችን፣ የጂኦሎጂካል ጥናቶችን፣ የማዕድን ስርጭት ካርታዎችን እና የፖሊሲ ሰነዶችን በቀጥታ በህትመቶች ማህደራችን ማግኘት፣ ማንበብ እና ማውረድ ይችላሉ።"
-                : "Explore verified institutional publications, geological studies, mineral distribution maps, and metallurgical monographs directly cataloged in the MIDI Publications module."}
-            </p>
-          </div>
-
-          <div className="pt-4 border-t border-slate-800 flex flex-wrap gap-3 items-center justify-between">
-            <Link
-              href={`/${locale}/publications`}
-              className="inline-flex items-center px-5 py-3 rounded-xl bg-primary text-white font-semibold text-xs sm:text-sm shadow-sm hover:bg-primary/95 transition-all group"
-            >
-              <BookOpen className="w-4 h-4 mr-2" />
-              <span>{isAm ? "ወደ ህትመቶች ማህደር ይሂዱ" : "Explore Publications"}</span>
-              <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-0.5 transition-transform" />
-            </Link>
-            <span className="text-xs font-mono text-slate-400">
-              {isAm ? "በዲጂታል ቅርጸት ዝግጁ" : "DIGITAL ACCESS"}
+            <ChevronRight className="w-4 h-4 shrink-0 transition-transform group-hover:translate-x-0.5 rtl:rotate-180" />
+          </Link>
+          <Link
+            href="/services"
+            className="group rounded-2xl bg-primary text-white p-4 flex items-center justify-between gap-3 hover:bg-primary-hover transition-colors"
+          >
+            <span className="flex items-center gap-2 text-sm font-semibold">
+              <GraduationCap className="w-4 h-4" />
+              {isAm ? "ልዩ የተግባር ስልጠናዎች እና የክህሎት ሽግግር" : "Workforce Skills & Training"}
             </span>
-          </div>
+            <ChevronRight className="w-4 h-4 shrink-0 transition-transform group-hover:translate-x-0.5 rtl:rotate-180" />
+          </Link>
         </div>
-      </section>
+      </div>
     </div>
   );
 }

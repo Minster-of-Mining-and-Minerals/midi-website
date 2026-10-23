@@ -1,34 +1,28 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { BriefcaseBusiness } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
-import PageHeader from "@/components/pages/home-page-components/PageHeader";
-import { Button } from "@/components/ui/button";
+import { usePathname } from "next/navigation";
+import { Link } from "@/i18n/navigation";
 import { useGetRoutesQuery } from "@/redux/api/routeApi";
+import { useGetPageHeaderByIdentifierQuery } from "@/redux/api/pageHeaderApi";
 import { Skeleton } from "@/components/ui/skeleton";
+import InteractiveGrid from "@/components/ui/interactive-grid";
+import { getFileUrl } from "@/utils/fileUrl";
 import { useLocale } from "next-intl";
 
-const fallbackDescriptions: Record<string, { en: string; am: string }> = {
-  "/businesses": {
-    en: "Mineral value chain, processing, beneficiation, and industrial manufacturing",
-    am: "የማዕድን እሴት ሰንሰለት፣ ማቀነባበሪያ፣ ማበልፀጊያ እና የኢንዱስትሪ ማኑፋክቸሪንግ",
-  },
-  "/businesses/overview": {
-    en: "Institutional technical framework across strategic mineral focus areas",
-    am: "በስልታዊ የማዕድን ትኩረት መስኮች ላይ የተዘረጋ ተቋማዊ የቴክኒክ ማዕቀፍ",
-  },
+// Page headlines shown in the title band; pages without one show their tab label
+const pageHeadlines: Record<string, { en: string; am: string }> = {
   "/businesses/mineral-processing": {
-    en: "Ore characterization, comminution, flotation, and physical separation methods",
-    am: "የኦር ባህሪ ጥናት፣ መፍጨት፣ ፍሎቴሽን እና አካላዊ የማጣሪያ ዘዴዎች",
+    en: "Upgrading Raw Ore Grades via Precision Beneficiation",
+    am: "የጥሬ ማዕድን ይዘትን በማሳደግ የኢንዱስትሪ ጥሬ ዕቃ ዝግጅት",
   },
   "/businesses/value-addition": {
-    en: "Transforming domestic mineral feedstocks into finished industrial products",
-    am: "የሀገር ውስጥ የጥሬ ማዕድን ግብዓቶችን ወደ ተጠናቀቁ የኢንዱስትሪ ምርቶች መቀየር",
+    en: "The Connected Industrial Transformation Continuum",
+    am: "ከተፈጥሮ ክምችት እስከ ገበያ ዝግጁ ምርት ድረስ ያለው ሂደት",
   },
   "/businesses/research-innovation": {
-    en: "Industry-driven applied R&D, pilot evaluation, and technology adaptation",
-    am: "ኢንዱስትሪ-መር ተግባራዊ ምርምር፣ የሙከራ ግምገማ እና የቴክኖሎጂ ሽግግር",
+    en: "Bridging Fundamental Science and Industrial Scalability",
+    am: "የማዕድን ምርምርን ከተግባራዊ የኢንዱስትሪ መፍትሄዎች ጋር ማስተሳሰር",
   },
 };
 
@@ -38,40 +32,25 @@ export default function Layout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const router = useRouter();
   const currentLocale = useLocale();
   const locale = currentLocale || "en";
   const isAm = locale === "am";
 
   const { data: routes = [], isLoading } = useGetRoutesQuery();
+  // Background image set in Admin → Page Headers → Businesses (same treatment as other page headers)
+  const { data: pageHeaderData } = useGetPageHeaderByIdentifierQuery("businesses");
+  const bgImage = pageHeaderData?.backgroundAttachment?.file_path;
 
+  const sectionTitle = isAm ? "የማዕድን ኢንዱስትሪ ልማት" : "Mineral Industry Development";
+
+  // Tabs come from the CMS routes (Businesses and its children), with built-in fallbacks
   const dynamicItems = useMemo(() => {
     const defaultItems = [
-      {
-        label: isAm ? "የማዕድን ኢንዱስትሪ ልማት" : "Mineral Industry Development",
-        slug: "/businesses",
-        description: fallbackDescriptions["/businesses"][isAm ? "am" : "en"],
-      },
-      {
-        label: isAm ? "የልማት አጠቃላይ እይታ" : "Development Overview",
-        slug: "/businesses/overview",
-        description: fallbackDescriptions["/businesses/overview"][isAm ? "am" : "en"],
-      },
-      {
-        label: isAm ? "የማዕድን ማቀነባበሪያ እና ማበልፀጊያ" : "Mineral Processing & Beneficiation",
-        slug: "/businesses/mineral-processing",
-        description: fallbackDescriptions["/businesses/mineral-processing"][isAm ? "am" : "en"],
-      },
-      {
-        label: isAm ? "እሴት መጨመር እና ማኑፋክቸሪንግ" : "Manufacturing & Value Addition",
-        slug: "/businesses/value-addition",
-        description: fallbackDescriptions["/businesses/value-addition"][isAm ? "am" : "en"],
-      },
-      {
-        label: isAm ? "ተግባራዊ ምርምር እና ቴክኖሎጂ" : "Applied Research & Innovation",
-        slug: "/businesses/research-innovation",
-        description: fallbackDescriptions["/businesses/research-innovation"][isAm ? "am" : "en"],
-      },
+      { label: sectionTitle, slug: "/businesses" },
+      { label: isAm ? "የልማት አጠቃላይ እይታ" : "Development Overview", slug: "/businesses/overview" },
+      { label: isAm ? "የማዕድን ማቀነባበሪያ እና ማበልፀጊያ" : "Mineral Processing & Beneficiation", slug: "/businesses/mineral-processing" },
+      { label: isAm ? "እሴት መጨመር እና ማኑፋክቸሪንግ" : "Manufacturing & Value Addition", slug: "/businesses/value-addition" },
+      { label: isAm ? "ተግባራዊ ምርምር እና ቴክኖሎጂ" : "Applied Research & Innovation", slug: "/businesses/research-innovation" },
     ];
 
     if (!routes || routes.length === 0) return defaultItems;
@@ -88,132 +67,107 @@ export default function Layout({
     const businessesRoute = routes.find((r: any) => r.path === "/businesses");
     if (!businessesRoute) return defaultItems;
 
-    const defaultTitle = isAm ? "የማዕድን ኢንዱስትሪ ልማት" : "Mineral Industry Development";
-    const defaultDesc = isAm
-      ? fallbackDescriptions["/businesses"].am
-      : fallbackDescriptions["/businesses"].en;
-
-    // Add parent route itself (Landing page)
     const items = [
       {
-        label: getLabel(businessesRoute.translations) || defaultTitle,
+        label: getLabel(businessesRoute.translations) || sectionTitle,
         slug: businessesRoute.path || "/businesses",
-        description:
-          fallbackDescriptions[businessesRoute.path || "/businesses"]?.[isAm ? "am" : "en"] ||
-          defaultDesc,
       },
     ];
 
-    // Add child routes in order
     if (businessesRoute.children) {
-      const children = [...businessesRoute.children]
+      [...businessesRoute.children]
         .filter((c: any) => c.is_active && c.show_in_navbar)
-        .sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
-
-      children.forEach((child: any) => {
-        items.push({
-          label: getLabel(child.translations),
-          slug: child.path || "",
-          description:
-            fallbackDescriptions[child.path || ""]?.[isAm ? "am" : "en"] ||
-            (isAm ? "ስልታዊ የማዕድን ዘርፎች" : "MIDI Strategic Mineral Sectors"),
+        .sort((a: any, b: any) => (a.order || 0) - (b.order || 0))
+        .forEach((child: any) => {
+          items.push({ label: getLabel(child.translations), slug: child.path || "" });
         });
-      });
     }
 
     return items;
-  }, [routes, locale, isAm]);
+  }, [routes, locale, isAm, sectionTitle]);
 
   // remove locale prefix: /en/businesses -> /businesses
-  const normalizedPathname = pathname.replace(/^\/(en|am)/, "");
+  const normalizedPathname = pathname.replace(/^\/(en|am)(?=\/|$)/, "") || "/";
 
-  // Find active item for title & description
   const activeItem = dynamicItems.find((item) => item.slug === normalizedPathname);
-  const title =
-    activeItem?.label ??
-    (isAm ? "የማዕድን ኢንዱስትሪ ልማት" : "Mineral Industry Development");
-  const description =
-    activeItem?.description ??
-    (isAm
-      ? fallbackDescriptions["/businesses"].am
-      : fallbackDescriptions["/businesses"].en);
+  const headline = pageHeadlines[normalizedPathname]?.[isAm ? "am" : "en"];
+  const title = headline ?? activeItem?.label ?? sectionTitle;
+  const isLanding = normalizedPathname === "/businesses";
 
   return (
     <>
-      {/* Hero / Page Header */}
-      <PageHeader
-        pageIdentifier="businesses"
-        title={isAm ? "የማዕድን ኢንዱስትሪ ልማት" : "Mineral Industry Development"}
-        icon={<BriefcaseBusiness />}
-        description={
-          isAm
-            ? "በማዕድን እሴት ሰንሰለት፣ በማበልፀግ፣ በማኑፋክቸሪንግ እና በቴክኖሎጂ ሽግግር የሀገሪቱን ኢንዱስትሪ ማሳደግ።"
-            : "Fostering sustainable mineral beneficiation, value addition, industrial manufacturing, and technology transfer."
-        }
-      />
-
-      {/* Main container with relative positioning for overlay */}
-      <div className="relative">
-        {/* Navigation Tabs (All 5 Pages) */}
-        {(isLoading || dynamicItems.length > 0) && (
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[95%] md:w-full max-w-7xl z-[999] pointer-events-auto">
-            <div className="pt-4 pb-8 w-full bg-white rounded-2xl shadow-xl border border-border overflow-hidden space-y-4 px-4 md:px-6">
-              <h1 className="text-xl md:text-2xl font-bold text-primary text-center">
-                {isAm ? "የማዕድን ኢንዱስትሪ ልማትን ያስሱ" : "Explore Mineral Industry Development"}
-              </h1>
-
-              <div
-                className="bg-white flex flex-row items-stretch justify-start lg:justify-center gap-2 md:gap-3 overflow-x-auto pb-2 px-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] touch-pan-x"
-              >
-                {isLoading ? (
-                  Array(5)
-                    .fill(0)
-                    .map((_, i) => (
-                      <Skeleton
-                        key={i}
-                        className="flex-1 min-w-[160px] max-w-[240px] h-[56px] rounded-md"
-                      />
-                    ))
-                ) : (
-                  dynamicItems.map((item) => {
-                    const active = normalizedPathname === item.slug;
-                    return (
-                      <Button
-                        key={item.slug}
-                        onClick={() => router.push(`/${locale}${item.slug}`)}
-                        className={`flex-1 min-w-[170px] max-w-[240px] px-3 py-5 cursor-pointer text-xs md:text-sm transition-all bg-background-secondary border border-border ${
-                          active
-                            ? "bg-primary text-white font-semibold border-b-4 border-amber-400 shadow-md hover:bg-primary/95"
-                            : "text-muted hover:bg-background-secondary hover:text-slate-900"
-                        }`}
-                      >
-                        {item.label}
-                      </Button>
-                    );
-                  })
-                )}
-              </div>
-            </div>
-          </div>
+      {/* Title band: breadcrumb, page headline and section tabs.
+          Same minimum height as the shared PageHeader on other pages (35vh, ~440px). */}
+      <section className="relative overflow-hidden bg-slate-950 text-white flex flex-col min-h-[max(35vh,440px)]">
+        {bgImage && (
+          <div
+            className="absolute inset-0 z-0 opacity-40 pointer-events-none bg-cover bg-center"
+            style={{ backgroundImage: `url('${getFileUrl(bgImage)}')` }}
+          />
         )}
+        {/* Animated grid as a background layer only, so the tabs stay on the band's bottom edge
+            (as a wrapper it adds its own padding and centering) */}
+        <div className="absolute inset-0 z-0 pointer-events-none" aria-hidden="true">
+          <InteractiveGrid className="h-full min-h-0" />
+        </div>
+        <div className="relative z-10 flex-1 flex flex-col w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 md:pt-16">
+          {/* Breadcrumb + headline centered vertically in the space above the tabs */}
+          <div className="flex-1 flex flex-col justify-center">
+          <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-x-2 text-xs md:text-sm text-slate-400">
+            <Link href="/" className="hover:text-primary transition-colors">
+              {isAm ? "መነሻ" : "Home"}
+            </Link>
+            <span aria-hidden="true">/</span>
+            {isLanding ? (
+              <span className="text-golden-dark">{sectionTitle}</span>
+            ) : (
+              <>
+                <Link href="/businesses" className="hover:text-primary transition-colors">
+                  {sectionTitle}
+                </Link>
+                <span aria-hidden="true">/</span>
+                <span className="text-golden-dark">{activeItem?.label}</span>
+              </>
+            )}
+          </nav>
 
-        {/* Content section starts below the overlay */}
-        <section className="pt-24 md:pt-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <div className="w-full">
-            <div className="flex items-start gap-4 mb-8">
-              <div>
-                <h1 className="text-2xl md:text-3xl flex gap-2 flex-col font-serif text-slate-900 dark:text-white leading-tight">
-                  {title}
-                  <span className="h-1 w-20 bg-primary rounded"></span>
-                  <p className="text-muted-foreground text-sm md:text-base">{description}</p>
-                </h1>
-              </div>
-            </div>
-
-            {/* Route-specific content renders here */}
-            <div className="prose max-w-none">{children}</div>
+          <h1 className="mt-3 font-display text-2xl md:text-3xl lg:text-5xl font-bold leading-tight text-balance text-golden-classic">
+            {title}
+          </h1>
           </div>
-        </section>
+
+          <nav
+            aria-label={sectionTitle}
+            className="mt-10 flex gap-1 overflow-x-auto [&::-webkit-scrollbar]:hidden [scrollbar-width:none]"
+          >
+            {isLoading
+              ? Array.from({ length: 5 }).map((_, i) => (
+                  <Skeleton key={i} className="h-11 w-44 shrink-0 rounded-t-lg rounded-b-none bg-slate-800" />
+                ))
+              : dynamicItems.map((item) => {
+                  const active = normalizedPathname === item.slug;
+                  return (
+                    <Link
+                      key={item.slug}
+                      href={item.slug}
+                      aria-current={active ? "page" : undefined}
+                      className={`shrink-0 whitespace-nowrap rounded-t-lg px-4 md:px-5 py-3 text-sm transition-colors ${
+                        active
+                          ? "bg-slate-50 text-primary font-semibold border-t-2 border-primary"
+                          : "text-slate-300 hover:text-primary hover:bg-white/5"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                })}
+          </nav>
+        </div>
+      </section>
+
+      {/* Route-specific content */}
+      <div className="bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">{children}</div>
       </div>
     </>
   );

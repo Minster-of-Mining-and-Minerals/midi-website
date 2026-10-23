@@ -2,9 +2,10 @@
 
 import React, { useState } from "react";
 import * as LucideIcons from "lucide-react";
+import { ChevronDown } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 import { useGetBusinessOverviewQuery } from "@/redux/api/businessApi";
 import { useGetAttachmentsQuery } from "@/redux/api/attachementApi";
-import { ChevronRight } from "lucide-react";
 import { getFileUrl, getImageUrl } from "@/utils/fileUrl";
 import { BusinessOverviewSkeleton } from "@/components/skeletons";
 import { useLocale } from "next-intl";
@@ -23,24 +24,21 @@ const OverviewPage = () => {
 
   const { data, isLoading } = useGetBusinessOverviewQuery();
   const { data: attachmentsResponse } = useGetAttachmentsQuery();
-  const [expandedNetworkOp, setExpandedNetworkOp] = useState<number | null>(null);
+  const [sideTab, setSideTab] = useState<"sectors" | "programs">("sectors");
+  const [expanded, setExpanded] = useState<number | null>(null);
 
   if (isLoading) {
-    return (
-      <div className="py-20">
-        <BusinessOverviewSkeleton />
-      </div>
-    );
+    return <BusinessOverviewSkeleton />;
   }
 
   // Graceful empty state
   if (!data) {
     return (
-      <div className="w-full py-16 text-center bg-slate-50 border border-slate-200 rounded-2xl p-8">
+      <div className="w-full py-16 text-center bg-white border border-slate-200 rounded-2xl p-8">
         <LucideIcons.ShieldCheck className="w-12 h-12 text-primary mx-auto mb-4" />
-        <h3 className="text-xl font-bold text-slate-800 mb-2">
+        <h2 className="text-xl font-bold text-slate-800 mb-2">
           {isAm ? "የዘርፉ አጠቃላይ እይታ መረጃ በዝግጅት ላይ ነው" : "Sector Overview Framework"}
-        </h3>
+        </h2>
         <p className="text-slate-600 max-w-xl mx-auto">
           {isAm
             ? "ተቋማዊ የልማት ማዕቀፍ እና የቴክኒክ ድጋፍ መረጃዎች እየተዘጋጁ ናቸው። እባክዎ ጥቂት ቆይተው እንደገና ይጎብኙ።"
@@ -50,24 +48,13 @@ const OverviewPage = () => {
     );
   }
 
-  const businessData = data.business_data || [];
   const businessCategories = data.business_categories || [];
   const keyMetrics = data.key_metrics || [];
   const operationsData = data.operations_data || [];
   const networkOperations = data.network_operations || [];
   const rawQuickStats: any = data.quick_stats || { left: [], right: [] };
-  const quickStats: any = {
-    left: Array.isArray(rawQuickStats.left)
-      ? rawQuickStats.left
-      : rawQuickStats.left
-      ? [rawQuickStats.left]
-      : [],
-    right: Array.isArray(rawQuickStats.right)
-      ? rawQuickStats.right
-      : rawQuickStats.right
-      ? [rawQuickStats.right]
-      : [],
-  };
+  const toList = (v: any) => (Array.isArray(v) ? v : v ? [v] : []);
+  const quickStats: any[] = [...toList(rawQuickStats.left), ...toList(rawQuickStats.right)];
   const pageMetadata: any = data.page_metadata || {};
   const generalInfo: any = pageMetadata.general_overview_info || {};
 
@@ -86,432 +73,219 @@ const OverviewPage = () => {
     }
   }
 
+  // Right column: sub-sectors and programs share one card with a toggle
+  const hasSectors = businessCategories.length > 0;
+  const hasPrograms = networkOperations.length > 0;
+  const activeSideTab = hasSectors && (sideTab === "sectors" || !hasPrograms) ? "sectors" : "programs";
+  const sectorsTitle =
+    pageMetadata.key_verticals_info?.title || (isAm ? "ቀዳሚ የማዕድን ዘርፎች" : "Priority Mineral Sub-Sectors");
+  const programsTitle =
+    pageMetadata.network_operations_info?.title || (isAm ? "ስልታዊ የልማት ፕሮግራሞች" : "Development Programs");
+
+  const switchSideTab = (tab: "sectors" | "programs") => {
+    setSideTab(tab);
+    setExpanded(null);
+  };
+
   return (
-    <div className="w-full max-w-7xl mx-auto space-y-8">
-      {/* Breadcrumb Navigation */}
-      <nav aria-label="Breadcrumb" className="flex items-center space-x-2 text-xs md:text-sm text-slate-500 mb-2">
-        <a href={`/${locale}`} className="hover:text-primary transition-colors">
-          {isAm ? "መነሻ" : "Home"}
-        </a>
-        <span>/</span>
-        <a href={`/${locale}/businesses`} className="hover:text-primary transition-colors">
-          {isAm ? "የማዕድን ኢንዱስትሪ ልማት" : "Mineral Industry Development"}
-        </a>
-        <span>/</span>
-        <span className="text-slate-900 dark:text-white font-semibold">
-          {isAm ? "የልማት አጠቃላይ እይታ" : "Development Overview"}
-        </span>
-      </nav>
-      {/* Main Grid Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Column - Main Content (8 cols) */}
-        <div className="lg:col-span-8 space-y-8">
-          {/* Key Strategic Metrics Grid */}
-          {keyMetrics.length > 0 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {keyMetrics.map((metric: any, index: number) => (
-                <div
-                  key={index}
-                  className="bg-white rounded-xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow"
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <div
-                      className="p-2.5 rounded-lg text-white"
-                      style={{ backgroundColor: metric.color || "#ba8200" }}
-                    >
-                      <IconRenderer name={metric.icon || "Layers"} className="w-5 h-5" />
-                    </div>
-                    {metric.change && (
-                      <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-700">
-                        {metric.change}
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="text-xl font-bold text-heading mb-1">{metric.value}</h3>
-                  <p className="text-heading font-medium text-sm mb-1">{metric.title}</p>
-                  <p className="text-xs text-muted leading-snug">{metric.period}</p>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Institutional Framework Overview Card */}
-          {generalInfo && (generalInfo.title || generalInfo.description) && (
-            <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-border">
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-6">
-                  <div>
-                    <h2 className="text-2xl font-bold text-heading mb-2">
-                      {generalInfo.title}
-                    </h2>
-                    <p className="text-muted text-sm md:text-base leading-relaxed">
-                      {generalInfo.description}
-                    </p>
-                  </div>
-                  {generalInfo.right_content?.title && (
-                    <div className="flex items-center gap-2 text-secondary font-medium text-sm">
-                      <IconRenderer
-                        name={generalInfo.right_content.icon || "Box"}
-                        className="w-5 h-5"
-                      />
-                      <span>{generalInfo.right_content.title}</span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="mb-8">
-                  <div
-                    className="min-h-[280px] md:min-h-[360px] bg-gradient-to-r from-slate-100 to-slate-200 rounded-xl flex flex-col items-center justify-center p-6 text-center bg-cover bg-center relative overflow-hidden"
-                    style={bgImageUrl ? { backgroundImage: `url('${bgImageUrl}')` } : {}}
-                  >
-                    {bgImageUrl && <div className="absolute inset-0 bg-black/50"></div>}
-                    <div className="relative z-10 flex flex-col items-center justify-center gap-6 md:gap-8">
-                      {generalInfo.overlay_text ? (
-                        <p className="text-base sm:text-lg md:text-xl font-semibold text-white">
-                          {generalInfo.overlay_text}
-                        </p>
-                      ) : (
-                        <p
-                          className={`text-sm sm:text-base md:text-lg max-w-lg ${
-                            bgImageUrl ? "text-white" : "text-muted"
-                          }`}
-                        >
-                          {generalInfo.right_content?.description}
-                        </p>
-                      )}
-                      <IconRenderer
-                        name={generalInfo.right_content?.icon || "ShieldCheck"}
-                        className={`w-14 h-14 md:w-16 md:h-16 mx-auto ${
-                          bgImageUrl ? "text-white" : "text-primary"
-                        }`}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {generalInfo.features &&
-                    generalInfo.features.length > 0 &&
-                    generalInfo.features.map((feature: any, fIndex: number) => (
-                      <div
-                        key={`feat-${fIndex}`}
-                        className="flex items-center gap-3 p-3 bg-background-secondary rounded-lg"
-                      >
-                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
-                          <IconRenderer
-                            name={feature.icon || "CheckCircle"}
-                            className="w-4 h-4 text-primary"
-                          />
-                        </div>
-                        <span className="text-muted text-sm">{feature.text}</span>
-                      </div>
-                    ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Operations / Technical Capabilities Table */}
-          {operationsData.length > 0 && (
-            <div className="bg-white rounded-xl border border-border shadow-sm overflow-hidden">
-              <div className="p-6 border-b border-border">
-                <h3 className="text-xl md:text-2xl font-bold text-heading flex items-center gap-2">
-                  <IconRenderer
-                    name={pageMetadata.operations_table_info?.icon || "Wrench"}
-                    className="w-6 h-6 text-primary"
-                  />
-                  {pageMetadata.operations_table_info?.title ||
-                    (isAm ? "ተቋማዊ የቴክኒክ አቅሞች" : "Institutional Technical Capabilities")}
-                </h3>
-                <p className="text-muted text-sm mt-1">
-                  {pageMetadata.operations_table_info?.description ||
-                    (isAm
-                      ? "ለማዕድን ኢንዱስትሪው የሚሰጡ ቁልፍ የቴክኒክ ድጋፎች እና የላቦራቶሪ አገልግሎቶች"
-                      : "Core technical divisions and specialized engineering services provided to the industry")}
-                </p>
-              </div>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-background-secondary">
-                    <tr>
-                      <th className="py-3 px-6 text-left text-xs font-semibold text-heading uppercase tracking-wider">
-                        {isAm ? "የስራ ክፍል / ዘርፍ" : "Technical Division"}
-                      </th>
-                      <th className="py-3 px-6 text-left text-xs font-semibold text-heading uppercase tracking-wider">
-                        {isAm ? "ስልታዊ ትኩረት" : "Strategic Focus"}
-                      </th>
-                      <th className="py-3 px-6 text-left text-xs font-semibold text-heading uppercase tracking-wider">
-                        {isAm ? "ተቋማዊ መሠረተ ልማት" : "Facility & Setup"}
-                      </th>
-                      <th className="py-3 px-6 text-left text-xs font-semibold text-heading uppercase tracking-wider">
-                        {isAm ? "ሁኔታ" : "Status"}
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    {operationsData.map((dataItem: any, index: number) => (
-                      <tr
-                        key={index}
-                        className="hover:bg-background-secondary transition-colors"
-                      >
-                        <td className="py-4 px-6">
-                          <div className="font-semibold text-heading text-sm">
-                            {dataItem.area}
-                          </div>
-                        </td>
-                        <td className="py-4 px-6">
-                          <span className="text-slate-700 text-sm">{dataItem.focus}</span>
-                        </td>
-                        <td className="py-4 px-6">
-                          <div className="text-slate-600 text-sm font-medium">
-                            {dataItem.infrastructure}
-                          </div>
-                        </td>
-                        <td className="py-4 px-6">
-                          <div
-                            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200"
-                          >
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
-                            <span>{dataItem.status}</span>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Right Column - Priority Sectors & Programs (4 cols) */}
-        <div className="lg:col-span-4 space-y-8">
-          {/* Priority Mineral Sub-Sectors */}
-          {businessCategories.length > 0 && (
-            <div className="bg-gradient-to-br from-amber-50/50 to-orange-50/30 rounded-xl p-6 border border-amber-600/20">
-              <h3 className="text-xl font-bold text-heading mb-4 flex items-center gap-2">
-                <IconRenderer
-                  name={pageMetadata.key_verticals_info?.icon || "Layers"}
-                  className="w-5 h-5 text-primary"
-                />
-                {pageMetadata.key_verticals_info?.title ||
-                  (isAm ? "ቀዳሚ የማዕድን ዘርፎች" : "Priority Mineral Sub-Sectors")}
-              </h3>
-              <div className="space-y-4">
-                {businessCategories.map((category: any, index: number) => (
-                  <div
-                    key={index}
-                    className="bg-white p-4 rounded-xl border border-slate-200 hover:border-primary transition-colors shadow-sm"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <div
-                          className="p-2 bg-amber-500/10 rounded-lg text-primary"
-                        >
-                          <IconRenderer
-                            name={category.icon || "Layers"}
-                            className="w-4 h-4"
-                          />
-                        </div>
-                        <h4 className="font-bold text-sm text-heading">{category.title}</h4>
-                      </div>
-                      {category.growth && (
-                        <span className="px-2 py-0.5 bg-green-50 text-green-700 text-[11px] rounded-full font-semibold border border-green-200">
-                          {category.growth}
-                        </span>
-                      )}
-                    </div>
-                    {category.description && (
-                      <p className="text-xs text-muted mb-2 leading-relaxed">
-                        {category.description}
-                      </p>
-                    )}
-                    {category.topFocus &&
-                      category.topFocus.length > 0 &&
-                      category.topFocus[0] !== "" && (
-                        <div className="pt-2 border-t border-gray-100">
-                          <p className="text-[11px] font-medium text-muted mb-1.5">
-                            {isAm ? "ትኩረት የሚሰጣቸው መስኮች:" : "Focus Areas:"}
-                          </p>
-                          <div className="flex flex-wrap gap-1.5">
-                            {category.topFocus.map((focus: string, idx: number) =>
-                              focus ? (
-                                <span
-                                  key={idx}
-                                  className="px-2 py-0.5 bg-background-secondary text-slate-700 text-[11px] rounded"
-                                >
-                                  {focus}
-                                </span>
-                              ) : null
-                            )}
-                          </div>
-                        </div>
-                      )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Development Programs */}
-          {networkOperations.length > 0 && (
-            <div className="bg-white rounded-xl border border-border p-6 shadow-sm">
-              <h3 className="text-xl font-bold text-heading mb-1 flex items-center gap-2">
-                <IconRenderer
-                  name={pageMetadata.network_operations_info?.icon || "ShieldCheck"}
-                  className="w-5 h-5 text-primary"
-                />
-                {pageMetadata.network_operations_info?.title ||
-                  (isAm ? "ስልታዊ የልማት ፕሮግራሞች" : "Development Programs")}
-              </h3>
-              {pageMetadata.network_operations_info?.description && (
-                <p className="text-xs text-muted mb-4">
-                  {pageMetadata.network_operations_info.description}
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6">
+      {/* Left column: framework, metrics, capabilities */}
+      <div className="lg:col-span-7 flex flex-col gap-5">
+        {(generalInfo.title || generalInfo.description) && (
+          <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden flex">
+            <div className="p-5 md:p-6 flex-1 min-w-0">
+              {generalInfo.right_content?.title && (
+                <span className="flex items-center gap-2 text-xs font-semibold tracking-[0.12em] uppercase text-primary">
+                  <IconRenderer name={generalInfo.right_content.icon || "ShieldCheck"} className="w-4 h-4" />
+                  {generalInfo.right_content.title}
+                </span>
+              )}
+              {generalInfo.title && (
+                <h2 className="mt-2 text-lg md:text-xl font-bold text-slate-900 leading-snug">{generalInfo.title}</h2>
+              )}
+              {generalInfo.description && (
+                <p className="mt-2 text-sm md:text-[15px] text-slate-600 leading-relaxed line-clamp-4">
+                  {generalInfo.description}
                 </p>
               )}
-              <div className="space-y-3">
-                {networkOperations.map((tool: any, index: number) => (
-                  <div
-                    key={index}
-                    className="flex flex-col p-3 bg-background-secondary rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
-                    onClick={() =>
-                      setExpandedNetworkOp(expandedNetworkOp === index ? null : index)
-                    }
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 bg-primary/10 rounded-lg text-primary">
-                          <IconRenderer name={tool.icon || "Cpu"} className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <p className="font-semibold text-xs md:text-sm text-heading">
-                            {tool.title}
-                          </p>
-                          <p className="text-[11px] text-muted line-clamp-1">
-                            {tool.description}
-                          </p>
-                        </div>
-                      </div>
-                      <ChevronRight
-                        className={`w-4 h-4 text-slate-400 transition-transform ${
-                          expandedNetworkOp === index ? "rotate-90" : ""
-                        }`}
-                      />
-                    </div>
-                    {expandedNetworkOp === index && tool.full_description && (
-                      <div className="mt-2 pt-2 border-t border-gray-200">
-                        <p className="text-xs text-slate-600 leading-relaxed">
-                          {tool.full_description}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
+              {generalInfo.features?.length > 0 && (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {generalInfo.features.map((feature: any, fIndex: number) => (
+                    <span
+                      key={`feat-${fIndex}`}
+                      className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-700"
+                    >
+                      <IconRenderer name={feature.icon || "CheckCircle"} className="w-3.5 h-3.5 text-primary" />
+                      {feature.text}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
-        </div>
+            {bgImageUrl && (
+              <div
+                className="hidden md:block w-44 lg:w-48 shrink-0 bg-cover bg-center"
+                style={{ backgroundImage: `url('${bgImageUrl}')` }}
+                role="img"
+                aria-label={generalInfo.overlay_text || generalInfo.title || ""}
+              />
+            )}
+          </div>
+        )}
+
+        {keyMetrics.length > 0 && (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            {keyMetrics.map((metric: any, index: number) => (
+              <div key={index} className="bg-white border border-slate-200 rounded-xl p-4 flex flex-col gap-1">
+                <div className="flex items-center justify-between">
+                  <span
+                    className="p-1.5 rounded-md text-white"
+                    style={{ backgroundColor: metric.color || "#ba8200" }}
+                  >
+                    <IconRenderer name={metric.icon || "Layers"} className="w-4 h-4" />
+                  </span>
+                  {metric.change && (
+                    <span className="text-[11px] font-semibold text-amber-700 bg-amber-50 rounded-full px-2 py-0.5">
+                      {metric.change}
+                    </span>
+                  )}
+                </div>
+                <span className="mt-2 text-lg font-bold text-slate-900 leading-tight">{metric.value}</span>
+                <span className="text-xs text-slate-600">{metric.title}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {operationsData.length > 0 && (
+          <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
+            <div className="px-5 py-3.5 border-b border-slate-100 flex items-center gap-2">
+              <IconRenderer name={pageMetadata.operations_table_info?.icon || "Wrench"} className="w-4 h-4 text-primary" />
+              <h2 className="text-base font-semibold text-slate-900">
+                {pageMetadata.operations_table_info?.title ||
+                  (isAm ? "ተቋማዊ የቴክኒክ አቅሞች" : "Institutional Technical Capabilities")}
+              </h2>
+            </div>
+            <ul className="divide-y divide-slate-100">
+              {operationsData.map((item: any, index: number) => (
+                <li key={index} className="px-5 py-3 grid grid-cols-1 sm:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_auto] gap-x-4 gap-y-1 items-center">
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-slate-900">{item.area}</p>
+                    {item.infrastructure && <p className="text-xs text-slate-500 truncate">{item.infrastructure}</p>}
+                  </div>
+                  <p className="text-sm text-slate-600">{item.focus}</p>
+                  {item.status && (
+                    <span className="justify-self-start sm:justify-self-end inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+                      {item.status}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
 
-      {/* Quick Stats Footer */}
-      {((quickStats.left && quickStats.left.length > 0) ||
-        (quickStats.right && quickStats.right.length > 0)) && (
-        <div className="mt-12 pt-8 border-t border-border">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="flex flex-wrap gap-8">
-              {quickStats.left?.map((stat: any, index: number) => (
-                <div key={`left-${index}`}>
-                  <p className="text-xs text-muted mb-1">
-                    {stat.subtitle || stat.label}
-                  </p>
-                  <p className="font-bold text-sm text-heading">
-                    {stat.title || stat.value}
-                  </p>
-                </div>
-              ))}
-            </div>
-            <div className="flex items-center gap-6">
-              {quickStats.right?.map((stat: any, index: number) => (
-                <React.Fragment key={`right-${index}`}>
-                  <div className="text-center">
-                    <p className="text-sm font-bold text-heading">
-                      {stat.title || stat.label}
-                    </p>
-                    <p className="text-xs text-muted">
-                      {stat.subtitle || stat.value}
-                    </p>
-                  </div>
-                  {index < quickStats.right.length - 1 && (
-                    <div className="h-6 w-px bg-gray-300"></div>
-                  )}
-                </React.Fragment>
-              ))}
-            </div>
+      {/* Right column: sectors / programs, quick stats, services */}
+      <div className="lg:col-span-5 flex flex-col gap-5">
+        {(hasSectors || hasPrograms) && (
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 flex flex-col gap-3">
+            {hasSectors && hasPrograms ? (
+              <div className="grid grid-cols-2 gap-1 rounded-lg bg-slate-100 p-1">
+                {(["sectors", "programs"] as const).map((tab) => (
+                  <button
+                    key={tab}
+                    type="button"
+                    onClick={() => switchSideTab(tab)}
+                    aria-pressed={activeSideTab === tab}
+                    className={`rounded-md px-3 py-2 text-sm font-semibold transition-colors ${
+                      activeSideTab === tab ? "bg-white text-slate-900 shadow-sm" : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    {tab === "sectors" ? sectorsTitle : programsTitle}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <h2 className="text-base font-semibold text-slate-900">
+                {activeSideTab === "sectors" ? sectorsTitle : programsTitle}
+              </h2>
+            )}
+
+            <ul className="flex flex-col">
+              {(activeSideTab === "sectors" ? businessCategories : networkOperations).map((item: any, index: number) => {
+                const isOpen = expanded === index;
+                const detail = activeSideTab === "sectors" ? item.description : item.full_description || item.description;
+                return (
+                  <li key={index} className="border-b border-slate-100 last:border-b-0">
+                    <button
+                      type="button"
+                      onClick={() => setExpanded(isOpen ? null : index)}
+                      aria-expanded={isOpen}
+                      className="w-full flex items-center gap-3 py-3 text-start"
+                    >
+                      <span className="p-1.5 rounded-md bg-primary/10 text-primary shrink-0">
+                        <IconRenderer name={item.icon || (activeSideTab === "sectors" ? "Layers" : "Cpu")} className="w-4 h-4" />
+                      </span>
+                      <span className="flex-1 min-w-0 text-sm font-semibold text-slate-900">{item.title}</span>
+                      {activeSideTab === "sectors" && item.growth && (
+                        <span className="shrink-0 rounded-full bg-amber-50 px-2.5 py-0.5 text-[11px] font-semibold text-amber-800">
+                          {item.growth}
+                        </span>
+                      )}
+                      {detail && (
+                        <ChevronDown className={`w-4 h-4 shrink-0 text-slate-400 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+                      )}
+                    </button>
+                    {isOpen && detail && (
+                      <div className="pb-3 ps-10 flex flex-col gap-2">
+                        <p className="text-xs text-slate-600 leading-relaxed">{detail}</p>
+                        {activeSideTab === "sectors" && item.topFocus?.filter(Boolean).length > 0 && (
+                          <div className="flex flex-wrap gap-1.5">
+                            {item.topFocus.filter(Boolean).map((focus: string, idx: number) => (
+                              <span key={idx} className="rounded bg-slate-100 px-2 py-0.5 text-[11px] text-slate-700">
+                                {focus}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
           </div>
-        </div>
-      )}
-      {/* Contextual Links to Other Institutional Development Pages */}
-      <div className="pt-8 border-t border-border">
-        <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
-          {isAm ? "ተዛማጅ የልማት ክፍሎችን ያስሱ" : "Related Technical Development Areas"}
-        </h4>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <a
-            href={`/${locale}/businesses/mineral-processing`}
-            className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-primary/50 transition-all flex flex-col justify-between group"
-          >
-            <div>
-              <p className="text-xs font-semibold text-primary mb-1">
-                {isAm ? "የማጣራት ቴክኖሎጂዎች" : "Beneficiation"}
-              </p>
-              <h5 className="font-bold text-sm text-slate-900 dark:text-white group-hover:text-primary transition-colors">
-                {isAm ? "የማዕድን ማቀነባበሪያ እና ማበልፀጊያ" : "Mineral Processing & Beneficiation"}
-              </h5>
-              <p className="text-xs text-slate-500 mt-1 line-clamp-2">
-                {isAm
-                  ? "የኦር ባህሪ ጥናት፣ መፍጨት፣ የስበት እና የፍሎቴሽን አካላዊ የማጣሪያ ቴክኖሎጂዎች።"
-                  : "Ore characterization, comminution, gravity concentration, and flotation methods."}
-              </p>
-            </div>
-          </a>
+        )}
 
-          <a
-            href={`/${locale}/businesses/value-addition`}
-            className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-primary/50 transition-all flex flex-col justify-between group"
-          >
-            <div>
-              <p className="text-xs font-semibold text-primary mb-1">
-                {isAm ? "እሴት መጨመር" : "Manufacturing"}
-              </p>
-              <h5 className="font-bold text-sm text-slate-900 dark:text-white group-hover:text-primary transition-colors">
-                {isAm ? "እሴት መጨመር እና ማኑፋክቸሪንግ" : "Mineral-Based Manufacturing"}
-              </h5>
-              <p className="text-xs text-slate-500 mt-1 line-clamp-2">
-                {isAm
-                  ? "የሀገር ውስጥ ማዕድናትን ወደ ሲሚንቶ፣ ሴራሚክስ፣ መስታወት፣ ብረታብረት እና ጌጣጌጥ መቀየር።"
-                  : "Transforming domestic mineral feedstocks into finished construction and industrial products."}
-              </p>
-            </div>
-          </a>
+        {quickStats.length > 0 && (
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 grid grid-cols-2 gap-4">
+            {quickStats.map((stat: any, index: number) => (
+              <div key={index} className="flex flex-col gap-0.5">
+                <span className="text-xs text-slate-500">{stat.subtitle || stat.label}</span>
+                <span className="text-sm font-bold text-slate-900">{stat.title || stat.value}</span>
+              </div>
+            ))}
+          </div>
+        )}
 
-          <a
-            href={`/${locale}/businesses/research-innovation`}
-            className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-primary/50 transition-all flex flex-col justify-between group"
-          >
-            <div>
-              <p className="text-xs font-semibold text-primary mb-1">
-                {isAm ? "ኢኖቬሽን እና ምርምር" : "R&D Pipeline"}
-              </p>
-              <h5 className="font-bold text-sm text-slate-900 dark:text-white group-hover:text-primary transition-colors">
-                {isAm ? "ተግባራዊ ምርምር እና ቴክኖሎጂ ሽግግር" : "Applied Research & Innovation"}
-              </h5>
-              <p className="text-xs text-slate-500 mt-1 line-clamp-2">
-                {isAm
-                  ? "ኢንዱስትሪ-መር ምርምር፣ የሙከራ ፍሰት-ንድፍ ግምገማ እና የቴክኖሎጂ ማላመድ።"
-                  : "Bench-scale testing, pilot trials, metallurgical solutions, and technical publications."}
-              </p>
-            </div>
-          </a>
+        <div className="bg-slate-950 text-white rounded-2xl p-5 flex flex-wrap items-center justify-between gap-4">
+          <span className="text-base font-semibold">{isAm ? "የቴክኒክ አገልግሎቶች" : "Technical Services"}</span>
+          <div className="flex gap-2">
+            <Link
+              href="/services"
+              className="inline-flex items-center h-10 px-4 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary-hover transition-colors"
+            >
+              {isAm ? "አገልግሎቶች" : "Our Services"}
+            </Link>
+            <Link
+              href="/publications"
+              className="inline-flex items-center h-10 px-4 rounded-lg border border-white/30 text-white text-sm font-semibold hover:bg-white/10 transition-colors"
+            >
+              {isAm ? "የህትመቶች ማህደር" : "Publications"}
+            </Link>
+          </div>
         </div>
       </div>
     </div>
