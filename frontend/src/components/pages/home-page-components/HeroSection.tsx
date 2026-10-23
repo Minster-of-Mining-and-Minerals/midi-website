@@ -3,8 +3,8 @@
 import { useState, useSyncExternalStore } from "react";
 import clsx from "clsx";
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { Link } from "@/i18n/navigation";
+import { ArrowRight } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useGetSlidersQuery } from "@/redux/api/sliderApi";
 import { getImageUrl } from "@/utils/fileUrl";
@@ -31,7 +31,7 @@ export type Slide = {
     image: string;
 };
 
-const SLIDE_DURATION = 7000;
+const SLIDE_DURATION = 5000;
 const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
 
 const defaultMidiSlides: Slide[] = [
@@ -51,7 +51,8 @@ const defaultMidiSlides: Slide[] = [
         button_url: "/businesses",
         button2_name: { en: "About MIDI", am: "ስለ ኢንስቲትዩቱ" },
         button2_url: "/about",
-        image: "/home-1.jpg",
+        // Compressed copies (public/hero/*.webp, ~0.5 MB) of the 4–7 MB originals
+        image: "/hero/home-1.webp",
     },
     {
         id: 2,
@@ -69,7 +70,7 @@ const defaultMidiSlides: Slide[] = [
         button_url: "/services",
         button2_name: { en: "About MIDI", am: "ስለ MIDI" },
         button2_url: "/about",
-        image: "/home-2.jpg",
+        image: "/hero/home-2.webp",
     },
     {
         id: 3,
@@ -87,7 +88,7 @@ const defaultMidiSlides: Slide[] = [
         button_url: "/services",
         button2_name: { en: "Contact Us", am: "አግኙን" },
         button2_url: "/contact",
-        image: "/home-4.jpg",
+        image: "/hero/home-4.webp",
     },
 ];
 
@@ -101,7 +102,6 @@ const same = (text: string): LocalizedText => ({ en: text, am: text });
 
 export default function HeroSection() {
     const [current, setCurrent] = useState(0);
-    const [hovered, setHovered] = useState(false);
     const locale: keyof LocalizedText = useLocale() === "am" ? "am" : "en";
     const t = useTranslations();
     const reducedMotion = useSyncExternalStore(
@@ -127,15 +127,14 @@ export default function HeroSection() {
                 button_url: s.button_url || "/businesses",
                 button2_name: same(s.button2_name || t("hero.button2")),
                 button2_url: s.button2_url || "/services",
-                image: getImageUrl(s.attachment as Parameters<typeof getImageUrl>[0], "original") || "/home-1.jpg",
+                // "large" is the backend's resized WebP (falls back to the original if it has none)
+                image: getImageUrl(s.attachment as Parameters<typeof getImageUrl>[0], "large") || "/hero/home-1.webp",
             }))
         : defaultMidiSlides;
 
     const count = activeSlides.length;
     const next = () => setCurrent((c) => (c + 1) % count);
-    const prev = () => setCurrent((c) => (c - 1 + count) % count);
-    // Auto-advance is driven by the progress bar's animation, so pausing on
-    // hover pauses the bar and the timer together.
+    // Auto-advance is driven by the progress bar's animation: when it ends, the next slide opens.
     const autoPlay = !reducedMotion && count > 1;
 
     if (isLoading) {
@@ -146,147 +145,112 @@ export default function HeroSection() {
         return null;
     }
 
+    // Expanding panels: every slide is a photo panel; the active one is wide and shows its
+    // text, the others are narrow strips (thin bars on phones) that open when clicked.
     return (
         <section
-            className="relative w-full h-[85vh] min-h-[560px] overflow-hidden bg-secondary"
+            className="w-full bg-white px-4 sm:px-6 lg:px-16 pt-4 pb-6 md:pb-10"
             aria-roledescription="carousel"
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
+            aria-label={activeSlides[current].label[locale]}
         >
-            {activeSlides.map((slide, index) => {
-                const isActive = index === current;
-                return (
-                    <div
-                        key={slide.id}
-                        aria-hidden={!isActive}
-                        className={clsx(
-                            "absolute inset-0 transition-opacity duration-1000 ease-out",
-                            isActive ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
-                        )}
-                    >
-                        <Image
-                            src={slide.image}
-                            alt=""
-                            fill
-                            priority={index === 0}
-                            unoptimized={true}
+            <div className="flex flex-col md:flex-row gap-3 md:h-[78vh] md:min-h-[560px]">
+                {activeSlides.map((slide, index) => {
+                    const isActive = index === current;
+                    const number = String(index + 1).padStart(2, "0");
+
+                    return (
+                        <div
+                            key={slide.id}
+                            aria-roledescription="slide"
+                            aria-label={`${number} · ${slide.label[locale]}`}
                             className={clsx(
-                                "object-cover transition-transform ease-linear",
-                                isActive && !reducedMotion ? "scale-110 duration-[9000ms]" : "scale-100 duration-0"
+                                "group relative overflow-hidden rounded-2xl transition-[flex-grow,flex-basis,height] duration-500 ease-out",
+                                isActive
+                                    ? "h-[68vh] min-h-[460px] md:h-auto md:min-h-0 md:grow md:basis-0"
+                                    : "h-14 md:h-auto md:grow-0 md:shrink-0 md:basis-[88px] lg:basis-[124px]"
                             )}
-                        />
-                        {/* Readability gradients */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-secondary/95 via-secondary/60 to-transparent" />
-                        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/60 to-transparent" />
+                        >
+                            <Image
+                                src={slide.image}
+                                alt=""
+                                fill
+                                priority={index === 0}
+                                unoptimized={true}
+                                className={clsx(
+                                    "object-cover transition-transform ease-linear",
+                                    isActive && !reducedMotion ? "scale-105 duration-[6000ms]" : "scale-100 duration-500"
+                                )}
+                            />
 
-                        {isActive && (
-                            <div className="relative z-10 h-full max-w-7xl mx-auto px-6 flex items-center pb-16">
-                                <div className="max-w-2xl">
-                                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-primary/40 bg-primary/15 backdrop-blur-sm text-[#f5c451] text-xs sm:text-sm font-semibold tracking-wide uppercase animate-in fade-in slide-in-from-bottom-3 duration-700 fill-mode-both">
-                                        <span className="relative flex h-2 w-2">
-                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-                                            <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
-                                        </span>
-                                        {slide.eyebrow[locale]}
-                                    </div>
+                            {isActive ? (
+                                <>
+                                    {/* Readability gradient, bottom only */}
+                                    <div className="absolute inset-x-0 bottom-0 h-3/4 bg-gradient-to-t from-slate-950/95 via-slate-950/60 to-transparent" />
 
-                                    <h1 className="mt-6 text-3xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] text-white text-balance animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150 fill-mode-both">
-                                        {slide.title[locale]}
-                                    </h1>
-
-                                    <div className="mt-6 h-1 w-16 rounded-full bg-primary animate-in fade-in zoom-in-50 duration-700 delay-200 fill-mode-both" />
-
-                                    {slide.description[locale] && (
-                                        <p className="mt-6 text-base sm:text-lg text-white/85 leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 fill-mode-both">
-                                            {slide.description[locale]}
-                                        </p>
-                                    )}
-
-                                    <div className="mt-10 flex flex-col sm:flex-row gap-3 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500 fill-mode-both">
-                                        <Link
-                                            href={slide.button_url}
-                                            className="group inline-flex items-center justify-center gap-2 h-12 px-7 rounded-md bg-primary text-white font-semibold shadow-lg shadow-primary/30 hover:bg-primary-hover transition"
-                                        >
-                                            {slide.button_name[locale]}
-                                            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                                        </Link>
-                                        <Link
-                                            href={slide.button2_url}
-                                            className="inline-flex items-center justify-center h-12 px-7 rounded-md border border-white/40 text-white font-semibold backdrop-blur-sm hover:bg-white hover:text-secondary transition"
-                                        >
-                                            {slide.button2_name[locale]}
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                );
-            })}
-
-            {/* Numbered progress + arrows */}
-            {count > 1 && (
-                <div className="absolute inset-x-0 bottom-6 z-20">
-                    <div className="max-w-7xl mx-auto px-6 flex items-end justify-between gap-6">
-                        <div className="flex gap-4 sm:gap-6 flex-1 max-w-xl">
-                            {activeSlides.map((slide, idx) => {
-                                const isActive = idx === current;
-                                return (
-                                    <button
-                                        key={slide.id}
-                                        onClick={() => setCurrent(idx)}
-                                        aria-label={`Go to slide ${idx + 1}`}
-                                        aria-current={isActive}
-                                        className="group flex-1 min-w-0 text-start"
+                                    <div
+                                        key={current}
+                                        className="absolute inset-x-0 bottom-0 p-6 sm:p-10 lg:p-12 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 lg:gap-10"
                                     >
-                                        <span
-                                            className={clsx(
-                                                "flex text-xs font-semibold mb-2 transition-colors",
-                                                isActive ? "text-white" : "text-white/50 group-hover:text-white/80"
+                                        <div className="max-w-2xl">
+                                            <span className="block text-xs sm:text-sm font-semibold tracking-[0.14em] uppercase text-[#f5c451] animate-in fade-in slide-in-from-bottom-3 duration-700 fill-mode-both">
+                                                {number} · {slide.eyebrow[locale]}
+                                            </span>
+                                            <h1 className="mt-4 font-display text-3xl sm:text-4xl lg:text-5xl font-bold leading-[1.1] text-white text-balance animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150 fill-mode-both">
+                                                {slide.title[locale]}
+                                            </h1>
+                                            {slide.description[locale] && (
+                                                <p className="mt-4 text-base sm:text-lg text-white/85 leading-relaxed line-clamp-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 fill-mode-both">
+                                                    {slide.description[locale]}
+                                                </p>
                                             )}
-                                        >
-                                            {String(idx + 1).padStart(2, "0")}
-                                            <span className="hidden md:inline truncate font-normal ms-2">{slide.label[locale]}</span>
-                                        </span>
-                                        <span className="block h-[3px] w-full rounded-full bg-white/25 overflow-hidden">
-                                            {isActive ? (
-                                                <span
-                                                    key={current}
-                                                    className={clsx("block h-full bg-primary", autoPlay ? "animate-hero-progress" : "w-full")}
-                                                    style={autoPlay ? {
-                                                        animationDuration: `${SLIDE_DURATION}ms`,
-                                                        animationPlayState: hovered ? "paused" : "running",
-                                                    } : undefined}
-                                                    onAnimationEnd={next}
-                                                />
-                                            ) : (
-                                                <span className={clsx("block h-full bg-primary", idx < current ? "w-full" : "w-0")} />
-                                            )}
-                                        </span>
-                                    </button>
-                                );
-                            })}
-                        </div>
+                                        </div>
 
-                        <div className="hidden sm:flex gap-2">
-                            <button
-                                onClick={prev}
-                                aria-label="Previous slide"
-                                className="size-11 rounded-full border border-white/40 text-white flex items-center justify-center hover:bg-white hover:text-secondary transition"
-                            >
-                                <ChevronLeft className="size-5 rtl:rotate-180" />
-                            </button>
-                            <button
-                                onClick={next}
-                                aria-label="Next slide"
-                                className="size-11 rounded-full border border-white/40 text-white flex items-center justify-center hover:bg-white hover:text-secondary transition"
-                            >
-                                <ChevronRight className="size-5 rtl:rotate-180" />
-                            </button>
+                                        <div className="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500 fill-mode-both">
+                                            <Link
+                                                href={slide.button_url}
+                                                className="group/btn inline-flex items-center justify-center gap-2 h-12 px-7 rounded-md bg-primary text-white font-semibold shadow-lg shadow-black/20 hover:bg-primary-hover transition"
+                                            >
+                                                {slide.button_name[locale]}
+                                                <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1 rtl:rotate-180" />
+                                            </Link>
+                                            <Link
+                                                href={slide.button2_url}
+                                                className="inline-flex items-center justify-center h-12 px-7 rounded-md border border-white/50 text-white font-semibold hover:bg-white hover:text-slate-950 transition"
+                                            >
+                                                {slide.button2_name[locale]}
+                                            </Link>
+                                        </div>
+                                    </div>
+
+                                    {/* Progress of the active slide; drives auto-advance (keeps running on hover) */}
+                                    {count > 1 && (
+                                        <div className="absolute inset-x-0 bottom-0 h-1 bg-white/15">
+                                            <span
+                                                key={current}
+                                                className={clsx("block h-full bg-primary", autoPlay ? "animate-hero-progress" : "w-full")}
+                                                style={autoPlay ? { animationDuration: `${SLIDE_DURATION}ms` } : undefined}
+                                                onAnimationEnd={next}
+                                            />
+                                        </div>
+                                    )}
+                                </>
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={() => setCurrent(index)}
+                                    aria-label={`Show slide ${number}: ${slide.label[locale]}`}
+                                    className="absolute inset-0 flex md:flex-col items-center justify-start md:justify-between gap-3 px-5 md:px-0 md:py-6 bg-slate-950/65 hover:bg-slate-950/45 text-white transition-colors text-start"
+                                >
+                                    <span className="text-sm font-semibold text-[#f5c451]">{number}</span>
+                                    <span className="truncate md:[writing-mode:vertical-rl] md:rotate-180 text-base font-semibold tracking-wide md:max-h-[70%]">
+                                        {slide.label[locale]}
+                                    </span>
+                                </button>
+                            )}
                         </div>
-                    </div>
-                </div>
-            )}
+                    );
+                })}
+            </div>
         </section>
     );
 }
