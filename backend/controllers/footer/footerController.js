@@ -77,7 +77,11 @@ const getAllFooters = async (req, res) => {
         { model: FooterSection, as: "sections" },
         { model: Attachment, as: "attachment" },
       ],
-      order: [["created_at", "DESC"]],
+      // Newest footer first; its sections in creation order so columns keep their position
+      order: [
+        ["created_at", "DESC"],
+        [{ model: FooterSection, as: "sections" }, "created_at", "ASC"],
+      ],
     });
 
     return res.status(200).json({
@@ -112,6 +116,7 @@ const getFooterById = async (req, res) => {
         { model: FooterSection, as: "sections" },
         { model: Attachment, as: "attachment" },
       ],
+      order: [[{ model: FooterSection, as: "sections" }, "created_at", "ASC"]],
     });
 
     if (!footer)
@@ -155,8 +160,9 @@ const updateFooter = async (req, res) => {
       {
         title: title || footer.title,
         text: text || footer.text,
-        attachment_id: attachment_id ?? footer.attachment_id,
-        content: content ?? footer.content,
+        // Only fields that were sent change: null removes the logo, "" clears the content
+        attachment_id: attachment_id !== undefined ? attachment_id : footer.attachment_id,
+        content: content !== undefined ? content || null : footer.content,
         updated_at: new Date(),
       },
       { transaction: t },

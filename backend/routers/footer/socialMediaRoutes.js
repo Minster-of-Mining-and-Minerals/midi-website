@@ -1,7 +1,7 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const { authenticateToken } = require("../../middlewares/authMiddleware");
+const { authenticateToken, checkPermission } = require("../../middlewares/authMiddleware");
 
 const {
   createSocialMedia,
@@ -17,9 +17,11 @@ const {
 } = require("../../validators/footer/socialMediaValidator");
 
 // ================= SOCIAL MEDIA CRUD =================
+// Social links are managed from the footer admin, so they use the footer permission
 router.post(
   "/",
   authenticateToken,
+  checkPermission("footer", "update"),
   validateCreateSocialMedia,
   createSocialMedia,
 );
@@ -28,9 +30,10 @@ router.get("/:id", getSocialMediaById);
 router.put(
   "/:id",
   authenticateToken,
+  checkPermission("footer", "update"),
   validateUpdateSocialMedia,
   updateSocialMedia,
 );
-router.delete("/:id", authenticateToken, deleteSocialMedia);
+router.delete("/:id", authenticateToken, checkPermission("footer", "update"), deleteSocialMedia);
 
 module.exports = router;

@@ -1,7 +1,7 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const { authenticateToken } = require("../../middlewares/authMiddleware");
+const { authenticateToken, checkPermission } = require("../../middlewares/authMiddleware");
 
 const {
   createFooter,
@@ -23,16 +23,18 @@ const {
 } = require("../../validators/footer/footerValidator");
 
 // ================= FOOTER CRUD =================
-router.post("/", authenticateToken, validateCreateFooter, createFooter);
+// footer:update is the only write permission seeded for the footer
+router.post("/", authenticateToken, checkPermission("footer", "update"), validateCreateFooter, createFooter);
 router.get("/", getAllFooters);
 router.get("/:id", getFooterById);
-router.put("/:id", authenticateToken, validateUpdateFooter, updateFooter);
-router.delete("/:id", authenticateToken, deleteFooter);
+router.put("/:id", authenticateToken, checkPermission("footer", "update"), validateUpdateFooter, updateFooter);
+router.delete("/:id", authenticateToken, checkPermission("footer", "update"), deleteFooter);
 
 // ================= FOOTER SECTION =================
 router.post(
   "/section",
   authenticateToken,
+  checkPermission("footer", "update"),
   validateCreateFooterSection,
   createFooterSection,
 );

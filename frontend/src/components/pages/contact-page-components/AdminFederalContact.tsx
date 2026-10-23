@@ -161,7 +161,7 @@ function ContactInformationForm({ officeId, initialContact, initialText }: Conta
                             Everything shown on the public contact page, in page order. Fields start with the current defaults; edit them and save to change the page.
                         </p>
                     </div>
-                    <ComponentGuard anyPermissions={["CONTACT:UPDATE", "PAGE_HEADERS:UPDATE"]}>
+                    <ComponentGuard anyPermissions={["CONTACTS:UPDATE", "PAGE_HEADERS:UPDATE"]}>
                         <Button
                             onClick={handleSave}
                             className="bg-golden-dark hover:bg-golden-darkHover"

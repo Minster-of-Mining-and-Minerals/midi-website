@@ -1,7 +1,7 @@
 "use client";
 
 import * as LucideIcons from "lucide-react";
-import { useMemo, useState } from "react";
+import { createElement, useMemo, useState, type ComponentType } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +14,20 @@ import {
     Command,
     CommandInput,
 } from "@/components/ui/command";
+import { BRAND_ICONS } from "@/components/common/socialIcons";
+
+type IconComponent = ComponentType<{ className?: string }>;
+const LUCIDE_ICONS = LucideIcons as unknown as Record<string, IconComponent>;
+
+// Brand icons (Telegram, TikTok…) first, then lucide-react's own icons
+const resolveIcon = (name?: string): IconComponent | null =>
+    name ? BRAND_ICONS[name] || LUCIDE_ICONS[name] || null : null;
+
+// Renders an icon by name without declaring a component during render
+const renderIcon = (name: string | undefined, className: string) => {
+    const icon = resolveIcon(name);
+    return icon ? createElement(icon, { className }) : null;
+};
 
 interface IconPickerProps {
     value?: string;
@@ -25,19 +39,17 @@ export function LucideIconPicker({ value, onChange }: IconPickerProps) {
     const [search, setSearch] = useState("");
 
     const icons = useMemo(() => {
-        return Object.keys(LucideIcons)
+        const query = search.toLowerCase();
+        return [...Object.keys(BRAND_ICONS), ...Object.keys(LucideIcons)]
             .filter(
                 (name) =>
                     name !== "default" &&
-                    name.toLowerCase().includes(search.toLowerCase())
+                    name.toLowerCase().includes(query)
             )
             .slice(0, 150);
     }, [search]);
 
-    const SelectedIcon =
-        value && (LucideIcons as any)[value]
-            ? (LucideIcons as any)[value]
-            : null;
+    const selectedIcon = renderIcon(value, "w-4 h-4");
 
     return (
         <>
@@ -48,11 +60,11 @@ export function LucideIconPicker({ value, onChange }: IconPickerProps) {
                 className="w-full justify-start gap-2"
                 onClick={() => setOpen(true)}
             >
-                {SelectedIcon ? (
+                {selectedIcon ? (
                     <>
                         <div className="flex items-center justify-between w-full gap-2">
                             <div className="flex items-center gap-2">
-                                <SelectedIcon className="w-4 h-4" />
+                                {selectedIcon}
                                 <span className="text-sm">{value}</span>
                             </div>
                             <LucideIcons.Plus className="w-4 h-4" />
@@ -81,7 +93,8 @@ export function LucideIconPicker({ value, onChange }: IconPickerProps) {
 
                         <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-2 max-h-[420px] overflow-y-auto hide-scrollbar mt-4">
                             {icons.map((iconName) => {
-                                const Icon = (LucideIcons as any)[iconName];
+                                const icon = renderIcon(iconName, "w-5 h-5");
+                                if (!icon) return null;
                                 const isSelected = iconName === value;
 
                                 return (
@@ -101,7 +114,7 @@ export function LucideIconPicker({ value, onChange }: IconPickerProps) {
                                             ${isSelected ? "bg-muted border-primary" : "border-border"}
                                             `}
                                     >
-                                        <Icon className="w-5 h-5" />
+                                        {icon}
                                     </button>
                                 );
                             })}

@@ -20,6 +20,20 @@ import {
 } from "@/redux/api/footerApi";
 import { ImageUploadField } from "@/components/common/ImageUploadField";
 import { ComponentGuard } from "@/components/auth/ComponentGuard";
+import { DEFAULT_FOOTER, FOOTER_SECTION_COUNT } from "@/components/public-layout/footerDefaults";
+
+const newId = () => Math.random().toString(36).substring(2, 9);
+
+// Same rule as the backend: internal path, anchor, full URL, mailto:/tel:, or empty for plain text
+const isValidFooterUrl = (url: string) => url.trim() === "" || /^(\/|#|https?:\/\/|mailto:|tel:)/i.test(url.trim());
+
+// The default footer columns, as editable sections
+const defaultSections = (from = 0): FooterSection[] =>
+    DEFAULT_FOOTER.sections.slice(from, FOOTER_SECTION_COUNT).map((s) => ({
+        id: newId(),
+        title: s.title,
+        links: s.links.map((l) => ({ id: newId(), label: l.label, href: l.url })),
+    }));
 
 interface FooterLink {
     id: string;
@@ -43,17 +57,14 @@ export default function AdminFooterManager() {
     const [attachmentId, setAttachmentId] = useState<string[]>([]);
     const isSaving = isCreating || isUpdating;
 
+    // Starts with the footer the public site shows until something is saved
     const [footerData, setFooterData] = useState({
         footer_id: "",
-        title: "Mineral Industry Development Institute",
-        text: `© ${new Date().getFullYear()} Mineral Industry Development Institute (MIDI). All rights reserved.`,
-        content: "",
+        title: DEFAULT_FOOTER.title,
+        text: DEFAULT_FOOTER.copyright(),
+        content: DEFAULT_FOOTER.content,
         attachment_id: "",
-        sections: [
-            { id: Math.random().toString(36).substring(2, 9), title: "Section 1", links: [] },
-            { id: Math.random().toString(36).substring(2, 9), title: "Section 2", links: [] },
-            { id: Math.random().toString(36).substring(2, 9), title: "Section 3", links: [] },
-        ] as FooterSection[],
+        sections: defaultSections(),
     });
 
     const [activeTab, setActiveTab] = useState("");
@@ -66,35 +77,29 @@ export default function AdminFooterManager() {
         if (footers && footers.length > 0 && !isLoading) {
             const f = footers[0];
 
-            const mappedSections =
+            const mappedSections: FooterSection[] =
                 f.sections?.map((s: any) => ({
-                    id: Math.random().toString(36).substring(2, 9), // Local UI ID
+                    id: newId(), // Local UI ID
                     footer_section_id: s.footer_section_id, // Store the actual DB ID
                     title: s.section_name,
                     links:
                         s.links?.map((l: any) => ({
-                            id: Math.random().toString(36).substring(2, 9),
+                            id: newId(),
                             label: l.label,
                             href: l.url,
                         })) ?? [],
                 })) ?? [];
 
-            // Ensure exactly 3 sections
-            const finalSections: FooterSection[] = [...mappedSections];
-            while (finalSections.length < 3) {
-                finalSections.push({
-                    id: Math.random().toString(36).substring(2, 9),
-                    title: `Section ${finalSections.length + 1}`,
-                    links: [],
-                    footer_section_id: undefined,
-                });
-            }
-            const displayedSections = finalSections.slice(0, 3);
+            // Always 3 sections, padded with the default columns (same as the public footer)
+            const displayedSections = [
+                ...mappedSections,
+                ...defaultSections(mappedSections.length),
+            ].slice(0, FOOTER_SECTION_COUNT);
 
             setFooterData({
                 footer_id: f.footer_id,
-                title: f.title || "Mineral Industry Development Institute",
-                text: f.text || `© ${new Date().getFullYear()} Mineral Industry Development Institute (MIDI). All rights reserved.`,
+                title: f.title || DEFAULT_FOOTER.title,
+                text: f.text || DEFAULT_FOOTER.copyright(),
                 content: f.content || "",
                 attachment_id: f.attachment_id || "",
                 sections: displayedSections,
@@ -115,6 +120,22 @@ export default function AdminFooterManager() {
     --------------------------*/
 
     const handleSave = async () => {
+        // Catch link URLs the backend would reject, with a message that names the link
+        for (const section of footerData.sections) {
+            for (const link of section.links) {
+                if (!link.label.trim()) {
+                    notify.error(`A link in "${section.title}" has no label.`);
+                    return;
+                }
+                if (!isValidFooterUrl(link.href)) {
+                    notify.error(
+                        `"${link.label}" in "${section.title}": the URL must start with "/", "https://", "mailto:" or "tel:", or be left empty for plain text.`
+                    );
+                    return;
+                }
+            }
+        }
+
         try {
             const payload: any = {
                 title: footerData.title,
@@ -124,19 +145,14 @@ export default function AdminFooterManager() {
                     ...(s.footer_section_id && { footer_section_id: s.footer_section_id }),
                     section_name: s.title,
                     links: s.links.map((l) => ({
-                        label: l.label,
-                        url: l.href,
+                        label: l.label.trim(),
+                        url: l.href.trim(),
                     })),
                 })),
+                // Always sent so they can be cleared: "" removes the content, null removes the logo
+                content: footerData.content.trim(),
+                attachment_id: attachmentId[0] ?? null,
             };
-
-            if (footerData.content) {
-                payload.content = footerData.content;
-            }
-
-            if (attachmentId.length > 0) {
-                payload.attachment_id = attachmentId[0];
-            }
 
             let result;
             if (footerData.footer_id) {
@@ -197,9 +213,9 @@ export default function AdminFooterManager() {
                         links: [
                             ...s.links,
                             {
-                                id: Math.random().toString(36).substring(2, 9),
+                                id: newId(),
                                 label: "New Link",
-                                href: "#",
+                                href: "",
                             },
                         ],
                     };
@@ -287,12 +303,13 @@ export default function AdminFooterManager() {
                     {/* MAIN INFO */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-b pb-6">
                         <div className="space-y-2">
-                            <Label>Ministry Title</Label>
+                            <Label>Footer Title</Label>
                             <Input
                                 value={footerData.title}
                                 onChange={(e) => updateTitle(e.target.value)}
-                                placeholder="Enter ministry title"
+                                placeholder={DEFAULT_FOOTER.title}
                             />
+                            <p className="text-xs text-muted-foreground">Shown under the logo.</p>
                         </div>
 
                         <div className="space-y-2">
@@ -306,20 +323,21 @@ export default function AdminFooterManager() {
                         </div>
 
                         <div className="space-y-2 md:col-span-2">
-                            <Label>Additional Content (Optional)</Label>
-                            <Input
+                            <Label>Short Description (Optional)</Label>
+                            <Textarea
                                 value={footerData.content || ""}
                                 onChange={(e) => setFooterData({
                                     ...footerData,
                                     content: e.target.value
                                 })}
-                                placeholder="Enter additional content"
+                                placeholder="A sentence or two about MIDI, shown under the footer title"
+                                rows={3}
                             />
                         </div>
                     </div>
 
                     {/* TABS */}
-                    <Tabs value={activeTab || "social"} onValueChange={setActiveTab}>
+                    <Tabs value={activeTab || footerData.sections[0]?.id || "social"} onValueChange={setActiveTab}>
                         <TabsList className="flex flex-wrap gap-2 mb-6 p-1">
                             {footerData.sections.map((section) => (
                                 <TabsTrigger key={section.id} value={section.id}>
@@ -398,7 +416,7 @@ function SectionEditor({
                     </Label>
 
                     <Input
-                        className="max-w-[200px] h-8 font-semibold text-primary"
+                        className="max-w-[200px] h-8 font-semibold"
                         value={section.title}
                         onChange={(e) => updateTitle(e.target.value)}
                         placeholder="Enter section name"
@@ -444,11 +462,11 @@ function SectionEditor({
                                     onChange={(e) =>
                                         updateLink(link.id, "href", e.target.value)
                                     }
-                                    placeholder="/page-url or https://..."
+                                    placeholder="/about, https://… or empty for plain text"
                                 />
                             </div>
 
-                            <ComponentGuard anyPermissions={['FOOTER:DELETE']}>
+                            <ComponentGuard anyPermissions={['FOOTER:UPDATE']}>
                                 <Button
                                     variant="ghost"
                                     size="icon"
