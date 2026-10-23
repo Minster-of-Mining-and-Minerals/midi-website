@@ -2,7 +2,6 @@ import { Briefcase } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import PageHeader from "@/components/pages/home-page-components/PageHeader";
 import Introduction from "@/components/pages/careers-page-components/Introduction";
-import PeopleAndCulture from "@/components/pages/careers-page-components/PeopleAndCulture";
 import CurrentOpportunities from "@/components/pages/careers-page-components/CurrentOpportunities";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -24,7 +23,6 @@ export default function CareersPage() {
             />
 
             <Introduction />
-            <PeopleAndCulture />
             <CurrentOpportunities />
         </main>
     );
