@@ -5,8 +5,12 @@ import HierarchyNode from "./HierarchyNode";
 import { useMemo } from "react";
 import { getImageUrl } from "@/utils/fileUrl";
 import SplitTitle from "@/components/common/SplitTitle";
+import { useGetPageHeaderByIdentifierQuery } from "@/redux/api/pageHeaderApi";
+import { useLocale } from "next-intl";
+import { LEADERSHIP_SECTION, readLegacyLeadershipHeader, pickLocalized } from "./aboutDefaults";
 
-function buildTree(items: any[], parentId: string | null = null): any[] {
+// Siblings keep the API order (display_order, set from the admin's up/down arrows)
+function buildTree(items: any[], locale: string, parentId: string | null = null): any[] {
     return items
         .filter((item) => item.parent_id === parentId)
         .map((item) => {
@@ -14,22 +18,24 @@ function buildTree(items: any[], parentId: string | null = null): any[] {
             return {
                 id: item.leadership_id,
                 level: item.level,
-                name: item.name,
-                title: item.title,
+                name: pickLocalized(locale, item.name, item.name_am),
+                title: pickLocalized(locale, item.title, item.title_am),
                 image: getImageUrl(attachment, "medium") || "/businessman.png",
-                fullDescription: item.description,
-                children: buildTree(items, item.leadership_id),
+                fullDescription: pickLocalized(locale, item.description || "", item.description_am),
+                children: buildTree(items, locale, item.leadership_id),
             };
         });
 }
 
 export default function LeadershipSection() {
     const { data: leaderships = [], isLoading, isError } = useGetLeadershipsQuery();
+    const { data: sectionHeader } = useGetPageHeaderByIdentifierQuery(LEADERSHIP_SECTION.identifier);
+    const locale = useLocale();
 
     const rootNodes = useMemo(() => {
         // Find top-level nodes (those without parents or whose parents don't exist in the list)
-        return buildTree(leaderships, null);
-    }, [leaderships]);
+        return buildTree(leaderships, locale, null);
+    }, [leaderships, locale]);
 
     if (isLoading) {
         return (
@@ -43,21 +49,10 @@ export default function LeadershipSection() {
         return null;
     }
 
-    let sectionTitle = "Corporate Leadership Structure";
-    let sectionDescription = "Interactive organizational hierarchy";
-    
-    if (rootNodes.length > 0 && leaderships.length > 0) {
-        const root = leaderships.find(l => !l.parent_id);
-        if (root && root.header) {
-            try {
-                const parsed = JSON.parse(root.header);
-                if (parsed.title) sectionTitle = parsed.title;
-                if (parsed.description) sectionDescription = parsed.description;
-            } catch {
-                sectionTitle = root.header;
-            }
-        }
-    }
+    // Page header "about-leadership" first, then the legacy JSON on the root leader, then defaults
+    const legacy = readLegacyLeadershipHeader(leaderships.find(l => !l.parent_id)?.header);
+    const sectionTitle = sectionHeader?.title || legacy.title || LEADERSHIP_SECTION.defaultTitle;
+    const sectionDescription = sectionHeader?.description || legacy.description || LEADERSHIP_SECTION.defaultDescription;
 
     return (
         <div className="min-h-screen py-12 md:px-4 space-y-4">

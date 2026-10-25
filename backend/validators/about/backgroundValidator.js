@@ -24,6 +24,8 @@ const createBackgroundSchema = Joi.object({
     description: Joi.string().allow("", null).optional(),
     content: Joi.string().allow("").optional(),
     icon: Joi.string().required(),
+    title_am: Joi.string().allow("", null).max(255).optional(),
+    description_am: Joi.string().allow("", null).optional(),
 });
 
 // ================= UPDATE BACKGROUND =================
@@ -32,6 +34,8 @@ const updateBackgroundSchema = Joi.object({
     description: Joi.string().allow("", null).optional(),
     content: Joi.string().allow("").optional(),
     icon: Joi.string().optional(),
+    title_am: Joi.string().allow("", null).max(255).optional(),
+    description_am: Joi.string().allow("", null).optional(),
 });
 
 // ================= MIDDLEWARES =================

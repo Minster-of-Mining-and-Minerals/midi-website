@@ -6,6 +6,10 @@ export interface CreateLeadershipPayload {
     title: string;
     description?: string;
     level?: number;
+    name_am?: string | null;
+    title_am?: string | null;
+    description_am?: string | null;
+    display_order?: number;
     attachments?: { attachment_id: string }[];
 }
 
@@ -16,6 +20,10 @@ export interface UpdateLeadershipPayload {
     title?: string;
     description?: string;
     level?: number;
+    name_am?: string | null;
+    title_am?: string | null;
+    description_am?: string | null;
+    display_order?: number;
     attachments?: { attachment_id: string }[];
 }
 
@@ -29,6 +37,10 @@ export interface Leadership {
     description?: string;
     level: number;
     is_active: boolean;
+    name_am?: string | null;
+    title_am?: string | null;
+    description_am?: string | null;
+    display_order?: number;
     attachments?: { attachment_id: string; file_path?: string }[];
     created_at: string;
     updated_at: string;

@@ -6,9 +6,12 @@ import SplitTitle from "@/components/common/SplitTitle";
 import { useGetCertificationsQuery } from "@/redux/api/certificationApi";
 import { useGetPageHeaderByIdentifierQuery } from "@/redux/api/pageHeaderApi";
 import { getImageUrl } from "@/utils/fileUrl";
+import { useLocale } from "next-intl";
+import { pickLocalized } from "./aboutDefaults";
 
 export default function CompanyCertifications() {
     const { data: response, isLoading, isError } = useGetCertificationsQuery();
+    const locale = useLocale();
     const certifications = response?.data || [];
     const { data: headerData } = useGetPageHeaderByIdentifierQuery("about-certifications");
 
@@ -94,12 +97,12 @@ export default function CompanyCertifications() {
                                 
                                 {/* Title */}
                                 <h3 className="relative z-10 text-xl font-extrabold text-slate-900 mb-4 group-hover:text-primary transition-colors duration-300">
-                                    {cert.title}
+                                    {pickLocalized(locale, cert.title, cert.title_am)}
                                 </h3>
                                 
                                 {/* Description */}
                                 <p className="relative z-10 text-slate-500 leading-relaxed">
-                                    {cert.description}
+                                    {pickLocalized(locale, cert.description, cert.description_am)}
                                 </p>
                             </div>
                         );

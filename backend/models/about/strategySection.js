@@ -42,9 +42,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      // Optional icon image; the public page falls back to a letter icon
       attachment_id: {
         type: DataTypes.UUID,
-        allowNull: false,
+        allowNull: true,
         references: {
           model: "attachments",
           key: "attachment_id",
@@ -54,6 +55,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       content: {
         type: DataTypes.TEXT,
+      },
+      content_am: {
+        type: DataTypes.TEXT,
+        allowNull: true,
       },
     },
     {

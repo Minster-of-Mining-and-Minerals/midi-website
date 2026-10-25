@@ -2,6 +2,8 @@
 import { useGetStrategiesQuery } from "@/redux/api/strategyApi";
 import { getImageUrl } from "@/utils/fileUrl";
 import SplitTitle from "@/components/common/SplitTitle";
+import { useLocale } from "next-intl";
+import { ABOUT_STRATEGY_DEFAULTS, pickLocalized } from "./aboutDefaults";
 
 const Column = ({ item, isLast = false }: { item: any; isLast?: boolean }) => {
     return (
@@ -34,6 +36,7 @@ const Column = ({ item, isLast = false }: { item: any; isLast?: boolean }) => {
 
 export default function VisionMissionValues() {
     const { data: strategiesData, isLoading } = useGetStrategiesQuery();
+    const locale = useLocale();
 
     if (isLoading) {
         return (
@@ -45,28 +48,25 @@ export default function VisionMissionValues() {
 
     const strategy = strategiesData && strategiesData.length > 0 ? strategiesData[0] : null;
 
-    const sectionTitle = strategy?.title || "Strategic Framework & Objectives";
-    const sectionDescription = strategy?.description || "Empowering the Ethiopian mineral industry through innovation, quality, and human capacity.";
+    const sectionTitle = pickLocalized(locale, strategy?.title || ABOUT_STRATEGY_DEFAULTS.title, strategy?.title_am);
+    const sectionDescription = pickLocalized(
+        locale,
+        strategy?.description || ABOUT_STRATEGY_DEFAULTS.description,
+        strategy?.description_am
+    );
 
-    const defaultValuesList = [
-        { title: "Research & Innovation", content: "Conducting problem-solving applied research and adopting state-of-the-art mineral technologies." },
-        { title: "Excellence & Quality", content: "Upholding world-class standards in laboratory testing, material characterization, and consultancy." },
-        { title: "Integrity & Accountability", content: "Transparent, evidence-based leadership and responsible stewardship of public resources." },
-        { title: "Sustainable Development", content: "Balancing mineral wealth generation with environmental preservation and community benefit." },
-        { title: "Human Capital Growth", content: "Empowering industry-driven professionals and supporting ASM formalization." },
-        { title: "Value Creation", content: "Driving import substitution and expanding export revenues through national value addition." }
-    ];
+    const defaultValuesList = ABOUT_STRATEGY_DEFAULTS.values;
 
     const displayData = {
         mission: {
             title2: "MISSION",
             icon: <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center text-primary font-bold text-2xl">M</div>,
-            description: "To support the mineral industry through applied research and development, capacity building, technical consultancy, and modern laboratory testing to enhance production, foster import substitution, and stimulate sustainable job creation."
+            description: ABOUT_STRATEGY_DEFAULTS.mission
         },
         vision: {
             title2: "VISION",
             icon: <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center text-primary font-bold text-2xl">V</div>,
-            description: "To become a premier center of excellence in mineral technology, innovative research, and human capital development in Africa by 2030."
+            description: ABOUT_STRATEGY_DEFAULTS.vision
         },
         values: {
             title2: "VALUES",
@@ -94,28 +94,32 @@ export default function VisionMissionValues() {
         const customIcon = imageUrl ? <img src={imageUrl} alt={sec.type} className="w-28 h-28 object-contain z-10" /> : null;
 
         if (sec.type === "mission") {
-            if (sec.content) displayData.mission.description = sec.content;
+            if (sec.content) displayData.mission.description = pickLocalized(locale, sec.content, sec.content_am);
             if (customIcon) displayData.mission.icon = customIcon;
         } else if (sec.type === "vision") {
-            if (sec.content) displayData.vision.description = sec.content;
+            if (sec.content) displayData.vision.description = pickLocalized(locale, sec.content, sec.content_am);
             if (customIcon) displayData.vision.icon = customIcon;
         } else if (sec.type === "core_values") {
             if (sec.core_values && sec.core_values.length > 0) {
                 displayData.values.description = (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full text-left">
-                        {sec.core_values.map((v: any, i: number) => (
-                            <div key={i} className="flex flex-col gap-2 p-6 rounded-xl bg-gray-50 border border-gray-100 hover:shadow-sm transition-shadow">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-2 h-2 bg-[#ba8200] rounded-full shrink-0" />
-                                    <span className="font-bold text-lg text-slate-900 dark:text-white">{v.title}</span>
+                        {sec.core_values.map((v: any, i: number) => {
+                            const valueTitle = pickLocalized(locale, v.title, v.title_am);
+                            const valueContent = pickLocalized(locale, v.content || "", v.content_am);
+                            return (
+                                <div key={i} className="flex flex-col gap-2 p-6 rounded-xl bg-gray-50 border border-gray-100 hover:shadow-sm transition-shadow">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-2 h-2 bg-[#ba8200] rounded-full shrink-0" />
+                                        <span className="font-bold text-lg text-slate-900 dark:text-white">{valueTitle}</span>
+                                    </div>
+                                    {valueContent && valueContent !== valueTitle && (
+                                        <p className="text-sm text-gray-600 leading-relaxed pl-5 border-l-2 border-[#ba8200]/20 ml-1">
+                                            {valueContent}
+                                        </p>
+                                    )}
                                 </div>
-                                {v.content && v.content !== v.title && (
-                                    <p className="text-sm text-gray-600 leading-relaxed pl-5 border-l-2 border-[#ba8200]/20 ml-1">
-                                        {v.content}
-                                    </p>
-                                )}
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 ) as any;
             } else if (sec.content) {

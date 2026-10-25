@@ -7,6 +7,8 @@ export interface CreateBackgroundPayload {
     description?: string;
     icon: string;
     content: string;
+    title_am?: string | null;
+    description_am?: string | null;
     attachments?: { attachment_id: string }[];
 }
 
@@ -15,6 +17,8 @@ export interface UpdateBackgroundPayload {
     description?: string;
     icon?: string;
     content?: string;
+    title_am?: string | null;
+    description_am?: string | null;
     attachment_ids?: string[];
 }
 

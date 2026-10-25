@@ -8,7 +8,7 @@ const {
     validateUpdateBackground,
 } = require("../../validators/about/backgroundValidator");
 
-const { authenticateToken } = require("../../middlewares/authMiddleware");
+const { authenticateToken, checkPermission } = require("../../middlewares/authMiddleware");
 
 const {
     createBackground,
@@ -21,11 +21,11 @@ const {
 // ===========================
 // Background CRUD
 // ===========================
-router.post("/", authenticateToken, validateCreateBackground, createBackground);
+router.post("/", authenticateToken, checkPermission("about", "update"), validateCreateBackground, createBackground);
 router.get("/", getAllBackgrounds);
 router.get("/:id", getBackgroundById);
-router.put("/:id", authenticateToken, validateUpdateBackground, updateBackground);
-router.delete("/:id", authenticateToken, deleteBackground);
+router.put("/:id", authenticateToken, checkPermission("about", "update"), validateUpdateBackground, updateBackground);
+router.delete("/:id", authenticateToken, checkPermission("about", "delete"), deleteBackground);
 
 /**
  * @swagger

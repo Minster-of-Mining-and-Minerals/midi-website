@@ -32,6 +32,20 @@ module.exports = (sequelize, DataTypes) => {
             content: {
                 type: DataTypes.TEXT,
             },
+            title_am: {
+                type: DataTypes.STRING(255),
+                allowNull: true,
+            },
+            content_am: {
+                type: DataTypes.TEXT,
+                allowNull: true,
+            },
+            // Position within the core values list (lower shows first)
+            display_order: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 0,
+            },
         },
         {
             sequelize,

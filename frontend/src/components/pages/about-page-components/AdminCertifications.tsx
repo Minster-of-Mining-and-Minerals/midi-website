@@ -6,10 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash2, Save, X } from "lucide-react";
+import { Plus, Trash2, Save, X, ArrowUp, ArrowDown } from "lucide-react";
 import { ImageUploadField, UploadedFileInfo } from "@/components/common/ImageUploadField";
 import { notify } from "@/utils/notification";
 import { ConfirmDialog } from "@/components/common/ConfirmDialog";
+import { ComponentGuard } from "@/components/auth/ComponentGuard";
 import {
     useGetCertificationsQuery,
     useCreateCertificationMutation,
@@ -66,10 +67,10 @@ export default function AdminCertifications() {
                 identifier: "about-certifications",
                 body: { title: headerTitle, description: headerDescription, icon: headerSubtitle },
             }).unwrap();
-            notify.success("Section header updated successfully.");
+            notify.success("Certifications section title saved.");
         } catch (error) {
             console.error(error);
-            notify.error("Failed to update section header.", error);
+            notify.error("Failed to save the certifications section title.", error);
         }
     };
 
@@ -106,6 +107,8 @@ export default function AdminCertifications() {
             const payload = {
                 title: draft.title,
                 description: draft.description || "",
+                title_am: draft.title_am?.trim() || "",
+                description_am: draft.description_am?.trim() || "",
                 order: draft.order || 0,
                 is_active: draft.is_active !== undefined ? draft.is_active : true,
                 attachments: draft.attachments,
@@ -113,15 +116,47 @@ export default function AdminCertifications() {
 
             if (editingId === "new") {
                 await createCertification(payload).unwrap();
-                notify.success("Certification created successfully.");
+                notify.success(`"${draft.title}" saved.`);
             } else if (editingId) {
                 await updateCertification({ certification_id: editingId, ...payload }).unwrap();
-                notify.success("Certification updated successfully.");
+                notify.success(`"${draft.title}" saved.`);
             }
             handleCancel();
         } catch (error) {
             console.error(error);
             notify.error("Failed to save certification.", error);
+        }
+    };
+
+    // Move a certification up/down; positions are renumbered 0..n-1 and only changed rows are saved
+    const [isReordering, setIsReordering] = useState(false);
+    const moveCertification = async (index: number, direction: -1 | 1) => {
+        const target = index + direction;
+        if (target < 0 || target >= certifications.length) return;
+        const reordered = [...certifications];
+        [reordered[index], reordered[target]] = [reordered[target], reordered[index]];
+
+        setIsReordering(true);
+        try {
+            await Promise.all(
+                reordered
+                    .map((cert, position) => ({ cert, position }))
+                    .filter(({ cert, position }) => cert.order !== position)
+                    .map(({ cert, position }) =>
+                        updateCertification({
+                            certification_id: cert.certification_id,
+                            title: cert.title,
+                            description: cert.description || "",
+                            order: position,
+                            is_active: cert.is_active !== undefined ? cert.is_active : true,
+                        }).unwrap()
+                    )
+            );
+            notify.success("Order saved.");
+        } catch (error) {
+            notify.error("Failed to save the new order.", error);
+        } finally {
+            setIsReordering(false);
         }
     };
 
@@ -153,9 +188,11 @@ export default function AdminCertifications() {
                     <p className="text-sm text-muted-foreground">Add, edit, or remove company certifications displayed on the About page.</p>
                 </div>
                 {!editingId && (
-                    <Button onClick={handleCreateNew} className="bg-primary text-white hover:bg-primary/80">
-                        <Plus className="w-4 h-4 mr-2" /> Add Certification
-                    </Button>
+                    <ComponentGuard anyPermissions={["ABOUT:UPDATE"]}>
+                        <Button onClick={handleCreateNew} className="bg-primary text-white hover:bg-primary/80">
+                            <Plus className="w-4 h-4 mr-2" /> Add Certification
+                        </Button>
+                    </ComponentGuard>
                 )}
             </div>
 
@@ -165,19 +202,22 @@ export default function AdminCertifications() {
                     <CardHeader>
                         <div className="flex justify-between items-center">
                             <CardTitle className="text-xl font-bold text-primary">Section Header Content</CardTitle>
-                            <Button 
-                                onClick={handleSaveHeader} 
-                                disabled={isUpdatingHeader}
-                                className="bg-golden-dark hover:bg-golden-darkHover text-white"
-                            >
-                                {isUpdatingHeader ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
-                                Save Header
-                            </Button>
+                            {/* Saves a page_headers row, so it needs the page headers permission */}
+                            <ComponentGuard anyPermissions={["PAGE_HEADERS:UPDATE"]}>
+                                <Button
+                                    onClick={handleSaveHeader}
+                                    disabled={isUpdatingHeader}
+                                    className="bg-golden-dark hover:bg-golden-darkHover text-white"
+                                >
+                                    {isUpdatingHeader ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+                                    Save Header
+                                </Button>
+                            </ComponentGuard>
                         </div>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div className="space-y-2">
-                            <Label>Subtitle (Primary Color Text)</Label>
+                            <Label>Small label above the title (shown in gold)</Label>
                             <Input
                                 value={headerSubtitle}
                                 onChange={(e) => setHeaderSubtitle(e.target.value)}
@@ -185,7 +225,7 @@ export default function AdminCertifications() {
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label>Main Title (Split Style)</Label>
+                            <Label>Main Title <span className="font-normal text-muted-foreground">(first half of the words dark, second half gold)</span></Label>
                             <Input
                                 value={headerTitle}
                                 onChange={(e) => setHeaderTitle(e.target.value)}
@@ -223,7 +263,16 @@ export default function AdminCertifications() {
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Order (Sorting)</Label>
+                                    <Label>Title (Amharic)</Label>
+                                    <Input
+                                        lang="am"
+                                        value={draft.title_am || ""}
+                                        onChange={(e) => setDraft({ ...draft, title_am: e.target.value })}
+                                        placeholder="Leave empty to show the English title on the Amharic page"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label>Position <span className="font-normal text-muted-foreground">(lower numbers show first)</span></Label>
                                     <Input
                                         type="number"
                                         value={draft.order || 0}
@@ -255,28 +304,40 @@ export default function AdminCertifications() {
                                 className="min-h-[100px]"
                             />
                         </div>
+                        <div className="space-y-2">
+                            <Label>Description (Amharic)</Label>
+                            <Textarea
+                                lang="am"
+                                value={draft.description_am || ""}
+                                onChange={(e) => setDraft({ ...draft, description_am: e.target.value })}
+                                placeholder="Leave empty to show the English description on the Amharic page"
+                                className="min-h-[100px]"
+                            />
+                        </div>
                     </CardContent>
                     <CardFooter className="flex justify-end gap-3">
                         <Button variant="outline" onClick={handleCancel} disabled={isSaving}>
                             <X className="w-4 h-4 mr-2" /> Cancel
                         </Button>
-                        <Button
-                            onClick={handleSave}
-                            disabled={isSaving}
-                            className="bg-golden-dark hover:bg-golden-darkHover text-white"
-                        >
-                            {isSaving ? (
-                                <>
-                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                    Saving...
-                                </>
-                            ) : (
-                                <>
-                                    <Save className="w-4 h-4 mr-2" />
-                                    Save
-                                </>
-                            )}
-                        </Button>
+                        <ComponentGuard anyPermissions={["ABOUT:UPDATE"]}>
+                            <Button
+                                onClick={handleSave}
+                                disabled={isSaving}
+                                className="bg-golden-dark hover:bg-golden-darkHover text-white"
+                            >
+                                {isSaving ? (
+                                    <>
+                                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                        Saving...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Save className="w-4 h-4 mr-2" />
+                                        Save
+                                    </>
+                                )}
+                            </Button>
+                        </ComponentGuard>
                     </CardFooter>
                 </Card>
             )}
@@ -289,27 +350,54 @@ export default function AdminCertifications() {
                             No certifications found. Click "Add Certification" to create one.
                         </div>
                     ) : (
-                        certifications.map((cert) => (
+                        certifications.map((cert, index) => (
                             <Card key={cert.certification_id} className="relative group overflow-hidden">
                                 <CardHeader className="pb-3 border-b border-gray-100 flex flex-row justify-between items-start space-y-0">
                                     <div>
                                         <CardTitle className="text-lg font-bold">{cert.title}</CardTitle>
-                                        <CardDescription className="text-xs mt-1">Order: {cert.order}</CardDescription>
+                                        <CardDescription className="text-xs mt-1">Position {index + 1}</CardDescription>
                                     </div>
                                     <div className="flex gap-2">
-                                        <Button variant="outline" size="sm" onClick={() => handleEdit(cert)}>
-                                            Edit
-                                        </Button>
-                                        <Button
-                                            variant="destructive"
-                                            size="icon"
-                                            className="h-8 w-8"
-                                            title="Delete Certification"
-                                            disabled={isDeleting}
-                                            onClick={() => handleDelete(cert)}
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </Button>
+                                        <ComponentGuard anyPermissions={["ABOUT:UPDATE"]}>
+                                            <Button
+                                                variant="outline"
+                                                size="icon"
+                                                className="h-8 w-8"
+                                                aria-label="Move up"
+                                                title="Move up"
+                                                disabled={index === 0 || isReordering}
+                                                onClick={() => moveCertification(index, -1)}
+                                            >
+                                                <ArrowUp className="w-4 h-4" />
+                                            </Button>
+                                            <Button
+                                                variant="outline"
+                                                size="icon"
+                                                className="h-8 w-8"
+                                                aria-label="Move down"
+                                                title="Move down"
+                                                disabled={index === certifications.length - 1 || isReordering}
+                                                onClick={() => moveCertification(index, 1)}
+                                            >
+                                                <ArrowDown className="w-4 h-4" />
+                                            </Button>
+                                            <Button variant="outline" size="sm" onClick={() => handleEdit(cert)}>
+                                                Edit
+                                            </Button>
+                                        </ComponentGuard>
+                                        <ComponentGuard anyPermissions={["ABOUT:DELETE"]}>
+                                            <Button
+                                                variant="destructive"
+                                                size="icon"
+                                                className="h-8 w-8"
+                                                title="Delete Certification"
+                                                aria-label="Delete Certification"
+                                                disabled={isDeleting}
+                                                onClick={() => handleDelete(cert)}
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                            </Button>
+                                        </ComponentGuard>
                                     </div>
                                 </CardHeader>
                                 <CardContent className="pt-4 flex flex-col items-center">
@@ -345,7 +433,7 @@ export default function AdminCertifications() {
                 onConfirm={async () => {
                     try {
                         await deleteCertification(deleteConfirm.id).unwrap();
-                        notify.success("Certification deleted successfully.");
+                        notify.success("Certification deleted.");
                         setDeleteConfirm((prev) => ({ ...prev, open: false }));
                     } catch (error) {
                         console.error(error);

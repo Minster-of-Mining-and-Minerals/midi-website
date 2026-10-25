@@ -11,6 +11,8 @@ export interface Background {
     description?: string;
     icon: string;
     content: string;
+    title_am?: string | null;
+    description_am?: string | null;
     created_at?: string;
     updated_at?: string;
     attachments?: BackgroundAttachment[];

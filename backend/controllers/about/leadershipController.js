@@ -10,7 +10,7 @@ const { v4: uuidv4, validate: isUuid } = require("uuid");
 const createLeadership = async (req, res) => {
     const t = await sequelize.transaction();
     try {
-        const { header, parent_id, name, title, description, level, attachments } = req.body;
+        const { header, parent_id, name, title, description, level, attachments, name_am, title_am, description_am, display_order } = req.body;
 
         if (!name || !title) {
             await t.rollback();
@@ -26,6 +26,10 @@ const createLeadership = async (req, res) => {
                 title,
                 description,
                 level,
+                name_am: name_am || null,
+                title_am: title_am || null,
+                description_am: description_am || null,
+                display_order: display_order ?? 0,
             },
             { transaction: t }
         );
@@ -70,7 +74,11 @@ const getAllLeaderships = async (req, res) => {
                     include: [{ model: Attachment, as: "attachment" }],
                 },
             ],
-            order: [["created_at", "DESC"]],
+            // Siblings by their admin-set position; ties keep the previous newest-first order
+            order: [
+                ["display_order", "ASC"],
+                ["created_at", "DESC"],
+            ],
         });
 
         return res.status(200).json({
@@ -135,7 +143,7 @@ const updateLeadership = async (req, res) => {
     const t = await sequelize.transaction();
     try {
         const { id } = req.params;
-        const { header, parent_id, name, title, description, level, attachments } = req.body;
+        const { header, parent_id, name, title, description, level, attachments, name_am, title_am, description_am, display_order } = req.body;
 
         const leadership = await Leadership.findByPk(id, { transaction: t });
         if (!leadership) {
@@ -143,7 +151,22 @@ const updateLeadership = async (req, res) => {
             return res.status(404).json({ success: false, message: "Leadership not found." });
         }
 
-        await leadership.update({ header, parent_id, name, title, description, level }, { transaction: t });
+        // Amharic fields and order only change when sent ("" clears the text)
+        await leadership.update(
+            {
+                header,
+                parent_id,
+                name,
+                title,
+                description,
+                level,
+                ...(name_am !== undefined && { name_am: name_am || null }),
+                ...(title_am !== undefined && { title_am: title_am || null }),
+                ...(description_am !== undefined && { description_am: description_am || null }),
+                ...(display_order !== undefined && { display_order }),
+            },
+            { transaction: t }
+        );
 
         // Update attachments if provided
         if (Array.isArray(attachments)) {

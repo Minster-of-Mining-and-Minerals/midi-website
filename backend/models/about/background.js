@@ -4,7 +4,10 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
     class Background extends Model {
         static associate(models) {
-            // For core values only
+            Background.hasMany(models.BackgroundAttachment, {
+                foreignKey: "background_id",
+                as: "attachments",
+            });
         }
     }
 
@@ -20,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
             },
             description: {
-                type: DataTypes.STRING,
+                type: DataTypes.TEXT,
                 allowNull: false,
             },
             icon: {
@@ -31,6 +34,14 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.TEXT,
                 allowNull: true,
                 defaultValue: "",
+            },
+            title_am: {
+                type: DataTypes.STRING(255),
+                allowNull: true,
+            },
+            description_am: {
+                type: DataTypes.TEXT,
+                allowNull: true,
             },
         },
         {

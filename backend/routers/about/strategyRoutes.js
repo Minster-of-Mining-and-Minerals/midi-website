@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { authenticateToken } = require("../../middlewares/authMiddleware");
+const { authenticateToken, checkPermission } = require("../../middlewares/authMiddleware");
 
 const {
   validateCreateStrategy,
@@ -19,11 +19,11 @@ const {
 // ===========================
 // Strategy CRUD
 // ===========================
-router.post("/", authenticateToken, validateCreateStrategy, createStrategy);
+router.post("/", authenticateToken, checkPermission("about", "update"), validateCreateStrategy, createStrategy);
 router.get("/", getAllStrategies);
 router.get("/:id", getStrategyById);
-router.put("/:id", authenticateToken, validateUpdateStrategy, updateStrategy);
-router.delete("/:id", authenticateToken, deleteStrategy);
+router.put("/:id", authenticateToken, checkPermission("about", "update"), validateUpdateStrategy, updateStrategy);
+router.delete("/:id", authenticateToken, checkPermission("about", "delete"), deleteStrategy);
 
 /**
  * @swagger

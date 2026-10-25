@@ -14,7 +14,7 @@ const { v4: uuidv4, validate: isUuid } = require("uuid");
 const createBackground = async (req, res) => {
     const t = await sequelize.transaction();
     try {
-        const { title, description, icon } = req.body;
+        const { title, description, icon, title_am, description_am } = req.body;
 
         if (!title) {
             await t.rollback();
@@ -31,6 +31,8 @@ const createBackground = async (req, res) => {
                 description,
                 icon,
                 content: "",
+                title_am: title_am || null,
+                description_am: description_am || null,
             },
             { transaction: t }
         );
@@ -113,7 +115,7 @@ const updateBackground = async (req, res) => {
     const t = await sequelize.transaction();
     try {
         const { id } = req.params;
-        const { title, description, icon } = req.body;
+        const { title, description, icon, title_am, description_am } = req.body;
 
         const background = await Background.findByPk(id, { transaction: t });
         if (!background) {
@@ -121,7 +123,18 @@ const updateBackground = async (req, res) => {
             return res.status(404).json({ success: false, message: "Background not found." });
         }
 
-        await background.update({ title, description, icon, content: "" }, { transaction: t });
+        // Amharic fields only change when sent ("" clears them)
+        await background.update(
+            {
+                title,
+                description,
+                icon,
+                content: "",
+                ...(title_am !== undefined && { title_am: title_am || null }),
+                ...(description_am !== undefined && { description_am: description_am || null }),
+            },
+            { transaction: t }
+        );
 
         await t.commit();
         return res.status(200).json({

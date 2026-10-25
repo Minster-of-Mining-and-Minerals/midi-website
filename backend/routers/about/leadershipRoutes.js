@@ -6,7 +6,7 @@ const {
     validateUpdateLeadership,
 } = require("../../validators/about/leadershipValidator");
 
-const { authenticateToken } = require("../../middlewares/authMiddleware");
+const { authenticateToken, checkPermission } = require("../../middlewares/authMiddleware");
 
 const {
     createLeadership,
@@ -19,11 +19,11 @@ const {
 // ===========================
 // Leadership CRUD
 // ===========================
-router.post("/", authenticateToken, validateCreateLeadership, createLeadership);
+router.post("/", authenticateToken, checkPermission("about", "update"), validateCreateLeadership, createLeadership);
 router.get("/", getAllLeaderships);
 router.get("/:id", getLeadershipById);
-router.put("/:id", authenticateToken, validateUpdateLeadership, updateLeadership);
-router.delete("/:id", authenticateToken, deleteLeadership);
+router.put("/:id", authenticateToken, checkPermission("about", "update"), validateUpdateLeadership, updateLeadership);
+router.delete("/:id", authenticateToken, checkPermission("about", "delete"), deleteLeadership);
 
 /**
  * @swagger

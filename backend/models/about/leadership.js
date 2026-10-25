@@ -59,6 +59,24 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.BOOLEAN,
                 defaultValue: true,
             },
+            name_am: {
+                type: DataTypes.STRING(255),
+                allowNull: true,
+            },
+            title_am: {
+                type: DataTypes.STRING(255),
+                allowNull: true,
+            },
+            description_am: {
+                type: DataTypes.TEXT,
+                allowNull: true,
+            },
+            // Position among leaders with the same parent (lower shows first)
+            display_order: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 0,
+            },
         },
         {
             sequelize,

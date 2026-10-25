@@ -18,7 +18,7 @@ const normalizeAttachments = (attachments = []) =>
 const createCertification = async (req, res) => {
     const t = await sequelize.transaction();
     try {
-        const { title, description, order, is_active, attachments } = req.body;
+        const { title, description, order, is_active, attachments, title_am, description_am } = req.body;
 
         if (!title) {
             await t.rollback();
@@ -31,6 +31,8 @@ const createCertification = async (req, res) => {
                 title,
                 description,
                 order: order || 0,
+                title_am: title_am || null,
+                description_am: description_am || null,
                 is_active: is_active !== undefined ? is_active : true,
             },
             { transaction: t }
@@ -144,7 +146,7 @@ const updateCertification = async (req, res) => {
     const t = await sequelize.transaction();
     try {
         const { id } = req.params;
-        const { title, description, order, is_active, attachments } = req.body;
+        const { title, description, order, is_active, attachments, title_am, description_am } = req.body;
 
         const certification = await Certification.findByPk(id, { transaction: t });
         if (!certification) {
@@ -152,7 +154,18 @@ const updateCertification = async (req, res) => {
             return res.status(404).json({ success: false, message: "Certification not found." });
         }
 
-        await certification.update({ title, description, order, is_active }, { transaction: t });
+        // Amharic fields only change when sent ("" clears them)
+        await certification.update(
+            {
+                title,
+                description,
+                order,
+                is_active,
+                ...(title_am !== undefined && { title_am: title_am || null }),
+                ...(description_am !== undefined && { description_am: description_am || null }),
+            },
+            { transaction: t }
+        );
 
         // Update attachments if provided
         if (Array.isArray(attachments)) {

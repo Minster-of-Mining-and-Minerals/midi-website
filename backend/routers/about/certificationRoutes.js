@@ -9,7 +9,7 @@ const {
     deleteCertification,
 } = require("../../controllers/about/certificationController");
 
-const { authenticateToken } = require("../../middlewares/authMiddleware");
+const { authenticateToken, checkPermission } = require("../../middlewares/authMiddleware");
 
 // Public Routes
 router.get("/", getAllCertifications);
@@ -17,8 +17,8 @@ router.get("/:id", getCertificationById);
 
 // Protected Routes
 router.use(authenticateToken);
-router.post("/", createCertification);
-router.put("/:id", updateCertification);
-router.delete("/:id", deleteCertification);
+router.post("/", checkPermission("about", "update"), createCertification);
+router.put("/:id", checkPermission("about", "update"), updateCertification);
+router.delete("/:id", checkPermission("about", "delete"), deleteCertification);
 
 module.exports = router;

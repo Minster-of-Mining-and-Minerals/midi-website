@@ -3,13 +3,20 @@ import React from "react";
 import * as Icons from "lucide-react";
 import { useGetBackgroundsQuery } from "@/redux/api/backgroundApi";
 import SplitTitle from "@/components/common/SplitTitle";
+import { useLocale } from "next-intl";
+import { ABOUT_BACKGROUND_DEFAULTS, pickLocalized } from "./aboutDefaults";
 
 const BackgroundPage = () => {
     const { data: backgrounds = [] } = useGetBackgroundsQuery();
+    const locale = useLocale();
 
-    const title = backgrounds[0]?.title || "Mineral Industry Development Institute (MIDI)";
-    const description = backgrounds[0]?.description || "Established under Proclamation No. 1263/2014 and governed by Regulation No. 508/2022 under the Ministry of Mines, the Mineral Industry Development Institute (MIDI) is mandated to support the national mineral industry in applied research & development, technical consultancy, modern laboratory testing, and specialized human capital development to foster production, import substitution, and sustainable economic transformation.";
-    const iconName = backgrounds[0]?.icon || "Building2";
+    const title = pickLocalized(locale, backgrounds[0]?.title || ABOUT_BACKGROUND_DEFAULTS.title, backgrounds[0]?.title_am);
+    const description = pickLocalized(
+        locale,
+        backgrounds[0]?.description || ABOUT_BACKGROUND_DEFAULTS.description,
+        backgrounds[0]?.description_am
+    );
+    const iconName = backgrounds[0]?.icon || ABOUT_BACKGROUND_DEFAULTS.icon;
     const IconComponent = (Icons as any)[iconName] || Icons.Building2;
 
     return (

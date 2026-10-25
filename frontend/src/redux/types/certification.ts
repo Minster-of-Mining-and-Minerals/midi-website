@@ -14,6 +14,8 @@ export interface Certification {
     description: string;
     order: number;
     is_active: boolean;
+    title_am?: string | null;
+    description_am?: string | null;
     created_at: string;
     updated_at: string;
     deleted_at: string | null;
@@ -25,6 +27,8 @@ export interface CreateCertificationPayload {
     description: string;
     order?: number;
     is_active?: boolean;
+    title_am?: string | null;
+    description_am?: string | null;
     attachments?: { attachment_id: string }[];
 }
 
