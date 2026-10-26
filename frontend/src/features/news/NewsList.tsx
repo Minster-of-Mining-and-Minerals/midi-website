@@ -6,6 +6,7 @@ import { Eye, Plus, Download, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
+import { Link } from "@/i18n/navigation";
 
 import { DataTable } from "@/features/template/component/DataTable";
 import { TableLayout } from "@/features/template/component/TableLayout";
@@ -45,7 +46,7 @@ export default function NewsList() {
     const [isDeleting, setIsDeleting] = useState(false);
 
     /* View mode */
-    const [viewMode, setViewMode] = useState<"table" | "card">("table");
+    const [viewMode, setViewMode] = useState<"table" | "card">("card");
 
     /* Pagination */
     const [pageIndex, setPageIndex] = useState(0);
@@ -155,12 +156,11 @@ export default function NewsList() {
                 return (
                     <div className="flex items-center gap-1">
                         <ComponentGuard anyPermissions={["NEWS:UPDATE"]}>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => router.push(`/admin/news/${newsId}`)}
-                            >
-                                <Eye className="h-4 w-4" />
+                            {/* A real link: pointer cursor, works with Ctrl/middle-click to open in a new tab */}
+                            <Button variant="ghost" size="icon" asChild>
+                                <Link href={`/admin/news/${newsId}`} title="View / edit news" aria-label="View / edit news">
+                                    <Eye className="h-4 w-4" />
+                                </Link>
                             </Button>
                         </ComponentGuard>
 

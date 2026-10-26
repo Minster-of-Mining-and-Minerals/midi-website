@@ -66,6 +66,21 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // The "/businesses" section was renamed; keep old bookmarks and shared links working
+  async redirects() {
+    return [
+      {
+        source: "/:locale(en|am)/businesses/:path*",
+        destination: "/:locale/mineral-industry-development/:path*",
+        permanent: true,
+      },
+      {
+        source: "/businesses/:path*",
+        destination: "/mineral-industry-development/:path*",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

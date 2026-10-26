@@ -34,7 +34,7 @@ const NewsDocuments: React.FC<NewsDocumentsProps> = ({ attachments }) => {
                     >
                         <div className="p-2 bg-white rounded-lg">
                             {doc.attachment.file_name.endsWith('.pdf') ? (
-                                <FileText className="w-5 h-5 text-red-500" />
+                                <FileText className="w-5 h-5 text-primary" />
                             ) : (
                                 <File className="w-5 h-5 text-primary" />
                             )}

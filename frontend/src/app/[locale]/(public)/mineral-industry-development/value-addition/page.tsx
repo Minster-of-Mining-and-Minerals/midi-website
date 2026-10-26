@@ -192,11 +192,11 @@ export default function ValueAdditionPage() {
                 type="button"
                 onClick={() => setActiveStoryStage(idx)}
                 aria-pressed={active}
-                className={`rounded-xl p-4 text-start flex flex-col gap-1 transition-colors ${
-                  active ? "bg-slate-950 text-white" : "bg-white border border-slate-200 text-slate-900 hover:border-primary/50"
+                className={`rounded-xl p-4 text-start flex flex-col gap-1 transition-colors bg-white border text-slate-900 ${
+                  active ? "border-primary ring-1 ring-primary" : "border-slate-200 hover:border-primary/50"
                 }`}
               >
-                <span className={`text-xs font-semibold ${active ? "text-amber-400" : "text-primary"}`}>
+                <span className="text-xs font-semibold text-primary">
                   {step.step} · {step.subtitle}
                 </span>
                 <span className="text-sm md:text-[15px] font-semibold leading-snug">{step.title}</span>
@@ -226,10 +226,10 @@ export default function ValueAdditionPage() {
                 onClick={() => setActiveSectorId(item.id)}
                 aria-pressed={active}
                 className={`flex items-center gap-3 rounded-lg px-3 py-3 text-start text-sm font-semibold transition-colors ${
-                  active ? "bg-slate-950 text-white" : "text-slate-800 hover:bg-slate-50"
+                  active ? "bg-primary/10 text-slate-900" : "text-slate-800 hover:bg-slate-50"
                 }`}
               >
-                <Icon className={`w-4 h-4 shrink-0 ${active ? "text-amber-400" : "text-primary"}`} />
+                <Icon className="w-4 h-4 shrink-0 text-primary" />
                 <span className="leading-snug">{item.name}</span>
               </button>
             );
@@ -258,7 +258,7 @@ export default function ValueAdditionPage() {
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs font-semibold uppercase tracking-wider text-primary">{sector.tag}</span>
               {sector.badge && (
-                <span className="rounded-full bg-amber-50 px-2.5 py-0.5 text-[11px] font-semibold text-amber-800">{sector.badge}</span>
+                <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-semibold text-slate-700">{sector.badge}</span>
               )}
             </div>
             <h3 className="font-display text-xl md:text-2xl font-bold text-slate-900 leading-snug">{sector.heading}</h3>
@@ -281,16 +281,16 @@ export default function ValueAdditionPage() {
           </div>
 
           {sector.metrics && (
-            <div className="bg-slate-950 text-white p-5 md:p-6 md:w-72 flex flex-col gap-3">
-              <span className="text-xs font-semibold uppercase tracking-wider text-amber-400">{sector.focusTitle}</span>
+            <div className="bg-slate-50 border-t md:border-t-0 md:border-s border-slate-200 text-slate-900 p-5 md:p-6 md:w-72 flex flex-col gap-3">
+              <span className="text-xs font-semibold uppercase tracking-wider text-primary">{sector.focusTitle}</span>
               {sector.metrics.map((metric, idx) => (
-                <div key={idx} className="rounded-lg border border-slate-800 bg-slate-900 p-3 flex flex-col gap-1">
-                  <span className="text-xs text-slate-400">{metric.label}</span>
-                  <span className="font-mono text-lg font-bold">{metric.value}</span>
-                  <span className="text-[11px] text-slate-400">{metric.note}</span>
+                <div key={idx} className="rounded-lg border border-slate-200 bg-white p-3 flex flex-col gap-1">
+                  <span className="text-xs text-slate-500">{metric.label}</span>
+                  <span className="font-mono text-lg font-bold text-slate-900">{metric.value}</span>
+                  <span className="text-[11px] text-slate-500">{metric.note}</span>
                 </div>
               ))}
-              <p className="mt-auto text-xs text-slate-400">{sector.focusNote}</p>
+              <p className="mt-auto text-xs text-slate-500">{sector.focusNote}</p>
             </div>
           )}
 

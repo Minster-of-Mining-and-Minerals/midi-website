@@ -19,7 +19,7 @@ export const DEFAULT_FOOTER = {
                 { label: "Home", url: "/" },
                 { label: "About MIDI", url: "/about" },
                 { label: "5-Year National Project", url: "/midi-project" },
-                { label: "Mineral Industry Development", url: "/businesses" },
+                { label: "Mineral Industry Development", url: "/mineral-industry-development" },
                 { label: "Laboratories & Services", url: "/services" },
             ],
         },

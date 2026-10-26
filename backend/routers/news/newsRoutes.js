@@ -39,9 +39,10 @@ const { newsInteractionLimiter } = require("../../middlewares/rateLimitMiddlewar
 // ===========================
 // News Reactions & Reads
 // ===========================
-router.post("/react", authenticateToken, checkPermission("news", "create"), newsInteractionLimiter, reactToNews);
-router.post("/read", authenticateToken, checkPermission("news", "create"), newsInteractionLimiter, recordNewsRead);
-router.post("/feedback", authenticateToken, checkPermission("news", "create"), newsInteractionLimiter, recordNewsFeedback);
+// Public visitor actions: one reaction per IP per article, rate limited per IP; feedback waits for admin approval
+router.post("/react", newsInteractionLimiter, reactToNews);
+router.post("/read", newsInteractionLimiter, recordNewsRead);
+router.post("/feedback", newsInteractionLimiter, recordNewsFeedback);
 router.get("/feedback/:news_id", getNewsFeedbacks);
 router.get("/feedback/count/:news_id", getNewsFeedbackCount);
 

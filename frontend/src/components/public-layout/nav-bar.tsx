@@ -57,12 +57,12 @@ export default function PublicNavbar() {
             { name: locale === "am" ? "ስለኛ" : "About", link: "/about" },
             {
                 name: locale === "am" ? "የማዕድን ልማት" : "Mineral Industry Dev",
-                link: "/businesses",
+                link: "/mineral-industry-development",
                 children: [
-                    { name: locale === "am" ? "የልማት አጠቃላይ እይታ" : "Development Overview", link: "/businesses/overview" },
-                    { name: locale === "am" ? "የማዕድን ማቀነባበሪያ እና ማበልፀጊያ" : "Mineral Processing", link: "/businesses/mineral-processing" },
-                    { name: locale === "am" ? "እሴት መጨመር እና ማኑፋክቸሪንግ" : "Value Addition", link: "/businesses/value-addition" },
-                    { name: locale === "am" ? "ተግባራዊ ምርምር እና ቴክኖሎጂ" : "Research & Innovation", link: "/businesses/research-innovation" },
+                    { name: locale === "am" ? "የልማት አጠቃላይ እይታ" : "Development Overview", link: "/mineral-industry-development/overview" },
+                    { name: locale === "am" ? "የማዕድን ማቀነባበሪያ እና ማበልፀጊያ" : "Mineral Processing", link: "/mineral-industry-development/mineral-processing" },
+                    { name: locale === "am" ? "እሴት መጨመር እና ማኑፋክቸሪንግ" : "Value Addition", link: "/mineral-industry-development/value-addition" },
+                    { name: locale === "am" ? "ተግባራዊ ምርምር እና ቴክኖሎጂ" : "Research & Innovation", link: "/mineral-industry-development/research-innovation" },
                 ],
             },
             { name: locale === "am" ? "አገልግሎቶች" : "Services", link: "/services" },
@@ -164,7 +164,7 @@ export default function PublicNavbar() {
                         <div className="h-4 w-20 bg-gray-200 dark:bg-gray-800 animate-pulse rounded"></div>
                     </div>
                 ) : (
-                    <NavItems items={navItems.map(item => (item.link === "/businesses" || item.name === "Businesses" || item.name === "ንግዶች" || item.name === "Mineral Industry Development" || item.name === "የማዕድን ኢንዱስትሪ ልማት" || item.name === "Mineral Industry Dev" || item.name === "የማዕድን ልማት") ? { ...item, children: undefined } : item)} />
+                    <NavItems items={navItems.map(item => (item.link === "/mineral-industry-development" || item.name === "Businesses" || item.name === "ንግዶች" || item.name === "Mineral Industry Development" || item.name === "የማዕድን ኢንዱስትሪ ልማት" || item.name === "Mineral Industry Dev" || item.name === "የማዕድን ልማት") ? { ...item, children: undefined } : item)} />
                 )}
             </NavBody>
 

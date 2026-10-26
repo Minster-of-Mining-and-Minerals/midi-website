@@ -155,6 +155,16 @@
   color: hsl(var(--foreground));
 }
 
+/* Published news articles: dark text by default (the body is gold); colors picked in the
+   rich text editor are inline styles, so they still apply */
+.news-content {
+  color: hsl(var(--foreground));
+}
+.news-content a {
+  color: hsl(var(--primary));
+  text-decoration: underline;
+}
+
 /* Success Toast */
 .sonner-toast[data-type="success"] {
   background: #e6f7ee;

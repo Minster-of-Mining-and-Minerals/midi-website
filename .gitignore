@@ -13,6 +13,10 @@
 # Ignore uploads
 /backend/uploads/
 /backend/public/uploads/
+# Uploaded publication PDFs (kept on the server, backed up by deploy.sh)
+/backend/storage/
+# Pre-deploy backups written by deploy.sh
+/backups/
 /backend/tmp/
 # Logs
 logs/

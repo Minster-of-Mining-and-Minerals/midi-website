@@ -12,15 +12,15 @@ import { useLocale } from "next-intl";
 
 // Page headlines shown in the title band; pages without one show their tab label
 const pageHeadlines: Record<string, { en: string; am: string }> = {
-  "/businesses/mineral-processing": {
+  "/mineral-industry-development/mineral-processing": {
     en: "Upgrading Raw Ore Grades via Precision Beneficiation",
     am: "የጥሬ ማዕድን ይዘትን በማሳደግ የኢንዱስትሪ ጥሬ ዕቃ ዝግጅት",
   },
-  "/businesses/value-addition": {
+  "/mineral-industry-development/value-addition": {
     en: "The Connected Industrial Transformation Continuum",
     am: "ከተፈጥሮ ክምችት እስከ ገበያ ዝግጁ ምርት ድረስ ያለው ሂደት",
   },
-  "/businesses/research-innovation": {
+  "/mineral-industry-development/research-innovation": {
     en: "Bridging Fundamental Science and Industrial Scalability",
     am: "የማዕድን ምርምርን ከተግባራዊ የኢንዱስትሪ መፍትሄዎች ጋር ማስተሳሰር",
   },
@@ -46,11 +46,11 @@ export default function Layout({
   // Tabs come from the CMS routes (Businesses and its children), with built-in fallbacks
   const dynamicItems = useMemo(() => {
     const defaultItems = [
-      { label: sectionTitle, slug: "/businesses" },
-      { label: isAm ? "የልማት አጠቃላይ እይታ" : "Development Overview", slug: "/businesses/overview" },
-      { label: isAm ? "የማዕድን ማቀነባበሪያ እና ማበልፀጊያ" : "Mineral Processing & Beneficiation", slug: "/businesses/mineral-processing" },
-      { label: isAm ? "እሴት መጨመር እና ማኑፋክቸሪንግ" : "Manufacturing & Value Addition", slug: "/businesses/value-addition" },
-      { label: isAm ? "ተግባራዊ ምርምር እና ቴክኖሎጂ" : "Applied Research & Innovation", slug: "/businesses/research-innovation" },
+      { label: sectionTitle, slug: "/mineral-industry-development" },
+      { label: isAm ? "የልማት አጠቃላይ እይታ" : "Development Overview", slug: "/mineral-industry-development/overview" },
+      { label: isAm ? "የማዕድን ማቀነባበሪያ እና ማበልፀጊያ" : "Mineral Processing & Beneficiation", slug: "/mineral-industry-development/mineral-processing" },
+      { label: isAm ? "እሴት መጨመር እና ማኑፋክቸሪንግ" : "Manufacturing & Value Addition", slug: "/mineral-industry-development/value-addition" },
+      { label: isAm ? "ተግባራዊ ምርምር እና ቴክኖሎጂ" : "Applied Research & Innovation", slug: "/mineral-industry-development/research-innovation" },
     ];
 
     if (!routes || routes.length === 0) return defaultItems;
@@ -64,13 +64,13 @@ export default function Layout({
       return translations[0]?.label || "";
     };
 
-    const businessesRoute = routes.find((r: any) => r.path === "/businesses");
+    const businessesRoute = routes.find((r: any) => r.path === "/mineral-industry-development");
     if (!businessesRoute) return defaultItems;
 
     const items = [
       {
         label: getLabel(businessesRoute.translations) || sectionTitle,
-        slug: businessesRoute.path || "/businesses",
+        slug: businessesRoute.path || "/mineral-industry-development",
       },
     ];
 
@@ -86,13 +86,13 @@ export default function Layout({
     return items;
   }, [routes, locale, isAm, sectionTitle]);
 
-  // remove locale prefix: /en/businesses -> /businesses
+  // remove locale prefix: /en/mineral-industry-development -> /mineral-industry-development
   const normalizedPathname = pathname.replace(/^\/(en|am)(?=\/|$)/, "") || "/";
 
   const activeItem = dynamicItems.find((item) => item.slug === normalizedPathname);
   const headline = pageHeadlines[normalizedPathname]?.[isAm ? "am" : "en"];
   const title = headline ?? activeItem?.label ?? sectionTitle;
-  const isLanding = normalizedPathname === "/businesses";
+  const isLanding = normalizedPathname === "/mineral-industry-development";
 
   return (
     <>
@@ -122,7 +122,7 @@ export default function Layout({
               <span className="text-golden-dark">{sectionTitle}</span>
             ) : (
               <>
-                <Link href="/businesses" className="hover:text-primary transition-colors">
+                <Link href="/mineral-industry-development" className="hover:text-primary transition-colors">
                   {sectionTitle}
                 </Link>
                 <span aria-hidden="true">/</span>

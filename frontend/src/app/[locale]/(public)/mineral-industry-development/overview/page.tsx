@@ -138,14 +138,12 @@ const OverviewPage = () => {
             {keyMetrics.map((metric: any, index: number) => (
               <div key={index} className="bg-white border border-slate-200 rounded-xl p-4 flex flex-col gap-1">
                 <div className="flex items-center justify-between">
-                  <span
-                    className="p-1.5 rounded-md text-white"
-                    style={{ backgroundColor: metric.color || "#ba8200" }}
-                  >
+                  {/* One accent for every metric: the admin-picked colors made the row too colorful */}
+                  <span className="p-1.5 rounded-md bg-primary/10 text-primary">
                     <IconRenderer name={metric.icon || "Layers"} className="w-4 h-4" />
                   </span>
                   {metric.change && (
-                    <span className="text-[11px] font-semibold text-amber-700 bg-amber-50 rounded-full px-2 py-0.5">
+                    <span className="text-[11px] font-semibold text-slate-700 bg-slate-100 rounded-full px-2 py-0.5">
                       {metric.change}
                     </span>
                   )}
@@ -175,8 +173,8 @@ const OverviewPage = () => {
                   </div>
                   <p className="text-sm text-slate-600">{item.focus}</p>
                   {item.status && (
-                    <span className="justify-self-start sm:justify-self-end inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
-                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-600" />
+                    <span className="justify-self-start sm:justify-self-end inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-semibold text-slate-700">
+                      <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                       {item.status}
                     </span>
                   )}
@@ -230,7 +228,7 @@ const OverviewPage = () => {
                       </span>
                       <span className="flex-1 min-w-0 text-sm font-semibold text-slate-900">{item.title}</span>
                       {activeSideTab === "sectors" && item.growth && (
-                        <span className="shrink-0 rounded-full bg-amber-50 px-2.5 py-0.5 text-[11px] font-semibold text-amber-800">
+                        <span className="shrink-0 rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-semibold text-slate-700">
                           {item.growth}
                         </span>
                       )}
@@ -270,8 +268,8 @@ const OverviewPage = () => {
           </div>
         )}
 
-        <div className="bg-slate-950 text-white rounded-2xl p-5 flex flex-wrap items-center justify-between gap-4">
-          <span className="text-base font-semibold">{isAm ? "የቴክኒክ አገልግሎቶች" : "Technical Services"}</span>
+        <div className="bg-white border border-slate-200 rounded-2xl p-5 flex flex-wrap items-center justify-between gap-4">
+          <span className="text-base font-semibold text-slate-900">{isAm ? "የቴክኒክ አገልግሎቶች" : "Technical Services"}</span>
           <div className="flex gap-2">
             <Link
               href="/services"
@@ -281,7 +279,7 @@ const OverviewPage = () => {
             </Link>
             <Link
               href="/publications"
-              className="inline-flex items-center h-10 px-4 rounded-lg border border-white/30 text-white text-sm font-semibold hover:bg-white/10 transition-colors"
+              className="inline-flex items-center h-10 px-4 rounded-lg border border-slate-300 text-slate-800 text-sm font-semibold hover:bg-slate-100 transition-colors"
             >
               {isAm ? "የህትመቶች ማህደር" : "Publications"}
             </Link>

@@ -381,6 +381,12 @@ const reactToNews = async (req, res) => {
             return res.status(400).json({ success: false, message: "Invalid reaction type." });
         }
 
+        // Public endpoint: only published articles can be reacted to
+        if (!isUuid(news_id) || !(await News.findOne({ where: { news_id, status: "published" }, transaction }))) {
+            await transaction.rollback();
+            return res.status(404).json({ success: false, message: "News not found." });
+        }
+
         const existingReaction = await NewsReaction.findOne({
             where: { news_id, ip_address },
             transaction,
@@ -470,8 +476,14 @@ const reactToNews = async (req, res) => {
 // ===========================
 const recordNewsRead = async (req, res) => {
     try {
-        const { news_id, read_time } = req.body; // read_time in seconds
+        const { news_id } = req.body;
         const ip_address = req.ip;
+        // read_time in seconds; public endpoint, so keep it to a sane per-call value
+        const read_time = Math.min(Math.max(parseInt(req.body.read_time, 10) || 0, 0), 3600);
+
+        if (!isUuid(news_id) || !(await News.findOne({ where: { news_id, status: "published" } }))) {
+            return res.status(404).json({ success: false, message: "News not found." });
+        }
 
         const [newsRead, created] = await NewsRead.findOrCreate({
             where: { news_id, ip_address },
@@ -515,6 +527,12 @@ const recordNewsFeedback = async (req, res) => {
             return res.status(400).json({
                 success: false,
                 message: "News ID, full name, and feedback are required.",
+            });
+        }
+        if (!isUuid(news_id) || fullname.trim().length > 100 || thought.trim().length > 2000) {
+            return res.status(400).json({
+                success: false,
+                message: "Name must be at most 100 characters and feedback at most 2000 characters.",
             });
         }
 

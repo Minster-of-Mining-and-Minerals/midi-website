@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocale } from "next-intl";
 import { AlertCircle, Download, ExternalLink, FileText, Maximize2, Minimize2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,10 @@ interface EmbeddedPdfReaderProps {
 export default function EmbeddedPdfReader({ publication }: EmbeddedPdfReaderProps) {
     const locale = useLocale();
     const tr = (en: string, am: string) => (locale === "am" ? am : en);
-    const [isFullscreen, setIsFullscreen] = useState(false);
+    const readerRef = useRef<HTMLDivElement>(null);
+    // "native" = browser fullscreen (above everything); "overlay" = fixed layer where that isn't supported (iPhone)
+    const [fullscreenMode, setFullscreenMode] = useState<"native" | "overlay" | null>(null);
+    const isFullscreen = fullscreenMode !== null;
     const [hasError, setHasError] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const { title } = localized(publication, locale);
@@ -25,10 +28,21 @@ export default function EmbeddedPdfReader({ publication }: EmbeddedPdfReaderProp
     const isReadable = publication.access_mode === "open_access" || publication.access_mode === "online_only";
     const streamUrl = `${apiBaseUrl()}/publications/${publication.publication_id}/view`;
 
-    // Close fullscreen with Escape and lock page scroll while open
+    // Native fullscreen: follow the browser (Esc, or the browser's own exit, ends it)
     useEffect(() => {
-        if (!isFullscreen) return;
-        const onKey = (e: KeyboardEvent) => e.key === "Escape" && setIsFullscreen(false);
+        const onChange = () => {
+            if (!document.fullscreenElement) {
+                setFullscreenMode((mode) => (mode === "native" ? null : mode));
+            }
+        };
+        document.addEventListener("fullscreenchange", onChange);
+        return () => document.removeEventListener("fullscreenchange", onChange);
+    }, []);
+
+    // Overlay fallback: close with Escape and lock page scroll while open
+    useEffect(() => {
+        if (fullscreenMode !== "overlay") return;
+        const onKey = (e: KeyboardEvent) => e.key === "Escape" && setFullscreenMode(null);
         document.addEventListener("keydown", onKey);
         const overflow = document.body.style.overflow;
         document.body.style.overflow = "hidden";
@@ -36,7 +50,29 @@ export default function EmbeddedPdfReader({ publication }: EmbeddedPdfReaderProp
             document.removeEventListener("keydown", onKey);
             document.body.style.overflow = overflow;
         };
-    }, [isFullscreen]);
+    }, [fullscreenMode]);
+
+    const toggleFullscreen = async () => {
+        if (fullscreenMode === "native") {
+            await document.exitFullscreen().catch(() => setFullscreenMode(null));
+            return;
+        }
+        if (fullscreenMode === "overlay") {
+            setFullscreenMode(null);
+            return;
+        }
+        const el = readerRef.current;
+        if (el?.requestFullscreen && document.fullscreenEnabled) {
+            try {
+                await el.requestFullscreen();
+                setFullscreenMode("native");
+                return;
+            } catch {
+                // Blocked by the browser: use the overlay instead
+            }
+        }
+        setFullscreenMode("overlay");
+    };
 
     if (!hasPdfFile || !isReadable) {
         return (
@@ -59,10 +95,14 @@ export default function EmbeddedPdfReader({ publication }: EmbeddedPdfReaderProp
 
     return (
         <div
+            ref={readerRef}
             className={
-                isFullscreen
-                    ? "fixed inset-0 z-[100] flex flex-col bg-slate-950"
-                    : "overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
+                fullscreenMode === "native"
+                    ? "flex h-full w-full flex-col bg-slate-950"
+                    : fullscreenMode === "overlay"
+                      ? // Above the sticky navbar (z-[1000])
+                        "fixed inset-0 z-[1100] flex flex-col bg-slate-950"
+                      : "overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"
             }
         >
             {/* Reader toolbar */}
@@ -98,7 +138,7 @@ export default function EmbeddedPdfReader({ publication }: EmbeddedPdfReaderProp
                     <Button
                         size="sm"
                         variant="ghost"
-                        onClick={() => setIsFullscreen((v) => !v)}
+                        onClick={toggleFullscreen}
                         className="h-8 gap-1 text-xs text-white hover:bg-white/10 hover:text-white"
                         aria-label={isFullscreen ? tr("Exit full screen", "ከሙሉ ማያ ውጣ") : tr("Full screen", "ሙሉ ማያ")}
                     >
@@ -136,7 +176,8 @@ export default function EmbeddedPdfReader({ publication }: EmbeddedPdfReaderProp
                     </div>
                 ) : (
                     <iframe
-                        src={`${streamUrl}#toolbar=1&navpanes=1`}
+                        // Open without the thumbnails sidebar (navpanes: Chrome/Edge, pagemode: Firefox)
+                        src={`${streamUrl}#toolbar=1&navpanes=0&pagemode=none`}
                         className="h-full w-full border-none"
                         title={title}
                         onLoad={() => setIsLoading(false)}

@@ -310,33 +310,33 @@ module.exports = {
     }
 
     // 3. Update routes and route_translations
-    // Update /businesses route label
+    // Update /mineral-industry-development route label
     await queryInterface.sequelize.query(`
       UPDATE route_translations
       SET label = 'Mineral Industry Development', updated_at = NOW()
-      WHERE route_id IN (SELECT route_id FROM routes WHERE path = '/businesses')
+      WHERE route_id IN (SELECT route_id FROM routes WHERE path = '/mineral-industry-development')
         AND language_code = 'en';
     `);
 
     await queryInterface.sequelize.query(`
       UPDATE route_translations
       SET label = 'የማዕድን ኢንዱስትሪ ልማት', updated_at = NOW()
-      WHERE route_id IN (SELECT route_id FROM routes WHERE path = '/businesses')
+      WHERE route_id IN (SELECT route_id FROM routes WHERE path = '/mineral-industry-development')
         AND language_code = 'am';
     `);
 
-    // Update /businesses/overview route label
+    // Update /mineral-industry-development/overview route label
     await queryInterface.sequelize.query(`
       UPDATE route_translations
       SET label = 'Sector Overview', updated_at = NOW()
-      WHERE route_id IN (SELECT route_id FROM routes WHERE path = '/businesses/overview')
+      WHERE route_id IN (SELECT route_id FROM routes WHERE path = '/mineral-industry-development/overview')
         AND language_code = 'en';
     `);
 
     await queryInterface.sequelize.query(`
       UPDATE route_translations
       SET label = 'የዘርፉ አጠቃላይ እይታ', updated_at = NOW()
-      WHERE route_id IN (SELECT route_id FROM routes WHERE path = '/businesses/overview')
+      WHERE route_id IN (SELECT route_id FROM routes WHERE path = '/mineral-industry-development/overview')
         AND language_code = 'am';
     `);
 

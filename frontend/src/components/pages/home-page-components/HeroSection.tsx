@@ -48,7 +48,7 @@ const defaultMidiSlides: Slide[] = [
             am: "የኢትዮጵያን የማዕድን ኢንዱስትሪ ለማሳደግ፣ ምርትና ምርታማነትን ለማሻሻል እና የውጭ ምርትን ለመተካት የላቀ የምርምር እና የሰው ኃይል ልማት መሪ።",
         },
         button_name: { en: "Explore Sectors", am: "ዘርፎችን ይመልከቱ" },
-        button_url: "/businesses",
+        button_url: "/mineral-industry-development",
         button2_name: { en: "About MIDI", am: "ስለ ኢንስቲትዩቱ" },
         button2_url: "/about",
         // Compressed copies (public/hero/*.webp, ~0.5 MB) of the 4–7 MB originals
@@ -124,7 +124,7 @@ export default function HeroSection() {
                 title: same(s.title),
                 description: same(s.description || ""),
                 button_name: same(s.button_name || t("hero.button")),
-                button_url: s.button_url || "/businesses",
+                button_url: s.button_url || "/mineral-industry-development",
                 button2_name: same(s.button2_name || t("hero.button2")),
                 button2_url: s.button2_url || "/services",
                 // "large" is the backend's resized WebP (falls back to the original if it has none)

@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { BookOpen, Check, Download, Quote, Share2 } from "lucide-react";
 import { Publication } from "@/redux/types/publication";
+import ShareMenu from "@/components/common/ShareMenu";
+import { copyText } from "@/utils/clipboard";
+import { notify } from "@/utils/notification";
 import { canDownload, downloadUrl, publicationYear } from "./publicationMeta";
 
 interface PublicationActionsProps {
@@ -13,12 +16,7 @@ interface PublicationActionsProps {
 
 export default function PublicationActions({ publication, title, locale }: PublicationActionsProps) {
     const tr = (en: string, am: string) => (locale === "am" ? am : en);
-    const [copied, setCopied] = useState<"cite" | "share" | null>(null);
-
-    const flash = (kind: "cite" | "share") => {
-        setCopied(kind);
-        setTimeout(() => setCopied(null), 2000);
-    };
+    const [citeCopied, setCiteCopied] = useState(false);
 
     const citation = () => {
         const parts = [
@@ -32,26 +30,14 @@ export default function PublicationActions({ publication, title, locale }: Publi
         return parts.filter(Boolean).join(" ");
     };
 
-    const copy = async (text: string, kind: "cite" | "share") => {
-        try {
-            await navigator.clipboard.writeText(text);
-            flash(kind);
-        } catch {
-            // Clipboard unavailable (e.g. insecure context) — nothing else to do
+    // Copies a ready-made reference (authors, year, title, MIDI, reference number, link) for researchers
+    const cite = async () => {
+        if (await copyText(citation())) {
+            setCiteCopied(true);
+            setTimeout(() => setCiteCopied(false), 2000);
+        } else {
+            notify.error(tr("Could not copy the citation", "ጥቅሱን መገልበጥ አልተቻለም"));
         }
-    };
-
-    const share = async () => {
-        const url = window.location.href.split("?")[0];
-        if (navigator.share) {
-            try {
-                await navigator.share({ title, url });
-            } catch {
-                // User dismissed the share sheet
-            }
-            return;
-        }
-        copy(url, "share");
     };
 
     const secondary =
@@ -72,14 +58,21 @@ export default function PublicationActions({ publication, title, locale }: Publi
                     {tr("Download PDF", "PDF አውርድ")}
                 </a>
             )}
-            <button type="button" onClick={() => copy(citation(), "cite")} className={secondary}>
-                {copied === "cite" ? <Check className="h-4 w-4 text-emerald-600" /> : <Quote className="h-4 w-4" />}
-                {copied === "cite" ? tr("Citation copied", "ተገልብጧል") : tr("Cite", "ጥቀስ")}
+            <button
+                type="button"
+                onClick={cite}
+                className={secondary}
+                title={tr("Copy a ready-made reference to this publication", "ለዚህ ህትመት ዝግጁ ጥቅስ ይቅዱ")}
+            >
+                {citeCopied ? <Check className="h-4 w-4 text-primary" /> : <Quote className="h-4 w-4" />}
+                {citeCopied ? tr("Citation copied", "ተገልብጧል") : tr("Cite", "ጥቀስ")}
             </button>
-            <button type="button" onClick={share} className={secondary}>
-                {copied === "share" ? <Check className="h-4 w-4 text-emerald-600" /> : <Share2 className="h-4 w-4" />}
-                {copied === "share" ? tr("Link copied", "ሊንክ ተገልብጧል") : tr("Share", "አጋራ")}
-            </button>
+            <ShareMenu title={title}>
+                <button type="button" className={secondary}>
+                    <Share2 className="h-4 w-4" />
+                    {tr("Share", "አጋራ")}
+                </button>
+            </ShareMenu>
         </div>
     );
 }

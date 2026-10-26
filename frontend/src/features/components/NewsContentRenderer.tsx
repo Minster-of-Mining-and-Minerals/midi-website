@@ -40,7 +40,7 @@ const NewsContentRenderer = ({ content }: Props) => {
 
     return (
         <div
-            className="prose prose-slate max-w-none break-words dark:prose-invert"
+            className="news-content prose prose-slate max-w-none break-words dark:prose-invert"
             dangerouslySetInnerHTML={{ __html: htmlContent }}
         />
     );

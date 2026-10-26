@@ -186,11 +186,11 @@ export default function ResearchInnovationPage() {
                 type="button"
                 onClick={() => setActivePipelineStage(idx)}
                 aria-pressed={active}
-                className={`rounded-lg px-3.5 py-3 text-start flex flex-col gap-1 transition-colors ${
-                  active ? "bg-slate-950 text-white" : "bg-white border border-slate-200 text-slate-900 hover:border-primary/50"
+                className={`rounded-lg px-3.5 py-3 text-start flex flex-col gap-1 transition-colors bg-white border text-slate-900 ${
+                  active ? "border-primary ring-1 ring-primary" : "border-slate-200 hover:border-primary/50"
                 }`}
               >
-                <span className={`font-mono text-[11px] ${active ? "text-amber-400" : "text-primary"}`}>
+                <span className="font-mono text-[11px] text-primary">
                   {isAm ? "ደረጃ" : "STAGE"} {stage.stepNumber}
                 </span>
                 <span className="text-sm font-semibold leading-snug">{stage.shortTitle}</span>
@@ -244,12 +244,12 @@ export default function ResearchInnovationPage() {
                 onClick={() => setActiveThemeId(theme.id)}
                 aria-expanded={active}
                 className={`rounded-xl px-4 py-3 text-start flex items-start gap-3 transition-colors ${
-                  active ? "bg-amber-50 ring-1 ring-primary/30" : "border border-slate-100 hover:bg-slate-50"
+                  active ? "bg-white ring-1 ring-primary" : "border border-slate-100 hover:bg-slate-50"
                 }`}
               >
                 <Icon className={`mt-0.5 w-4 h-4 shrink-0 ${active ? "text-primary" : "text-slate-400"}`} />
                 <span className="flex flex-col gap-0.5 min-w-0">
-                  <span className={`text-[11px] font-semibold tracking-wider ${active ? "text-amber-800" : "text-slate-500"}`}>
+                  <span className={`text-[11px] font-semibold tracking-wider ${active ? "text-primary" : "text-slate-500"}`}>
                     {theme.badge}
                   </span>
                   <span className="text-sm font-semibold text-slate-900">{theme.title}</span>
@@ -279,7 +279,7 @@ export default function ResearchInnovationPage() {
               <p className="mt-1 text-xs text-slate-700 leading-relaxed line-clamp-4">{currentTheme.approach}</p>
             </div>
           </div>
-          <p className="text-sm font-semibold text-amber-800">
+          <p className="text-sm font-semibold text-slate-900">
             <span className="text-slate-500 font-normal">{isAm ? "የታለመው ተጨባጭ ውጤት" : "Targeted impact"}: </span>
             {currentTheme.impact}
           </p>
@@ -288,10 +288,10 @@ export default function ResearchInnovationPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <Link
             href="/publications"
-            className="group rounded-2xl bg-slate-950 text-white p-4 flex items-center justify-between gap-3 hover:bg-slate-900 transition-colors"
+            className="group rounded-2xl bg-white border border-slate-200 text-slate-900 p-4 flex items-center justify-between gap-3 hover:border-primary/50 transition-colors"
           >
             <span className="flex items-center gap-2 text-sm font-semibold">
-              <BookOpen className="w-4 h-4 text-amber-400" />
+              <BookOpen className="w-4 h-4 text-primary" />
               {isAm ? "ወደ ህትመቶች ማህደር ይሂዱ" : "Explore Publications"}
             </span>
             <ChevronRight className="w-4 h-4 shrink-0 transition-transform group-hover:translate-x-0.5 rtl:rotate-180" />

@@ -51,7 +51,7 @@ const ConnectingLine = ({
       y1={yCenterTemplate as any}
       x2={`${node.position_x}%`}
       y2={yNodeTemplate as any}
-      className={isHovered ? "stroke-primary" : "stroke-white/20"}
+      className={isHovered ? "stroke-primary" : "stroke-slate-300"}
       strokeWidth={isHovered ? 2 : 1.5}
       strokeDasharray={isHovered ? "none" : "4 4"}
       initial={{ pathLength: 0, opacity: 0 }}
@@ -151,7 +151,7 @@ export default function OurBusinesses() {
             >
               {titlePart1}
               <br />
-              <span className="text-secondary">{titlePart2}</span>
+              <span className="text-primary">{titlePart2}</span>
             </motion.h2>
 
             <motion.p
@@ -186,9 +186,8 @@ export default function OurBusinesses() {
 
           {/* Right Side: Mineral Value Chain Visualization (58%) */}
           <div className="w-full xl:w-[58%] relative min-h-[620px] md:min-h-[720px] flex items-center justify-center">
-            {/* Dark premium background panel */}
-            <div className="absolute inset-0 bg-[#0F172A] rounded-3xl overflow-hidden shadow-2xl border border-white/5">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#1E293B]/60 via-transparent to-transparent"></div>
+            {/* Light background panel */}
+            <div className="absolute inset-0 bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-200">
               <div className="absolute top-0 right-0 w-[450px] h-[450px] bg-primary/10 rounded-full blur-[100px] transform translate-x-1/3 -translate-y-1/3 pointer-events-none"></div>
               <div className="absolute bottom-0 left-0 w-[450px] h-[450px] bg-primary/5 rounded-full blur-[100px] transform -translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
 
@@ -216,10 +215,10 @@ export default function OurBusinesses() {
                   whileInView={{ scale: 1, opacity: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, ease: "easeOut" }}
-                  className="flex flex-col items-center justify-center w-44 h-44 bg-[#0F172A]/90 backdrop-blur-md rounded-full border border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.5)]"
+                  className="flex flex-col items-center justify-center w-44 h-44 bg-white/95 backdrop-blur-md rounded-full border border-slate-200 shadow-md"
                 >
                   <div className="absolute inset-0 rounded-full border border-primary/25 animate-[spin_16s_linear_infinite]"></div>
-                  <h3 className="text-white font-bold text-xl text-center leading-none tracking-wider mb-2">
+                  <h3 className="text-slate-900 font-bold text-xl text-center leading-none tracking-wider mb-2">
                     {centerNodeTitle.split("\n").map((line, idx, arr) => (
                       <React.Fragment key={idx}>
                         {line}
@@ -278,15 +277,15 @@ export default function OurBusinesses() {
                           onMouseLeave={() => setHoveredNode(null)}
                           className={`relative z-10 w-44 group flex flex-col items-center text-center p-3.5 rounded-xl backdrop-blur-md border transition-all duration-300 cursor-default ${
                             hoveredNode === node.business_node_id
-                              ? "bg-white/10 border-primary/50 shadow-[0_0_30px_rgba(0,0,0,0.3)]"
-                              : "bg-white/5 border-white/10 hover:border-white/20"
+                              ? "bg-white border-primary shadow-md"
+                              : "bg-white/90 border-slate-200 hover:border-slate-300"
                           }`}
                         >
                           <div
                             className={`w-11 h-11 rounded-full flex items-center justify-center mb-2.5 transition-colors duration-300 ${
                               hoveredNode === node.business_node_id
                                 ? "bg-primary text-white"
-                                : "bg-slate-800 text-white"
+                                : "bg-primary/10 text-primary"
                             }`}
                           >
                             <Icon className="w-5 h-5" />
@@ -296,12 +295,12 @@ export default function OurBusinesses() {
                           </span>
                           <h4
                             className={`font-bold text-xs md:text-sm tracking-wide mb-1 transition-colors ${
-                              hoveredNode === node.business_node_id ? "text-primary" : "text-white"
+                              hoveredNode === node.business_node_id ? "text-primary" : "text-slate-900"
                             }`}
                           >
                             {nodeTitle}
                           </h4>
-                          <p className="text-white/70 text-[11px] leading-snug line-clamp-3">
+                          <p className="text-slate-600 text-[11px] leading-snug line-clamp-3">
                             {nodeDesc}
                           </p>
                         </motion.div>
@@ -319,9 +318,9 @@ export default function OurBusinesses() {
                 viewport={{ once: true }}
                 className="flex flex-col items-center text-center mb-4"
               >
-                <div className="w-24 h-24 rounded-full border border-primary/30 flex items-center justify-center bg-[#0F172A] shadow-lg mb-3 relative">
+                <div className="w-24 h-24 rounded-full border border-primary/30 flex items-center justify-center bg-white shadow-sm mb-3 relative">
                   <div className="absolute inset-0 rounded-full border border-primary/20 animate-[spin_16s_linear_infinite]"></div>
-                  <h3 className="text-white font-bold text-xs leading-tight tracking-wider">
+                  <h3 className="text-slate-900 font-bold text-xs leading-tight tracking-wider">
                     {centerNodeTitle.split("\n").map((line, idx, arr) => (
                       <React.Fragment key={idx}>
                         {line}
@@ -336,7 +335,7 @@ export default function OurBusinesses() {
               </motion.div>
 
               <div className="flex flex-col space-y-3 relative">
-                <div className="absolute left-[2.25rem] top-4 bottom-8 w-px bg-gradient-to-b from-primary/50 via-white/20 to-transparent"></div>
+                <div className="absolute left-[2.25rem] top-4 bottom-8 w-px bg-gradient-to-b from-primary/50 via-slate-200 to-transparent"></div>
 
                 {[...businessNodes]
                   .filter((n) => n.id_string !== "center")
@@ -358,19 +357,19 @@ export default function OurBusinesses() {
                       >
                         <div className="absolute left-[2.25rem] w-2 h-2 rounded-full bg-primary/50 -translate-x-1/2 top-4"></div>
 
-                        <div className="relative z-10 w-9 h-9 rounded-full bg-slate-800 flex-shrink-0 flex items-center justify-center border border-white/10 mt-1">
-                          <Icon className="w-4 h-4 text-white" />
+                        <div className="relative z-10 w-9 h-9 rounded-full bg-primary/10 flex-shrink-0 flex items-center justify-center border border-primary/20 mt-1">
+                          <Icon className="w-4 h-4 text-primary" />
                         </div>
-                        <div className="flex-1 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-3.5">
+                        <div className="flex-1 bg-white border border-slate-200 rounded-xl p-3.5">
                           <div className="flex items-center justify-between mb-1">
                             <span className="text-[10px] uppercase font-bold tracking-wider text-primary">
                               {isAm ? `ደረጃ ${node.mobile_order}` : `Stage ${node.mobile_order}`}
                             </span>
                           </div>
-                          <h4 className="text-white font-bold text-sm tracking-wide mb-1">
+                          <h4 className="text-slate-900 font-bold text-sm tracking-wide mb-1">
                             {nodeTitle}
                           </h4>
-                          <p className="text-white/70 text-xs leading-relaxed">{nodeDesc}</p>
+                          <p className="text-slate-600 text-xs leading-relaxed">{nodeDesc}</p>
                         </div>
                       </motion.div>
                     );

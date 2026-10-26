@@ -14,7 +14,7 @@ module.exports = {
         description: "Spearheading research, technology transfer, and high-level human resource development to accelerate production, import substitution, and sustainable development of Ethiopia's mineral industry.",
         order: 1,
         button_name: "Explore Sectors",
-        button_url: "/businesses",
+        button_url: "/mineral-industry-development",
         button2_name: "About MIDI",
         button2_url: "/about",
         attachment_id: null,

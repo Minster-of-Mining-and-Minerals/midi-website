@@ -230,7 +230,7 @@ module.exports = {
 
     // 2. Synchronize Routes and RouteTranslations in Database
     const parentRouteQuery = await queryInterface.sequelize.query(
-      `SELECT route_id FROM routes WHERE path = '/businesses' LIMIT 1;`,
+      `SELECT route_id FROM routes WHERE path = '/mineral-industry-development' LIMIT 1;`,
       { type: queryInterface.sequelize.QueryTypes.SELECT }
     );
 
@@ -249,28 +249,28 @@ module.exports = {
         WHERE route_id = '${parentRouteId}' AND language_code = 'am';
       `);
 
-      // Define the 4 subroutes under /businesses
+      // Define the 4 subroutes under /mineral-industry-development
       const subroutes = [
         {
-          path: "/businesses/overview",
+          path: "/mineral-industry-development/overview",
           order: 1,
           en: "Development Overview",
           am: "የልማት አጠቃላይ እይታ",
         },
         {
-          path: "/businesses/mineral-processing",
+          path: "/mineral-industry-development/mineral-processing",
           order: 2,
           en: "Mineral Processing",
           am: "የማዕድን ማቀነባበሪያ",
         },
         {
-          path: "/businesses/value-addition",
+          path: "/mineral-industry-development/value-addition",
           order: 3,
           en: "Value Addition",
           am: "እሴት መጨመር",
         },
         {
-          path: "/businesses/research-innovation",
+          path: "/mineral-industry-development/research-innovation",
           order: 4,
           en: "Research & Innovation",
           am: "ተግባራዊ ምርምር እና ቴክኖሎጂ",

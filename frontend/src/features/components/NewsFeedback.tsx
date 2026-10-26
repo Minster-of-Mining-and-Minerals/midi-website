@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { useGetNewsFeedbackCountQuery, useRecordNewsFeedbackMutation, useGetNewsFeedbacksQuery } from "@/redux/api/newsApi";
 import { notify, extractErrorMessage } from "@/utils/notification";
 import { formatLongDate } from "@/utils/datetime";
-import { ComponentGuard } from "@/components/auth/ComponentGuard";
 
 interface NewsFeedbackProps {
     newsId: string;
@@ -54,7 +53,7 @@ const NewsFeedback: React.FC<NewsFeedbackProps> = ({ newsId }) => {
                     <h2 className="text-xl font-bold text-gray-900">Article Feedback</h2>
                     <div className="flex items-center gap-2 text-gray-600">
                         <MessageSquare size={18} />
-                        <span>{feedbackCount?.feedback_count} Comments</span>
+                        <span>{feedbackCount?.feedback_count ?? 0} Comments</span>
                     </div>
                 </div>
 
@@ -64,6 +63,7 @@ const NewsFeedback: React.FC<NewsFeedbackProps> = ({ newsId }) => {
                         placeholder="Full Name"
                         value={fullname}
                         onChange={(e) => setFullname(e.target.value)}
+                        maxLength={100}
                         className="focus-visible:ring-primary"
                     />
 
@@ -71,20 +71,19 @@ const NewsFeedback: React.FC<NewsFeedbackProps> = ({ newsId }) => {
                         placeholder="Your thoughts about this article..."
                         value={thought}
                         onChange={(e) => setThought(e.target.value)}
+                        maxLength={2000}
                         rows={4}
                         className="focus-visible:ring-primary"
                     />
 
                     <div className="flex justify-end">
-                        <ComponentGuard anyPermissions={['NEWS:UPDATE']}>
-                            <Button
-                                type="submit"
-                                disabled={isLoading}
-                                className="bg-primary hover:bg-primary/90 text-white px-8"
-                            >
-                                {isLoading ? "Submitting..." : "Post Comment"}
-                            </Button>
-                        </ComponentGuard>
+                        <Button
+                            type="submit"
+                            disabled={isLoading}
+                            className="bg-primary hover:bg-primary/90 text-white px-8"
+                        >
+                            {isLoading ? "Submitting..." : "Post Comment"}
+                        </Button>
                     </div>
                 </form>
             </div>

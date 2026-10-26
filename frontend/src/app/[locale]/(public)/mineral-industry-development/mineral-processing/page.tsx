@@ -202,13 +202,11 @@ export default function MineralProcessingPage() {
               type="button"
               onClick={() => setActiveStage(idx)}
               aria-pressed={active}
-              className={`rounded-xl p-4 text-start flex flex-col gap-1.5 transition-colors ${
-                active
-                  ? "bg-slate-950 text-white"
-                  : "bg-white border border-slate-200 text-slate-900 hover:border-primary/50"
+              className={`rounded-xl p-4 text-start flex flex-col gap-1.5 transition-colors bg-white border text-slate-900 ${
+                active ? "border-primary ring-1 ring-primary" : "border-slate-200 hover:border-primary/50"
               }`}
             >
-              <span className={`font-mono text-xs ${active ? "text-amber-400" : "text-primary"}`}>
+              <span className="font-mono text-xs text-primary">
                 {isAm ? "ደረጃ" : "STAGE"} {stage.stageNumber}
               </span>
               <span className="text-sm md:text-[15px] font-semibold leading-snug">{stage.name}</span>
@@ -236,8 +234,8 @@ export default function MineralProcessingPage() {
               {currentStageData.flowFeed}
             </span>
             <ArrowRight className="w-4 h-4 text-primary rtl:rotate-180" aria-hidden="true" />
-            <span className="rounded-md bg-amber-50 px-2.5 py-1.5 text-amber-900">
-              <span className="text-amber-800/80">{isAm ? "የደረጃው ምርት" : "Product"}: </span>
+            <span className="rounded-md border border-primary/30 bg-white px-2.5 py-1.5 text-slate-900">
+              <span className="text-slate-500">{isAm ? "የደረጃው ምርት" : "Product"}: </span>
               {currentStageData.flowProduct}
             </span>
           </div>
@@ -286,7 +284,7 @@ export default function MineralProcessingPage() {
                   onClick={() => setActiveMethod(method.id)}
                   aria-pressed={active}
                   className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-start text-sm font-semibold transition-colors ${
-                    active ? "bg-amber-50 text-amber-900 ring-1 ring-primary/40" : "bg-slate-50 text-slate-700 hover:bg-slate-100"
+                    active ? "bg-white text-slate-900 ring-1 ring-primary" : "bg-slate-50 text-slate-700 hover:bg-slate-100"
                   }`}
                 >
                   <Icon className={`w-4 h-4 shrink-0 ${active ? "text-primary" : "text-slate-400"}`} />

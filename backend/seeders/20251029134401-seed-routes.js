@@ -26,7 +26,7 @@ module.exports = {
       },
       {
         key: "businesses",
-        path: "/businesses",
+        path: "/mineral-industry-development",
         order: 3,
         translations: {
           en: "Mineral Industry Development",
@@ -35,7 +35,7 @@ module.exports = {
         children: [
           {
             key: "overview",
-            path: "/businesses/overview",
+            path: "/mineral-industry-development/overview",
             order: 1,
             translations: {
               en: "Development Overview",
@@ -44,7 +44,7 @@ module.exports = {
           },
           {
             key: "mineral-processing",
-            path: "/businesses/mineral-processing",
+            path: "/mineral-industry-development/mineral-processing",
             order: 2,
             translations: {
               en: "Mineral Processing & Beneficiation",
@@ -53,7 +53,7 @@ module.exports = {
           },
           {
             key: "value-addition",
-            path: "/businesses/value-addition",
+            path: "/mineral-industry-development/value-addition",
             order: 3,
             translations: {
               en: "Manufacturing & Value Addition",
@@ -62,7 +62,7 @@ module.exports = {
           },
           {
             key: "research-innovation",
-            path: "/businesses/research-innovation",
+            path: "/mineral-industry-development/research-innovation",
             order: 4,
             translations: {
               en: "Applied Research & Innovation",

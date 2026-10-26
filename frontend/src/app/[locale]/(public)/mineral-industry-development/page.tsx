@@ -30,7 +30,7 @@ export default async function BusinessesPage({
       description: isAm
         ? "በስልታዊ የማዕድን ምርቶች ላይ የተዘረጋ ተቋማዊ የቴክኒክ ድጋፍ ማዕቀፍ እና ቀዳሚ የትኩረት መስኮች።"
         : "Institutional support framework, priority technical focus areas, and specialized industrial engineering capabilities.",
-      href: `/${locale}/businesses/overview`,
+      href: `/${locale}/mineral-industry-development/overview`,
       icon: ShieldCheck,
       badge: isAm ? "ተቋማዊ ማዕቀፍ" : "Technical Framework",
     },
@@ -39,7 +39,7 @@ export default async function BusinessesPage({
       description: isAm
         ? "የኦር ባህሪ ጥናት፣ መፍጨት፣ የስበት እና የፍሎቴሽን አካላዊ የማጣሪያ ቴክኖሎጂዎች።"
         : "Ore characterization, comminution, gravity concentration, froth flotation, and recovery optimization.",
-      href: `/${locale}/businesses/mineral-processing`,
+      href: `/${locale}/mineral-industry-development/mineral-processing`,
       icon: Layers,
       badge: isAm ? "ማጣራት እና ማበልፀግ" : "Ore Upgrading",
     },
@@ -48,7 +48,7 @@ export default async function BusinessesPage({
       description: isAm
         ? "የሀገር ውስጥ ማዕድናትን ወደ ሲሚንቶ፣ ሴራሚክስ፣ መስታወት፣ ብረታብረት እና ጌጣጌጥ መቀየር።"
         : "Transforming domestic mineral feedstocks into cement, structural ceramics, glass, foundries, and lapidary.",
-      href: `/${locale}/businesses/value-addition`,
+      href: `/${locale}/mineral-industry-development/value-addition`,
       icon: Factory,
       badge: isAm ? "የውጭ ምርት መተካት" : "Value Addition",
     },
@@ -57,7 +57,7 @@ export default async function BusinessesPage({
       description: isAm
         ? "ኢንዱስትሪ-መር ምርምር፣ የሙከራ ፍሰት-ንድፍ ግምገማ፣ የቴክኖሎጂ ማላመድ እና የህትመት ውጤቶች።"
         : "Bench-scale testing, pilot trials, metallurgical solutions, and technical knowledge dissemination.",
-      href: `/${locale}/businesses/research-innovation`,
+      href: `/${locale}/mineral-industry-development/research-innovation`,
       icon: FlaskConical,
       badge: isAm ? "ኢኖቬሽን" : "Technology Transfer",
     },
@@ -106,7 +106,7 @@ export default async function BusinessesPage({
       description: isAm
         ? "የተቋሙን ስትራቴጂካዊ የቴክኒክ ማዕቀፍ እና የልማት ፕሮግራሞች ይመልከቱ።"
         : "Explore institutional technical framework, testing criteria, and development programs.",
-      href: `/${locale}/businesses/overview`,
+      href: `/${locale}/mineral-industry-development/overview`,
       icon: Layers,
     },
     {

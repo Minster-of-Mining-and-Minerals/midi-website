@@ -7,9 +7,9 @@ export const PUBLIC_STATIC_PATHS: string[] = [
   "/products",
   "/careers",
   "/contact",
-  "/businesses",
-  "/businesses/overview",
-  "/businesses/mineral-processing",
-  "/businesses/value-addition",
-  "/businesses/research-innovation"
+  "/mineral-industry-development",
+  "/mineral-industry-development/overview",
+  "/mineral-industry-development/mineral-processing",
+  "/mineral-industry-development/value-addition",
+  "/mineral-industry-development/research-innovation"
 ];
